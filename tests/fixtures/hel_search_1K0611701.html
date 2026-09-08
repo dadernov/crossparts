@@ -1,0 +1,193 @@
+<html><body>
+<div class="product-thumb uni-item">
+								<div class="product-thumb__image" >
+										
+									<a href="https://helrussia.ru/avto/volkswagen-golf-mk6-all-models-excluding-gti-r-2009-/">
+										<img src="https://helrussia.ru/image/cache/catalog/001%20Фото%20комплектов%20АВТО/VW-4-409/VW%20Golf%206%202011(1)-500x500.jpg" data-additional="https://helrussia.ru/image/cache/catalog/001%20Фото%20комплектов%20АВТО/VW-4-409/VW%20Golf%206%202011-500x500.jpg||https://helrussia.ru/image/cache/catalog/001%20Фото%20комплектов%20АВТО/VW-4-409/VW%20Golf%206%202011%20(4)-500x500.jpg||https://helrussia.ru/image/cache/catalog/001%20Фото%20комплектов%20АВТО/VW-4-409/VW%20Golf%206%202011%20(3)-500x500.jpg||https://helrussia.ru/image/cache/catalog/001%20Фото%20комплектов%20АВТО/VW-4-409/VW%20Golf%206%202011%20(2)-500x500.jpg||https://helrussia.ru/image/cache/catalog/product/automotive-brake-hoses-colours-500x500.jpg" alt="Volkswagen VW Golf MK6 2008-2012 (за исключением GTi / R)" title="Volkswagen VW Golf MK6 2008-2012 (за исключением GTi / R)" class="img-responsive" />
+									</a>
+								</div>
+								<div class="product-thumb__caption">
+									<a class="product-thumb__name" href="https://helrussia.ru/avto/volkswagen-golf-mk6-all-models-excluding-gti-r-2009-/">Volkswagen VW Golf MK6 2008-2012 (за исключением GTi / R)</a>
+									<div class="product-thumb__model" data-text="Модель:">VW-4-409</div>
+																			<div class="product-thumb__attribute product-thumb__description attribute">
+					Армированные тормозные шланги <span class="product-thumb__attribute-value"></span>
+					Замена штатных, аналог оригинальных шлангов <span class="product-thumb__attribute-value">1K0611701K
+1K0611775C</span>
+			</div>
+									<div class="product-thumb__option option">
+	</div>										<div class="qty-indicator" data-text="Наличие схемы:">
+					<div class="qty-indicator__text text-5">
+				В наличии
+			</div>
+			</div>
+																			<div class="product-thumb__rating rating">
+																							<i class="far fa-star"></i>
+																							<i class="far fa-star"></i>
+																							<i class="far fa-star"></i>
+																							<i class="far fa-star"></i>
+																							<i class="far fa-star"></i>
+											 
+																					</div>
+																												<div class="product-thumb__price price" data-price="5565" data-special="0" data-discount="">
+																							5565 ₽
+																					</div>
+										<div class="price-tax">Без НДС: 5300 ₽</div>																		<div class="product-thumb__cart cart ">
+																					<div class="qty-switch">
+												<input type="text" name="quantity" value="1" data-minimum="1" class="qty-switch__input form-control" />
+												<div>
+													<i class="qty-switch__btn fa fa-plus btn-default"></i>
+													<i class="qty-switch__btn fa fa-minus btn-default"></i>
+												</div>
+											</div>
+																				<button type="button" class="product-thumb__add-to-cart add_to_cart btn " title="В корзину" data-pid="9675" onclick="cart.add(9675, this)"><i class="fa fa-shopping-bag"></i><span>В корзину</span></button>
+										<button type="button" class="product-thumb__quick-order quick-order btn hidden" data-toggle="tooltip" title="" onclick="quick_order('9675');"><i class=""></i></button>
+										<button type="button" class="product-thumb__wishlist wishlist " title="В закладки" onclick="wishlist.add('9675');"><i class="far fa-heart"></i></button>
+										<button type="button" class="product-thumb__compare compare " title="В сравнение" onclick="compare.add('9675');"><i class="fas fa-align-right"></i></button>
+									</div>
+								</div>
+							</div>
+						</div>
+									</div>
+				
+			  <div class="pagination-text">Показано с 1 по 1 из 1 (всего 1 страниц)</div>
+						</div>
+			
+		</div>
+		
+		<script>uniSelectView.init();</script>
+	</div>
+</div>
+<script>
+	$(function() {
+		let showTimer = function() {
+			$('.product-layout .product-thumb__image').each(function() {
+				const date = $(this).data('special-end');
+
+				if(date) {
+					$(this).uniTimer({
+						date  :''+date+'',
+						texts :['дней','часов','минут','секунд']
+					});
+				}
+			});
+		};
+							
+		showTimer();
+								
+		let observer = new MutationObserver(() => {
+			showTimer();
+		});
+		
+		observer.observe($('.products-block')[0], {childList:true});
+	});
+</script>
+<script>
+$('#button-search').bind('click', () => {
+	let url = 'index.php?route=product/search';
+
+	const search = $('#content input[name=\'search\']').val(),
+		  category_id = $('#content select[name=\'category_id\']').val(),
+		  sub_category_id = $('#content input[name=\'sub_category\']:checked').val(),
+		  filter_description = $('#content input[name=\'description\']:checked').val();
+
+	if (search) url += '&search=' + encodeURIComponent(search);
+	if (category_id > 0) url += '&category_id=' + encodeURIComponent(category_id);
+	if (sub_category_id) url += '&sub_category=true';
+	if (filter_description) url += '&description=true';
+
+	location = url;
+});
+
+$('#content input[name=\'search\']').bind('keydown', (e) => {
+	if (e.keyCode == 13) {
+		$('#button-search').trigger('click');
+	}
+});
+
+$('select[name=\'category_id\']').on('change', function() {
+	if (this.value == '0') {
+		$('input[name=\'sub_category\']').prop('disabled', true);
+	} else {
+		$('input[name=\'sub_category\']').prop('disabled', false);
+	}
+});
+
+$('select[name=\'category_id\']').trigger('change');
+</script>
+</main>
+
+	<div class="pwa-notification hidden">
+		<div class="container">
+			<span class="pwa-notification__text chromium">Установите наше приложение</span>
+			<span class="pwa-notification__text other">Ура! Теперь у нас есть собственное приложение. Нажмите «поделиться» и затем «добавить на домашний экран»</span>
+			<span class="pwa-notification__install">Установить</span>
+			<span class="pwa-notification__close">не сейчас</span>
+		</div>
+	</div>
+
+	<div id="uni-notification" class="notification fixed hidden">
+					<div class="container">
+				<div class="notification__wrapper fixed">
+					<div class="notification__text fixed">Мы используем файлы cookie для улучшения работы сайта и персонализации сервисов. Продолжая пользоваться сайтом, вы соглашаетесь с использованием cookie. Подробнее см. в <a href="https://helrussia.ru/privacy/">Политике конфиденциальности</a>.</div>
+					<div class="notification__buttons">
+													<button class="notification__button btn btn-sm cancel">Отклонить</button>
+												<button class="notification__button btn btn-sm btn-primary">Принять</button>
+					</div>
+				</div>
+			</div>
+			</div>
+	<script>
+	$(function() {	
+		let uni_notification = $('#uni-notification');
+		
+		if(!document.cookie.match('notificationOffTime')) {
+			uni_notification.removeClass('hidden');
+	
+					
+			$('.notification__button.btn-primary').on('click', function() {
+				$.get('index.php?route=extension/module/uni_notification/apply');
+				notificationClose();
+			});
+		
+			$('.notification__button.btn-default, .notification__button.cancel').on('click', function() {
+									notificationClose();
+							});
+		
+			function notificationClose() {
+									uni_notification.fadeOut('fast', function() {
+						uni_notification.remove();
+					});
+							}
+		}
+	});
+	</script>
+
+<footer class="footer mobile-menu-bottom">
+    <div id="customCallback" class="moduleCustom-callback">
+        <form name="custom-callback" class="container">
+            <div class="row row-flex">
+                <div class="customCallback__info customCallback-info col-xs-12">
+                    Остались вопросы? Заполните форму и мы с вами свяжемся!  
+                </div>
+                <div class="col-xs-12">
+                    <div class="customCallback__block">
+                        <div class="customCallback__inputs">
+                            <input type="text" name="name" placeholder="Ваше имя*" class="customCallback__input customCallback__input-name form-control" required/>
+                            <input type="tel" name="telephone" placeholder="Ваш телефон*" class="customCallback__input customCallback__input-phone form-control" required/>
+                            <input type="text" name="brand" placeholder="Марка" class="customCallback__input customCallback__input-brand form-control"  />
+                            <input type="text" name="model" placeholder="Модель" class="customCallback__input customCallback__input-model form-control" />
+                            <input type="text" name="year" placeholder="Год выпуска" class="customCallback__input customCallback__input-year form-control" />
+                        </div>
+                        <button type="button" class="customCallback__btn btn btn-lg btn-block" data-loading-text="Загрузка..."><span>Отправить</span></button>
+                    </div>
+                    <label class="customCallback__agree input"><input type="checkbox" name="confirm" value="1">
+					<span>
+						<span>
+                            Я ознакомлен(а) с <a href="https://helrussia.ru/index.php?route=information/information/agree&amp;information_id=5" class="agree"><b>Пользовательским соглашением</b></a> и <a href="https://helrussia.ru/index.php?route=information/information/agree&amp;information_id=3" class="agree"><b>Политикой в отношении обработки персональных данных</b></a>, принимаю их условия и даю согласие на обработку моих персональных данных в соответствии с Федеральным законом № 152-ФЗ «О персональных данных».
+                        </span>
+					</span>
+					</label>
+                </div>
+            </div>
+        
+</body></html>

@@ -1,0 +1,17 @@
+[Unit]
+Description=CrossParts — поиск кроссов автозапчастей
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/crossparts
+EnvironmentFile=/root/crossparts/.env.production
+ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips=127.0.0.1
+Restart=always
+RestartSec=3
+StandardOutput=append:/var/log/crossparts.log
+StandardError=append:/var/log/crossparts.log
+
+[Install]
+WantedBy=multi-user.target

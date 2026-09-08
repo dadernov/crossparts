@@ -1,0 +1,17 @@
+# Домашний Linux-ПК: systemd-юнит, чтобы туннель поднимался сам.
+# Положить в ~/.config/systemd/user/ и включить:
+#   systemctl --user enable --now crossparts-tunnel
+#   sudo loginctl enable-linger $USER     # чтобы работал без входа в систему
+[Unit]
+Description=CrossParts: обратный туннель домашнего интернета
+After=network-online.target
+
+[Service]
+Environment=SERVER=mrb-cross-search-test.duckdns.org
+Environment=SSH_USER=tunnel
+ExecStart=%h/crossparts-tunnel/tunnel.sh
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=default.target

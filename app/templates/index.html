@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CrossParts — поиск кроссов автозапчастей</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>CrossParts</h1>
+    <p class="sub">По оригинальному номеру собираем кросс-номера из каталогов-источников</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <h2>Товарные группы и покрытие</h2>
+    <p class="hint">Какой каталог закрывает какую группу. Позиции из файла ищутся
+      только в источниках своей группы.</p>
+    <table class="sources">
+      <thead><tr><th>Группа</th><th>Готово</th><th>Заблокировано</th><th>В планах</th></tr></thead>
+      <tbody id="coverage"><tr><td colspan="4" class="note">загружаем…</td></tr></tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Источники</h2>
+    <table class="sources">
+      <thead><tr><th>Ключ</th><th>Каталог</th><th>Статус парсера</th><th>Комментарий</th></tr></thead>
+      <tbody>
+      {% for s in sources %}
+        <tr>
+          <td><label><input type="checkbox" class="src" value="{{ s.key }}"
+              {% if s.enabled_by_default %}checked{% endif %}> <code>{{ s.key }}</code></label></td>
+          <td><a href="{{ s.homepage }}" target="_blank" rel="noopener">{{ s.title }}</a>
+              <div class="note">{{ s.group_titles | join(', ') or 'все группы' }}</div></td>
+          <td>{% if s.verified %}<span class="ok">проверен на живых данных</span>
+              {% else %}<span class="warn">требует доступа / настройки</span>{% endif %}</td>
+          <td class="note">{{ s.note }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Быстрый поиск по одному номеру</h2>
+    <div class="row">
+      <input id="oe" type="text" placeholder="например 58101H5A25" autocomplete="off">
+      <select id="group">
+        <option value="">Любая группа</option>
+      </select>
+      <button id="btn-lookup">Найти кроссы</button>
+      <label class="inline"><input type="checkbox" id="fresh"> без кэша</label>
+    </div>
+    <div id="lookup-out"></div>
+  </section>
+
+  <section class="card">
+    <h2>Пакетная обработка (xlsx)</h2>
+    <p class="hint">Файл с колонками «Наш Артикул», «Тормозная группа» и
+      «Номер для парсинга кроссов». Формат без группы тоже читается.</p>
+    <div class="row">
+      <input id="file" type="file" accept=".xlsx">
+      <button id="btn-upload">Запустить</button>
+    </div>
+    <div id="job-out"></div>
+  </section>
+
+  <section class="card">
+    <h2>Задания</h2>
+    <div id="jobs"></div>
+  </section>
+</main>
+
+<footer class="wrap"><p>API-документация: <a href="/docs">/docs</a></p></footer>
+<script src="/static/app.js"></script>
+</body>
+</html>

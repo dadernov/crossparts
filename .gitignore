@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+data/*.db
+out/
+.pytest_cache/
+deploy/duckdns.env
+.env.production

@@ -1,0 +1,279 @@
+{
+  "_comment": "Полный список сайтов из файла заказчика «Парсинг кроссов GERAT - пошагово.xlsx», лист «Сайты для парсинга». status: implemented — есть парсер; blocked — сайт не пускает наш IP; planned — парсер ещё не написан.",
+  "sites": [
+    {
+      "brand": "SB NAGAMOCHI",
+      "key": "sbparts",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses"
+      ],
+      "url": "https://sbparts.ru/catalog/",
+      "status": "implemented",
+      "note": "Кроме колодок и дисков находит и тормозные шланги (серии BH / T)."
+    },
+    {
+      "brand": "NIBK",
+      "key": "jnbk",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://www.jnbk-brakes.com/catalogue/cars",
+      "status": "blocked",
+      "note": "Закрыт для нашего IP (AWS WAF). Кроссы NiBK берём из каталога Brixo — источник brixo."
+    },
+    {
+      "brand": "NIBK",
+      "key": "nibkru",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://nibkbrakes.com/ru/catalog",
+      "status": "implemented",
+      "note": "Данные бренда приходят из общего каталога Brixo (источник brixo).",
+      "via": "brixo"
+    },
+    {
+      "brand": "Brembo",
+      "key": "brembo",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses"
+      ],
+      "url": "https://www.bremboparts.com/europe/ru",
+      "status": "implemented",
+      "note": "Кроме колодок и дисков находит и тормозные шланги (серии BH / T)."
+    },
+    {
+      "brand": "Mintex",
+      "key": "mintex",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://mintex.brakebook.com/",
+      "status": "blocked",
+      "note": "Cloudflare managed challenge"
+    },
+    {
+      "brand": "TRIALLI",
+      "key": "trialli",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses",
+        "shock_absorbers"
+      ],
+      "url": "https://trialli.ru/catalogue/",
+      "status": "implemented"
+    },
+    {
+      "brand": "ATE",
+      "key": "ate",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://www.ate-brakes.com/catalogues/online-catalogues/",
+      "status": "planned"
+    },
+    {
+      "brand": "ZIMMERMANN",
+      "key": "zimmermann",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://www.otto-zimmermann.de/ru/novosti/onlain-katalog/",
+      "status": "planned",
+      "note": "Поиск по сайту игнорирует номер: выдача одинаковая на любой запрос."
+    },
+    {
+      "brand": "BRANNOR",
+      "key": "brannor",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://brannor.ru/search-oem/",
+      "status": "implemented",
+      "note": "Поиск по ОЕ, на карточке вкладка «Оригинальные номера»."
+    },
+    {
+      "brand": "FAP",
+      "key": "fap",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://fapbrakes.ru/ru/catalogue",
+      "status": "planned"
+    },
+    {
+      "brand": "MONAER",
+      "key": "monaer",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://monaer-russia.ru/catalog/",
+      "status": "planned"
+    },
+    {
+      "brand": "KYB",
+      "key": "kyb",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "url": "https://kyb.ru/support/cross",
+      "status": "implemented",
+      "note": "Сервис кроссировки KYB: по ОЕ-номеру отдаёт артикулы KYB."
+    },
+    {
+      "brand": "Bilstein",
+      "key": "bilstein",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "url": "https://www.bilstein.ru/",
+      "status": "planned",
+      "note": "Витрина дилера на платформе ABCP (поиск по коду детали в магазине), каталога кроссов производителя нет."
+    },
+    {
+      "brand": "SACHS",
+      "key": "sachs",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "url": "https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/sachs/",
+      "status": "planned"
+    },
+    {
+      "brand": "BOGE",
+      "key": "boge",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "url": "http://boge.com.ru/catalog/",
+      "status": "planned",
+      "note": "Поиск магазина по ОЕ-номерам ничего не находит — индексируются только свои артикулы."
+    },
+    {
+      "brand": "KONI",
+      "key": "koni",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "url": "https://koni.ru/",
+      "status": "planned",
+      "note": "Поиск по сайту ОЕ-номера не индексирует — находит только артикулы KONI."
+    },
+    {
+      "brand": "HOLA",
+      "key": "hola",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses",
+        "shock_absorbers"
+      ],
+      "url": "https://www.hola-auto.ru/production/shock-absorbers/",
+      "status": "implemented",
+      "note": "В таблице заказчика указан в амортизаторах, но каталог у бренда шире: колодки, диски и шланги тоже есть."
+    },
+    {
+      "brand": "Nissens",
+      "key": "nissens",
+      "groups": [
+        "radiators"
+      ],
+      "url": "https://catalogue.nissens.com/Product",
+      "status": "implemented",
+      "note": "Поиск по ОЕ, ОЕМ-номера с карточки товара."
+    },
+    {
+      "brand": "LUZAR",
+      "key": "luzar",
+      "groups": [
+        "radiators"
+      ],
+      "url": "https://luzar.ru/catalogue",
+      "status": "implemented",
+      "note": "Радиаторы охлаждения, поиск по ОЕМ-номеру."
+    },
+    {
+      "brand": "SALURA",
+      "key": "salura",
+      "groups": [
+        "radiators"
+      ],
+      "url": "https://brixogroup.com/catalog",
+      "status": "implemented",
+      "via": "brixo",
+      "note": "Общий каталог Brixo: радиаторы SAKURA и остальные бренды группы (источник brixo)."
+    },
+    {
+      "brand": "NRF",
+      "key": "nrf",
+      "groups": [
+        "radiators"
+      ],
+      "url": "https://webshop.nrf.eu/",
+      "status": "blocked",
+      "note": "Витрина B2B: список найденных товаров скрыт от гостя, нужен аккаунт дилера."
+    },
+    {
+      "brand": "AVA",
+      "key": "ava",
+      "groups": [
+        "radiators"
+      ],
+      "url": "https://ava-cooling.com/ru/",
+      "status": "blocked",
+      "note": "Домен не открывается (404 от фронтенда)."
+    },
+    {
+      "brand": "PATRON",
+      "key": "patron",
+      "groups": [
+        "brake_hoses"
+      ],
+      "url": "https://patron.ru/",
+      "status": "blocked",
+      "note": "Сайт отвечает 503 (балансировщик не отдаёт бэкенд)."
+    },
+    {
+      "brand": "HEL",
+      "key": "hel",
+      "groups": [
+        "brake_hoses"
+      ],
+      "url": "https://helrussia.ru/",
+      "status": "implemented",
+      "note": "Армированные шланги, узкий модельный ряд. Номера видны в выдаче поиска."
+    },
+    {
+      "brand": "TRW",
+      "key": "trw",
+      "groups": [
+        "brake_hoses"
+      ],
+      "url": "https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/",
+      "status": "planned"
+    },
+    {
+      "brand": "STELLOX",
+      "key": "stellox",
+      "groups": [
+        "brake_hoses"
+      ],
+      "url": "https://ru.stellox.com/catalog/",
+      "status": "planned",
+      "note": "Каталог без поиска по ОЕ: номера видны только в карточке товара, обратного поиска сайт не даёт."
+    }
+  ]
+}

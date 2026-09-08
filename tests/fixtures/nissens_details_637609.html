@@ -1,0 +1,593 @@
+﻿
+
+
+<script language="javascript" type="text/javascript">
+
+    var UniquePageIdenifier = "";
+
+    $(document).ready(function () {        
+        UniquePageIdenifier = GaQniquePageIdentifier();
+        
+        $("div.increase a.plus").click(changeQuantity);
+        $("div.increase a.minus").click(changeQuantity);
+        $(document).off("click", "a.delivery", addProductToBasket);
+        $(document).on("click", "a.delivery", addProductToBasket);
+
+        // Quantity Filter and change
+        $('#quantity').filter_input({ regex: '[0-9 \t]' });
+        $("#quantity").change(onQuantityChange);
+        $('#quantity').keyup(onQuantityChange);
+
+        // Load PartialViews
+        startLoading($('#loadingcontainer'), false);
+        getStockStatus();
+
+        if ("System.Collections.Generic.List`1[System.String]" != "") {
+            setTimeout('setupZoom();', 500);
+        }
+
+        var buttonKeys = { "ArrowUp": 38, "ArrowDown": 40 };
+        $(".increaseKeyDetect").keydown(function (e) {
+            if (e.keyCode == buttonKeys.ArrowUp) {
+                $("#" + e.target.id)[0].value++;
+                return false;
+            }
+            else if (e.keyCode == buttonKeys.ArrowDown) {
+                if ($("#" + e.target.id)[0].value > 1) {
+                    $("#" + e.target.id)[0].value--;
+                }
+                return false;
+            }
+        });
+
+    });
+
+    function setupZoom() {
+        var yOffset = ("False" == "True" || "4" != 0) ? -0 : 0;
+        var options = {
+            zoomWidth: 310,
+            zoomHeight: 240,
+            xOffset: 14,
+            yOffset: yOffset,
+            title: false
+        };
+        $('.hoverImage').removeData('jqzoom');
+        $('.hoverImage').jqzoom(options);
+    }
+
+    /* Quantity Change / StockStatus */
+    var savedQuantity = 0;
+    var quantityChangedTimer;
+
+    function changeQuantity() {
+        var x = $("#quantity").val();
+        if (parseInt(x) != NaN) {
+            var i = parseInt(x);
+
+            if ($(this).hasClass("plus"))
+                $("#quantity").val(i + 1);
+            if ($(this).hasClass("minus") & (i > 0))
+                $("#quantity").val(i - 1);
+        }
+
+        onQuantityChange();
+
+        return false;
+    }
+    
+    function onQuantityChange() {
+        if (window.maxAmountPerProduct != -1) {
+            var maxAllowedQuantity = parseInt(window.maxAmountPerProduct);
+            if ($('#quantity').val() > maxAllowedQuantity) {
+                $('#quantity').val(maxAllowedQuantity);
+                SetErrorMessageProductPage(window.translation_ProductMaxProductsReachedShort);
+            }
+        }
+        
+        if ($('#quantity').val() != savedQuantity && $('#quantity').val() != "") {
+            savedQuantity = $('#quantity').val();
+            $("#deliveryOptions").fadeOut("slow", function() {
+                // $("#LoadingContainer").show();
+                startLoading($('#loadingcontainer'), false);
+            });
+            $("div.addOptions div.total").fadeOut("slow");
+            $("#jqQuantityDiscountUnitPrice").fadeOut("slow", function () {
+                $(this).empty();
+            });
+            clearTimeout(quantityChangedTimer);
+            quantityChangedTimer = setTimeout(getStockStatus, 1500);
+        }
+    }
+
+    function getStockStatus() {
+        var productID = $("#basketNormal").attr("productID");
+        var nissensNo = $("#basketNormal").attr("nissensNo");
+        var customerId = '';
+        
+        var quantity = $("#quantity").val();
+        if (quantity) {
+            
+            jQuery.ajax({
+                url: '/ShoppingBasket/DeliveryOptionsQuantityDiscount1',
+                dataType: 'html',
+                data: 'customerId=' + customerId + '&nissensNo=' + nissensNo + '&quantity=' + quantity,
+                cache: false,
+                success: function (data) {
+                    $('#jqQuantityDiscountUnitPrice').html(data);
+                    
+                    var deliveryOptionUrl = '/ShoppingBasket/DeliveryOptions';
+                    
+                    $.get( deliveryOptionUrl, { nissensNo: nissensNo, quantity: quantity} , function( data ) {
+                        $('#deliveryOptions').html(data);
+                        setStockStatusAndPriceInfo();
+                        var deliveryOptionsList = GetDeliveryInfo4GA(data);
+                        var identifier = UniquePageIdenifier;
+                        var searchPars = 'CustNo:' + customerId + '+NisNo:' + nissensNo + '+Qty:' + quantity + '+Deliveryoption:' + deliveryOptionsList + '+Id:' + identifier;
+                        if (CookieInformation.getConsentGivenFor('cookie_cat_statistic')) {
+                            analytics.sendSiteSearchQueryByString('Search-Detailed', searchPars);
+                        };
+                    });
+                }
+            });
+        }
+    }
+
+    function GaQniquePageIdentifier() {
+        var customerId = '';
+        var rand = Math.floor(Math.random() * 10000);
+        var uniqueIdentifier = new String(customerId+rand).hashCode();
+        return uniqueIdentifier;
+    }
+
+    function GetDeliveryInfo4GA(data) {
+        var deliveryOptionStatus = "";
+        var totalPrice = $(data).filter('#hiddenStockDetails').attr("totalPrice");
+        $(data).each(function( index, value ) {
+            var title = $(this).find('.text').text();
+            var status = "InStock";
+            
+            if($(this).hasClass('no2')) {status = 'InStock';}
+            else if($(this).hasClass('no1')) {status = 'NotInStock';}    
+            else if($(this).hasClass('no4')) {status = 'PartlyInStock';}
+
+            if (title) {
+                deliveryOptionStatus += title + "=" + status + ",";
+            }
+        });
+
+        if (deliveryOptionStatus.length > 0) {
+            deliveryOptionStatus = deliveryOptionStatus.slice(0, -1);
+        }
+
+        return "[" + deliveryOptionStatus + "]"+"+Price:"+totalPrice;
+    }
+
+    function setStockStatusAndPriceInfo() {
+        $('#jqQuantityDiscountUnitPrice').hide();
+        //$("#LoadingContainer").hide();
+        stopLoading($('#loadingcontainer'), false);
+        $("#deliveryOptions").fadeIn("slow");
+        $("div.productdetails__basket__price__total div.total").html($("#hiddenStockDetails").attr("totalprice")).fadeIn("slow");
+        $('#jqQuantityDiscountUnitPrice').fadeIn("slow");
+
+        styleBasketContainer();
+    }
+    
+    function openProductSheet(url) {
+
+        var newWindow = window.open(url);
+        if (window.focus) {
+            newWindow.focus();
+        }    
+    }
+
+    function selectImage(event, thumburl, imgurl, index) {
+        event.preventDefault ? event.preventDefault() : (event.returnValue = false);
+        $(".ImageContainer").removeClass("view360");
+        var img = $('.MainImage');
+        var hlink = $('.hoverImage');
+        hlink.attr('href', imgurl);
+        img.attr('src', imgurl);
+        
+        $(".hoverImage360").css('display', 'none');
+        $(".hoverImage").css('display', 'block');
+
+        $(".zoomPad").remove();
+        hlink.append(img);
+        setTimeout('setupZoom();', 50);
+
+        $('.MainImage').data('index', index);
+    }
+
+    function selectImage360(event, imgurl) {
+        event.preventDefault ? event.preventDefault() : (event.returnValue = false);
+        $(".ImageContainer").addClass("view360");
+
+        if ($(".productArea .wrap360").length == 0) {
+            var sourceImages = $("#source-images-360").data("images");
+            var images = [];
+            for (var i = 0; i < sourceImages.length; i++) {
+                images.push(sourceImages[i].FilePath);         
+            }
+            var $img360 = $(".image360");
+
+            if ($(window).width() < 567) {
+                $img360 = $img360.threesixty({
+                    images: images,
+                    method: "mousemove",
+                    direction: "forward",
+                    sensibility: 1.2,
+                    width: 400,
+                    height: 300
+                });
+            } else {
+                $img360 = $img360.threesixty({
+                    images: images,
+                    method: "mousemove",
+                    direction: "forward",
+                    sensibility: 1.2,
+                    width: 450,
+                    height: 350
+                });
+            }
+
+            //$("#image360").off('click').on('click', function() {
+            //    $('#hoverImage360').click();
+            //});
+
+            $(".hoverImage360").css('display', 'block');
+            $(".hoverImage").css('display', 'none');
+        }
+    }
+
+    $(document).ready(function() {
+        styleBasketContainer();
+        
+        $("a.delivery").hover(function(event) {
+            //apply some conditions if yes
+            event.preventDefault();
+            return true;
+        });
+    });
+
+
+    //-- This function blur prices for status 20 Parts
+    function styleBasketContainer() {
+        var status = false;
+        var canBeAddedToBasket = true;
+        var showNotInStock = false;
+
+        if (status) {
+            $('div.addOptions').css('opacity', '0.35');
+
+            $('div.addOptions > div.options > div.amount a,div.addOptions > div.options > div.amount input, div.addOptions > div.options > div.amount span').hide();
+
+            //$("a.delivery").addClass('deliveryDisabled');
+            //$("a.delivery").removeClass('delivery');
+
+            $('#checkoutButton a').hide();
+            $('#productPrice').hide();
+
+            $('div.price span').html('');
+            $('div.price span').css('font-size', 'large');
+            $('div.price span').css('text-align', 'left');
+
+            $(document).off("click", "a.delivery", addProductToBasket);
+        }
+
+        if(showNotInStock)
+        {
+            $(document).off("click", "a.delivery", addProductToBasket);
+        }
+
+        if(canBeAddedToBasket)
+        {
+            $(document).off("click", "a.delivery", addProductToBasket);
+            $(document).on("click", "a.delivery", addProductToBasket);
+        }
+    }
+        
+</script>
+
+<!--Json array for the 360 images -->
+
+
+<div style="display: none" data-images='[]' id="source-images-360"></div>
+
+
+<div class="row productView productdetails">
+
+    
+
+<script>
+    var MODALSENDPDFID = "sendPdfModalContainer";
+
+    function LoadSendPdfModal() {
+        var url = '/Product/SendPdfModal?model=637609';
+        addModalMedium(MODALSENDPDFID, url);
+    }
+
+    
+        setupAjaxForm('PrintPDFForm');
+    
+
+</script>
+
+
+<div class="productdetails__header col-xs-24">
+    <div class="productdetails__header__main">
+
+        <span>Nissens part number 637609
+        </span>
+
+    </div>
+    <div class="productdetails__header__sub">
+
+        <span>
+            DACIA | LOGAN (2005) | 1.2 ,  Group: Radiator
+        </span>
+
+        <div class="productdetails__header__pdf">
+            
+            <div class="printpdf">
+                <div class="icon">
+                    <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="#444" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2.7909953 12.2777778H.5V3.41666667H15v8.86111113h-2.33288574M10.97222222 5.83333333h-.80555555" />
+                            <path d="M2.9166667 9.05555556V15.5h9.66666663V9.05555556zM2.9166667 1v2.38775635h9.66666663V1z" />
+                        </g>
+                    </svg>
+                </div>
+
+
+                <form action="/Product/PrintPDF" id="PrintPDFForm" method="post">
+                <div>
+                    <a href="#" onclick="$(this).closest('form').submit(); return false;">Print PDF</a>
+                </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+    <div class="productdetails__content col-xs-24">
+
+        <div class="row productdetails__content__rowwrap">
+
+            
+
+
+<div class="productdetails__images col-xs-24 col-lg-8">
+
+    
+
+    <div class="productdetails__images__icons row">
+
+        
+        <div class="col-xs-12">
+            <a target="_blank" href="https://nissens.com/radiator" title="The Difference">
+                <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=121639&amp;ps=Webshop_SheetLogo" alt="" />
+                <span>The Difference</span>
+            </a>
+        </div>
+
+        
+        <div class="col-xs-12">
+            <a target="_blank" href="https://support.nissens.com/search/radiator" title="Technical Support">
+                <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=121638&amp;ps=Webshop_SheetLogo" alt="" />
+                <span>Technical Support</span>
+            </a>
+        </div>
+
+        
+        <div class="col-xs-12">
+            <a target="_blank" href="https://support.nissens.com/material/radiator-replacement-in-an-internal-combustion-engine-vehicle-video" title="Radiator replacement - ICE vehicle">
+                <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=121637&amp;ps=Webshop_SheetLogo" alt="" />
+                <span>Radiator replacement - ICE vehicle</span>
+            </a>
+        </div>
+
+        
+        <div class="col-xs-12">
+            <a target="_blank" href="https://support.nissens.com/material/radiator-replacement-in-an-electric-car" title="Radiator replacement - electric car">
+                <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=121637&amp;ps=Webshop_SheetLogo" alt="" />
+                <span>Radiator replacement - electric car</span>
+            </a>
+        </div>
+
+        
+    </div>
+
+    
+
+    <div class="productdetails__images__images row">
+
+         
+           
+            <div class="ImageContainer col-xs-24">
+                
+                    <a href="https://customerportalmedia.nissens.com/fetchfile.aspx?id=34934&amp;ps=Webshop_Product_VeryLarge" 
+                        onclick="showProductInfoCore('637609', this); return false;" class=hoverImage>
+                        <img class="MainImage" src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=34934&amp;ps=Webshop_Product_VeryLarge" title="Zoom" data-index="0"/></a>
+                    
+
+                <a href="" 
+                    onclick="showProductInfoCore('637609', this); return false;"
+                    class="hoverImage360"
+                    id="hoverImage360">
+                    <img class="image360" id="image360" alt="" data-index="1"/>
+                </a>
+            </div>          
+
+            <div class="productdetails__images__clicktext col-xs-24">
+                
+                    <a href="https://customerportalmedia.nissens.com/fetchfile.aspx?id=34934&amp;ps=Webshop_Product_VeryLarge" onclick="showProductInfoCore('637609', 0); return false;">Click on image or icon to view larger version
+                    </a>
+                    
+            </div>
+
+            <div id="thumbNailContainer" class="thumbNailContainer">
+
+                
+                    <a onclick="selectImage(event, 'https://customerportalmedia.nissens.com/fetchfile.aspx?id=34934&amp;ps=Webshop_Product_Small','https://customerportalmedia.nissens.com/fetchfile.aspx?id=34934&amp;ps=Webshop_Product_VeryLarge', '0');" href="#">
+                    
+                            <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=34934&amp;ps=Webshop_Product_Small" alt="" class="thumbnail" />
+                   
+                    </a>
+                
+                    <a onclick="selectImage(event, 'https://customerportalmedia.nissens.com/fetchfile.aspx?id=39252&amp;ps=Webshop_Product_Small','https://customerportalmedia.nissens.com/fetchfile.aspx?id=39252&amp;ps=Webshop_Product_VeryLarge', '1');" href="#">
+                    
+                            <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=39252&amp;ps=Webshop_Product_Small" alt="" class="thumbnail" />
+                   
+                    </a>
+                
+                    <a onclick="selectImage(event, 'https://customerportalmedia.nissens.com/fetchfile.aspx?id=39253&amp;ps=Webshop_Product_Small','https://customerportalmedia.nissens.com/fetchfile.aspx?id=39253&amp;ps=Webshop_Product_VeryLarge', '2');" href="#">
+                    
+                            <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=39253&amp;ps=Webshop_Product_Small" alt="" class="thumbnail" />
+                   
+                    </a>
+                
+                    <a onclick="selectImage(event, 'https://customerportalmedia.nissens.com/fetchfile.aspx?id=39254&amp;ps=Webshop_Product_Small','https://customerportalmedia.nissens.com/fetchfile.aspx?id=39254&amp;ps=Webshop_Product_VeryLarge', '3');" href="#">
+                    
+                            <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=39254&amp;ps=Webshop_Product_Small" alt="" class="thumbnail" />
+                   
+                    </a>
+                
+                    <a onclick="selectImage(event, 'https://customerportalmedia.nissens.com/fetchfile.aspx?id=39255&amp;ps=Webshop_Product_Small','https://customerportalmedia.nissens.com/fetchfile.aspx?id=39255&amp;ps=Webshop_Product_VeryLarge', '4');" href="#">
+                    
+                            <img src="https://customerportalmedia.nissens.com/fetchfile.aspx?id=39255&amp;ps=Webshop_Product_Small" alt="" class="thumbnail" />
+                   
+                    </a>
+                
+            </div>
+
+        
+    </div>
+
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#oe_accordion').on('click', function (e) {
+            $('#otherOe').slideToggle();
+            $('#toggleOeNumbers').toggleClass('down').toggleClass('up');
+            $('#oe_accordion').toggleClass('open').toggleClass('closed');
+        });
+
+        $('#alt_accordion').on('click', function (e) {
+            $('#otherAlt').slideToggle();
+            $('#toggleAltNumbers').toggleClass('down').toggleClass('up');
+            $('#alt_accordion').toggleClass('open').toggleClass('closed');
+        });
+
+
+        $('#cars_accordion').on('click', function (e) {
+            $('#otherAllcar').slideToggle();
+            $('#toggleOeNumbers').toggleClass('down').toggleClass('up');
+            $('#cars_accordion').toggleClass('open').toggleClass('closed');
+        });
+    });
+
+</script>
+
+<div class="productdetails__info col-xs-24 col-lg-8">
+    <div class="productdetails__info__header">
+        Specifications
+    </div>
+
+    <div class="productdetails__info__info">
+
+        <ul>
+            <li>
+                <div class="type">Date:</div>
+                <div class="value">6/2009 -&gt; 12/2012</div>
+            </li>
+            
+            <li>
+                <div class="type">Product size (H x W x T):</div>
+                <div class="value">479 x 416 x 18 mm</div>
+            </li>
+            
+            <li>
+                <div class="type">Box size (L x W x H):</div>
+                <div class="value">785 x 500 x 120 mm</div>
+            </li>
+            
+            <li>
+                <div class="type">Gross weight:</div>
+                <div class="value">2.86 kg</div>
+            </li>
+            
+            <li>
+                <div class="type">Material:</div>
+                <div class="value">Mechanical aluminium</div>
+            </li>
+            
+            <li>
+                <div class="type">Driver side:</div>
+                <div class="value">For left-/right-hand vehicles</div>
+            </li>
+            
+            <li>
+                <div class="type">EAN:</div>
+                <div class="value">5707286322714</div>
+            </li>
+            
+            <li>
+                <div class="type">Transmission:</div>
+                <div class="value">Manual Transmission</div>
+            </li>
+            
+        </ul>
+
+    </div>
+
+
+    
+    <div class="productdetails__info__accordion">
+
+        <div class="fake-li closed" id="oe_accordion">
+            <div class="type OE">OE number</div>
+            <div class="fake-li--arrow">
+                <svg width="13" height="6" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0L6.5 5.5 1 0" stroke="#555" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+        </div>
+        <div id="otherOe" style="display:none;"><span class="value">8200735038</span><br /><span class="value">8660003459</span><br /></div>
+    </div>
+    
+</div>
+
+
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class="productdetails__addedtobasket" id="addToBasketContainer">
+    <div class="icon">
+        <svg width="46" height="46" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(1 1)" stroke="#FFF" fill="none" fill-rule="evenodd">
+                <circle cx="22" cy="22" r="22" />
+                <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M30 17L19.498077 27 14 22" />
+            </g>
+        </svg>
+    </div>
+    <div id="waitMessage" class="message">
+        Added to basket
+    </div>
+</div>
+
+
