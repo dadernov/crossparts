@@ -15,4 +15,28 @@ label { display:block; font-size:13px; font-weight:500; margin-bottom:8px; }inpu
 @media(max-width:1000px) { .workspace { padding:32px 25px; }.work-grid { grid-template-columns:1fr 1fr; }.search-panel,.batch-panel { padding:24px; }.search-bottom .primary { width:100%; }.job-row { grid-template-columns:minmax(0,1fr) 120px 125px; }.job-progress { grid-column:1; grid-row:2; }.job-actions { grid-column:3; grid-row:1 / 3; }.login-layout { gap:40px; }.edition { display:none; } }
 @media(max-width:700px) { .topbar { padding:16px 20px; min-height:72px; }.logo { font-size:22px; }.mark { width:32px; height:32px; font-size:20px; }.account { gap:12px; }.account>span { max-width:95px; }.workspace { padding:30px 20px 15px; }.page-heading { margin-bottom:26px; }.index-label { display:none; }h1 { letter-spacing:-1px; }.work-grid { grid-template-columns:1fr; }.batch-panel { border-left:0; border-top:1px solid var(--line); }.search-panel,.batch-panel { padding:22px; }.section-heading { gap:10px; }h2 { font-size:19px; }.upload-bottom>* { flex:1 1 100%; text-align:center; }.results-panel { padding:20px 16px; }.result-tools { flex-wrap:wrap; }.result-tools label { width:100%; }.result-tools input { max-width:none; }.result-tools select { width:100%; }.job-row { grid-template-columns:minmax(0,1fr) auto; gap:12px; }.job-row>.badge { grid-column:2; grid-row:1; }.job-actions { grid-column:2; grid-row:2; }.job-progress { min-width:0; }.job-actions a { font-size:12px; }footer { padding:20px; flex-direction:column; gap:8px; }.login-layout { display:block; padding:0 20px; margin:35px auto; max-width:500px; }.login-intro { display:none; }.login-card { padding:26px; } }
 .sr-only { left:0; top:0; }
+/* Reading scale: supporting text remains legible on tinted surfaces. */
+:root { --ink:#1e3028; --muted:#4f6056; }
+body { font-size:16px; line-height:1.6; }
+label, .checkbox, .field-help, .eyebrow, .badge,
+.job-date, .job-progress, .catalogues summary, .coverage-row strong,
+.text-button, .text-link, .copy-button, .notice, .count { font-size:14px; }
+.eyebrow { letter-spacing:.015em; }
+label, th { font-weight:600; }
+.primary, .secondary, .job-name, .dropzone strong { font-size:16px; }
+.dropzone>span:last-of-type { font-size:14px; }
+table { font-size:15px; line-height:1.65; }
+th { font-size:13px; color:var(--ink); background:#edf1e9; }
+code { font-size:16px; }
+tbody tr:hover { background:#f4f7ef; }
+.badge.neutral { color:#384e5d; }
+.login-intro h1 span { color:#596b49; }
+.result-tools { flex-wrap:wrap; }
+.section-heading>div { min-width:0; }
+.search-bottom .checkbox { flex:1 1 220px; }
+@media(max-width:700px) {
+  .job-actions a { font-size:14px; }
+  .results-panel>.section-heading { align-items:flex-start; flex-direction:column; }
+  .search-panel,.batch-panel { padding:20px; }
+}
 @media(prefers-reduced-motion:reduce) { * { transition:none!important; } }
