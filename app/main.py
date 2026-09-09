@@ -91,7 +91,7 @@ async def login(request: Request, username: str = Form(...), password: str = For
         request.session["username"] = account
         return RedirectResponse("/", status_code=303)
     return templates.TemplateResponse(request, "login.html",
-                                      {"error": "Неверный логин или пароль"}, status_code=401)
+                                      {"error": "Неверный логин или пароль", "username": username}, status_code=401)
 
 
 @app.post("/logout")
