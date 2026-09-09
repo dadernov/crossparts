@@ -4,7 +4,7 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import HTMLResponse, Response
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
@@ -14,11 +14,12 @@ from . import groups as product_groups
 from .aggregator import Aggregator
 from .config import get_settings
 from .db import SessionLocal, init_db
-from .excel import build_workbook, read_input
+from .excel import build_template, build_workbook, read_input
 from .jobs import JobRunner
 from .models import Job, JobItem
 from .schemas import JobCreate, JobOut, LookupRequest
-from .security import require_tenant
+from .security import authenticate, require_tenant
+from .session import SignedSessionMiddleware
 from .sources.registry import SourceRegistry
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
@@ -44,6 +45,7 @@ app = FastAPI(
     description="B2B-сервис: по оригинальному номеру собирает кросс-номера из каталогов-источников.",
     lifespan=lifespan,
 )
+app.add_middleware(SignedSessionMiddleware, secret_key=settings.session_secret)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
@@ -65,10 +67,45 @@ def _job_out(job: Job) -> JobOut:
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
+    if not request.session.get("username"):
+        return RedirectResponse("/login", status_code=303)
     return templates.TemplateResponse(
         request,
-        "index.html",
-        {"sources": registry.describe(), "settings": settings},
+        "index.html", {"sources": registry.describe(), "settings": settings,
+                        "username": request.session["username"]},
+    )
+
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request):
+    if request.session.get("username"):
+        return RedirectResponse("/", status_code=303)
+    return templates.TemplateResponse(request, "login.html", {"error": None})
+
+
+@app.post("/login", response_class=HTMLResponse)
+async def login(request: Request, username: str = Form(...), password: str = Form(...)):
+    account = await authenticate(SessionLocal, username, password)
+    if account:
+        request.session.clear()
+        request.session["username"] = account
+        return RedirectResponse("/", status_code=303)
+    return templates.TemplateResponse(request, "login.html",
+                                      {"error": "Неверный логин или пароль"}, status_code=401)
+
+
+@app.post("/logout")
+async def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse("/login", status_code=303)
+
+
+@app.get("/template.xlsx")
+async def download_template(tenant: str = Depends(require_tenant)):
+    return Response(
+        content=build_template(),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": 'attachment; filename="crossparts-template.xlsx"'},
     )
 
 
@@ -139,6 +176,7 @@ async def _create_job(items, sources, tenant, filename) -> JobOut:
                     job_id=job.id,
                     position=pos,
                     our_sku=item.get("our_sku", ""),
+                    part_name=item.get("part_name", ""),
                     oe_number=item["oe_number"],
                     group=item.get("group") or product_groups.resolve(raw),
                     group_raw=raw or None,
@@ -183,6 +221,7 @@ async def get_job(job_id: str, tenant: str = Depends(require_tenant)):
         "items": [
             {
                 "our_sku": i.our_sku,
+                "part_name": i.part_name,
                 "oe_number": i.oe_number,
                 "group": i.group,
                 "group_title": product_groups.title(i.group) if i.group else (i.group_raw or "—"),
@@ -203,6 +242,7 @@ async def job_results(job_id: str, format: str = "long", tenant: str = Depends(r
             "rows": [
                 {
                     "our_sku": i.our_sku,
+                    "part_name": i.part_name,
                     "group": i.group,
                     "oe_number": i.oe_number,
                     "crosses": _unique_numbers(i.crosses or []),
@@ -215,6 +255,7 @@ async def job_results(job_id: str, format: str = "long", tenant: str = Depends(r
         for c in i.crosses or []:
             rows.append({
                 "our_sku": i.our_sku,
+                "part_name": i.part_name,
                 "group": i.group,
                 "oe_number": i.oe_number,
                 "brand": c["brand"],
@@ -231,6 +272,7 @@ async def job_export(job_id: str, tenant: str = Depends(require_tenant)):
     payload = [
         {
             "our_sku": i.our_sku,
+            "part_name": i.part_name,
             "oe_number": i.oe_number,
             "group": i.group,
             "group_raw": i.group_raw,

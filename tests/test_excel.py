@@ -65,14 +65,14 @@ def test_build_workbook_layout():
     wb = load_workbook(io.BytesIO(blob))
     assert wb.sheetnames[:3] == ["Вариант 1", "Вариант 2", "Отчёт"]
     v1 = list(wb["Вариант 1"].iter_rows(values_only=True))
-    assert v1[0][:5] == ("Наш артикул", "Товарная группа", "Номер ОЕ (запрос)",
-                         "Бренд", "Номер кросса")
-    assert v1[1][:5] == ("BPF159CG", "Тормозные колодки", "58101H5A25",
-                         "HYUNDAI", "58101-H5A25")
+    assert v1[0][:6] == ("Наш артикул", "Наименование детали", "Товарная группа",
+                          "Номер ОЕ (запрос)", "Бренд", "Номер кросса")
+    assert v1[1][:6] == ("BPF159CG", None, "Тормозные колодки", "58101H5A25",
+                          "HYUNDAI", "58101-H5A25")
     v2 = list(wb["Вариант 2"].iter_rows(values_only=True))
-    assert v2[1][1] == "Тормозные колодки"
-    assert v2[1][3] == 2
-    assert v2[1][4] == "58101-H5A25, PN0537"
+    assert v2[1][2] == "Тормозные колодки"
+    assert v2[1][4] == 2
+    assert v2[1][5] == "58101-H5A25, PN0537"
 
 
 def test_unrecognised_group_is_shown_as_sent():
@@ -85,4 +85,4 @@ def test_unrecognised_group_is_shown_as_sent():
         "source_reports": [],
     }])
     wb = load_workbook(io.BytesIO(blob))
-    assert list(wb["Вариант 2"].iter_rows(values_only=True))[1][1] == "Свечи зажигания"
+    assert list(wb["Вариант 2"].iter_rows(values_only=True))[1][2] == "Свечи зажигания"

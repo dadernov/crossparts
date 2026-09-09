@@ -13,6 +13,7 @@ class LookupRequest(BaseModel):
 
 class JobItemIn(BaseModel):
     our_sku: str = ""
+    part_name: str = ""
     oe_number: str
     group: str | None = None
 

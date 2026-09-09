@@ -34,6 +34,7 @@ def test_reads_three_column_file_with_groups():
     assert len(items) == 14
     assert items[0] == {
         "our_sku": "BPF159CG",
+        "part_name": "",
         "oe_number": "58101H5A25",
         "group_raw": "Тормозные колодки NEW",
         "group": "brake_pads",

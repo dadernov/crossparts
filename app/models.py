@@ -49,6 +49,7 @@ class JobItem(Base):
     job_id: Mapped[str] = mapped_column(ForeignKey("jobs.id", ondelete="CASCADE"), index=True)
     position: Mapped[int] = mapped_column(Integer, default=0)
     our_sku: Mapped[str] = mapped_column(String(128), default="")
+    part_name: Mapped[str] = mapped_column(String(255), default="")
     oe_number: Mapped[str] = mapped_column(String(128), default="")
     #: Ключ товарной группы (app.groups) и исходный текст из файла заказчика.
     group: Mapped[str | None] = mapped_column(String(32), nullable=True)
@@ -74,3 +75,13 @@ class CacheEntry(Base):
 
 
 Index("ix_cache_source_oe", CacheEntry.source, CacheEntry.oe_key, unique=True)
+
+
+class Account(Base):
+    """A client account. Its login is also the isolated tenant identifier."""
+
+    __tablename__ = "accounts"
+
+    username: Mapped[str] = mapped_column(String(64), primary_key=True)
+    password_hash: Mapped[str] = mapped_column(String(256))
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

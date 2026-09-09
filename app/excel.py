@@ -20,6 +20,7 @@ from .normalize import KIND_AFTERMARKET, KIND_OEM, clean_number
 SKU_HEADERS = ("наш артикул", "артикул", "our sku", "sku")
 OE_HEADERS = ("номер ое", "номер оe", "оригинальный номер", "oe", "oem", "номер для парсинга")
 GROUP_HEADERS = ("тормозная группа", "товарная группа", "группа", "product group")
+NAME_HEADERS = ("наименование детали", "наименование", "название детали", "название", "part name")
 
 _HEADER_HINT = re.compile(r"артикул|номер|sku|oe|oem", re.IGNORECASE)
 
@@ -40,7 +41,7 @@ def read_input(data: bytes) -> list[dict]:
     rows = [list(r) for r in ws.iter_rows(values_only=True)]
     wb.close()
 
-    sku_col, oe_col, group_col, start = 0, 1, None, 0
+    sku_col, oe_col, group_col, name_col, start = 0, 1, None, None, 0
     for idx, row in enumerate(rows[:30]):
         headers = [_norm_header(c) for c in row]
         found_sku = next((i for i, h in enumerate(headers)
@@ -49,9 +50,12 @@ def read_input(data: bytes) -> list[dict]:
                          if h and any(p in h for p in OE_HEADERS)), None)
         found_group = next((i for i, h in enumerate(headers)
                             if h and any(p in h for p in GROUP_HEADERS)), None)
+        found_name = next((i for i, h in enumerate(headers)
+                           if h and any(p in h for p in NAME_HEADERS)), None)
         if found_sku is not None and found_oe is not None and found_sku != found_oe:
             sku_col, oe_col, start = found_sku, found_oe, idx + 1
             group_col = found_group if found_group not in (found_sku, found_oe) else None
+            name_col = found_name if found_name not in (found_sku, found_oe) else None
             break
 
     items: list[dict] = []
@@ -61,8 +65,11 @@ def read_input(data: bytes) -> list[dict]:
         sku = clean_number(str(row[sku_col])) if len(row) > sku_col and row[sku_col] else ""
         oe = clean_number(str(row[oe_col])) if len(row) > oe_col and row[oe_col] else ""
         group_raw = ""
+        part_name = ""
         if group_col is not None and len(row) > group_col and row[group_col]:
             group_raw = str(row[group_col]).strip()
+        if name_col is not None and len(row) > name_col and row[name_col]:
+            part_name = str(row[name_col]).strip()
         if not oe:
             # Stop at the first gap after data started — the client's sheet keeps
             # unrelated blocks (site list, output samples) below the input table.
@@ -73,6 +80,7 @@ def read_input(data: bytes) -> list[dict]:
             continue
         items.append({
             "our_sku": sku,
+            "part_name": part_name,
             "oe_number": oe,
             "group_raw": group_raw,
             "group": product_groups.resolve(group_raw),
@@ -100,14 +108,15 @@ def build_workbook(items: list[dict], meta: dict | None = None) -> bytes:
 
     ws1 = wb.active
     ws1.title = "Вариант 1"
-    ws1.append(["Наш артикул", "Товарная группа", "Номер ОЕ (запрос)",
+    ws1.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ (запрос)",
                 "Бренд", "Номер кросса", "Тип", "Источники"])
-    _style_header(ws1, {1: 18, 2: 24, 3: 20, 4: 24, 5: 26, 6: 14, 7: 22})
+    _style_header(ws1, {1: 18, 2: 34, 3: 24, 4: 20, 5: 24, 6: 26, 7: 14, 8: 22})
     kind_ru = {KIND_OEM: "OEM", KIND_AFTERMARKET: "Афтермаркет", "standard": "Стандарт"}
     for item in items:
         for cross in item.get("crosses", []):
             ws1.append([
                 item.get("our_sku", ""),
+                item.get("part_name", ""),
                 _group_title(item),
                 item.get("oe_number", ""),
                 cross["brand"],
@@ -117,12 +126,13 @@ def build_workbook(items: list[dict], meta: dict | None = None) -> bytes:
             ])
 
     ws2 = wb.create_sheet("Вариант 2")
-    ws2.append(["Наш артикул", "Товарная группа", "Номер ОЕ (запрос)", "Кол-во", "Все кроссы"])
-    _style_header(ws2, {1: 18, 2: 24, 3: 20, 4: 10, 5: 160})
+    ws2.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ (запрос)", "Кол-во", "Все кроссы"])
+    _style_header(ws2, {1: 18, 2: 34, 3: 24, 4: 20, 5: 10, 6: 160})
     for item in items:
         numbers = _unique(item.get("crosses", []))
         ws2.append([
             item.get("our_sku", ""),
+            item.get("part_name", ""),
             _group_title(item),
             item.get("oe_number", ""),
             len(numbers),
@@ -130,9 +140,9 @@ def build_workbook(items: list[dict], meta: dict | None = None) -> bytes:
         ])
 
     ws3 = wb.create_sheet("Отчёт")
-    ws3.append(["Наш артикул", "Товарная группа", "Номер ОЕ", "Статус",
+    ws3.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ", "Статус",
                 "Всего кроссов", "По источникам", "Комментарии"])
-    _style_header(ws3, {1: 18, 2: 24, 3: 20, 4: 14, 5: 16, 6: 40, 7: 70})
+    _style_header(ws3, {1: 18, 2: 34, 3: 24, 4: 20, 5: 14, 6: 16, 7: 40, 8: 70})
     for item in items:
         reports = item.get("source_reports", [])
         per_source = ", ".join(
@@ -144,6 +154,7 @@ def build_workbook(items: list[dict], meta: dict | None = None) -> bytes:
         )
         ws3.append([
             item.get("our_sku", ""),
+            item.get("part_name", ""),
             _group_title(item),
             item.get("oe_number", ""),
             item.get("status", ""),
@@ -182,3 +193,21 @@ def _unique(crosses: list[dict]) -> list[str]:
             seen.add(k)
             out.append(c["number"])
     return out
+
+
+def build_template() -> bytes:
+    """A ready-to-fill client workbook, not merely a format description."""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Загрузить этот лист"
+    ws.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ"])
+    _style_header(ws, {1: 20, 2: 38, 3: 28, 4: 24})
+    ws.append(["BPF159CG", "Колодки тормозные передние", "Тормозные колодки", "58101H5A25"])
+    ws.append(["", "", "", ""])
+    ws.append(["Заполните строки ниже. Обязателен только «Номер ОЕ»; наименование детали поможет не перепутать позиции в результате."])
+    ws.merge_cells("A4:D4")
+    ws["A4"].alignment = Alignment(wrap_text=True)
+    ws["A4"].font = Font(italic=True, color="6B7280")
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue()

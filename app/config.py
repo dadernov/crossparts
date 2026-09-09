@@ -17,6 +17,11 @@ class Settings(BaseSettings):
 
     # "key:tenant,key2:tenant2". Empty string disables authentication (dev mode).
     api_keys: str = "demo-key:Demo"
+    # Клиентские учётные записи для MVP: "login:password,login2:password2".
+    # При первом запуске создана учётная запись admin / changeme — обязательно
+    # поменяйте её через CP_USERS в production.
+    users: str = "admin:changeme"
+    session_secret: str = "change-this-crossparts-session-secret"
 
     source_timeout: int = 45
     job_concurrency: int = 4
@@ -36,7 +41,9 @@ class Settings(BaseSettings):
     # Требует установленного Chromium (python3 -m playwright install chromium).
     browser_fallback: bool = True
     # Sources active by default when a request does not name any explicitly.
-    enabled_sources: str = "sbparts,brembo"
+    enabled_sources: str = (
+        "sbparts,brembo,trialli,brixo,luzar,nissens,kyb,hola,brannor,hel"
+    )
 
     @property
     def api_key_map(self) -> dict[str, str]:
@@ -47,6 +54,15 @@ class Settings(BaseSettings):
                 continue
             key, _, tenant = chunk.partition(":")
             out[key.strip()] = tenant.strip() or "default"
+        return out
+
+    @property
+    def user_map(self) -> dict[str, str]:
+        out: dict[str, str] = {}
+        for chunk in self.users.split(","):
+            login, sep, password = chunk.strip().partition(":")
+            if login and sep and password:
+                out[login.strip().lower()] = password
         return out
 
     @property
