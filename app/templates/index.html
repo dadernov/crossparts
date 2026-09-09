@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Поиск — CrossParts</title><meta name="theme-color" content="#f7f8f4"><link rel="icon" href="/static/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/static/style.css?v=onest-mobile-5"></head>
-<body><a class="skip" href="#main">К содержимому</a>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Поиск — CrossParts</title><meta name="theme-color" content="#f7f8f4"><link rel="icon" href="/static/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/static/style.css?v=workspace-6"></head>
+<body class="main-page"><a class="skip" href="#main">К содержимому</a>
 <header class="topbar"><a class="logo" href="/"><span class="mark" aria-hidden="true">cp</span>crossparts</a><div class="account"><span>{{ username }}</span><form action="/logout" method="post"><button class="text-button">Выйти</button></form></div></header>
 <main id="main" class="workspace">
-<div class="page-heading"><div><h1>Поиск кросс-номеров</h1></div><div class="quota" id="quota" aria-live="polite"><span>Поисков осталось</span><strong>…</strong></div></div>
+<div class="page-heading"><div><h1>Поиск <span>кросс-номеров</span></h1></div><div class="quota" id="quota" aria-live="polite"><span>Поисков осталось</span><strong>…</strong></div></div>
 <div class="work-grid">
 <section class="search-panel" aria-labelledby="search-title"><div class="section-heading"><h2 id="search-title">По оригинальному номеру</h2><span class="section-index">01</span></div>
 <form id="lookup-form"><label for="oe">Номер OE / OEM</label><div class="number-field"><input id="oe" required minlength="2" maxlength="128" placeholder="58101H5A25" autocomplete="off" spellcheck="false"><span aria-hidden="true">↗</span></div><label for="group">Товарная группа</label><select id="group"><option value="">Все группы</option></select><div class="search-bottom"><button id="btn-lookup" class="primary" type="submit">Найти кроссы →</button></div></form><p id="lookup-status" class="notice" role="status"></p></section>
