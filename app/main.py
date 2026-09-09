@@ -17,6 +17,7 @@ from .db import SessionLocal, init_db
 from .excel import build_template, build_workbook, read_input
 from .jobs import JobRunner
 from .models import Job, JobItem
+from .quota import quota_status, reserve_queries
 from .schemas import JobCreate, JobOut, LookupRequest
 from .security import authenticate, require_tenant
 from .session import SignedSessionMiddleware
@@ -127,11 +128,19 @@ async def list_groups(tenant: str = Depends(require_tenant)):
     return {"groups": registry.coverage()}
 
 
+@app.get("/api/v1/account")
+async def account_status(tenant: str = Depends(require_tenant)):
+    """The remaining search positions for the signed-in client."""
+    return await quota_status(SessionLocal, tenant, settings.requests_per_account)
+
+
 @app.post("/api/v1/lookup")
 async def lookup(req: LookupRequest, tenant: str = Depends(require_tenant)):
     """Single OE number, answered synchronously."""
     group = product_groups.resolve(req.group) if req.group else None
-    return await aggregator.lookup(req.oe, req.sources, use_cache=not req.fresh, group=group)
+    await reserve_queries(SessionLocal, tenant, 1, settings.requests_per_account)
+    # Every lookup must query catalogues live; cached answers are intentionally off.
+    return await aggregator.lookup(req.oe, req.sources, use_cache=False, group=group)
 
 
 @app.post("/api/v1/jobs", response_model=JobOut)
@@ -165,6 +174,7 @@ async def _create_job(items, sources, tenant, filename) -> JobOut:
     chosen = [s.key for s in registry.resolve(sources)]
     if not chosen:
         raise HTTPException(400, "Не выбран ни один известный источник")
+    await reserve_queries(SessionLocal, tenant, len(items), settings.requests_per_account)
     async with SessionLocal() as session:
         job = Job(tenant=tenant, sources=chosen, total=len(items), filename=filename)
         session.add(job)

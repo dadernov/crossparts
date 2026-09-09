@@ -29,6 +29,11 @@ async def init_db() -> None:
                 await conn.exec_driver_sql(
                     "ALTER TABLE job_items ADD COLUMN part_name VARCHAR(255) NOT NULL DEFAULT ''"
                 )
+            account_columns = (await conn.exec_driver_sql("PRAGMA table_info(accounts)")).all()
+            if "queries_used" not in {column[1] for column in account_columns}:
+                await conn.exec_driver_sql(
+                    "ALTER TABLE accounts ADD COLUMN queries_used INTEGER NOT NULL DEFAULT 0"
+                )
     async with SessionLocal() as session:
         for username, password in _settings.user_map.items():
             if await session.get(Account, username) is None:

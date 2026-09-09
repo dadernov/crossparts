@@ -23,7 +23,7 @@ async function api(path, options = {}) {
   if (!response.ok) {
     const messages = {413: 'Файл слишком большой. Максимум — 20 МБ.', 422: 'Проверьте заполнение полей и формат номера.', 429: 'Слишком много запросов. Подождите минуту и повторите.'};
     let detail;
-    if (response.status === 400) { try { detail = (await response.json()).detail; } catch (_) { /* generic fallback */ } }
+    if ([400, 429].includes(response.status)) { try { detail = (await response.json()).detail; } catch (_) { /* generic fallback */ } }
     throw new Error(messages[response.status] || (typeof detail === 'string' ? detail : 'Сервис временно недоступен. Повторите позже.'));
   }
   return response.json();
@@ -35,7 +35,7 @@ async function loadGroups() {
     const [coverage, sources] = await Promise.all([api('/api/v1/groups'), api('/api/v1/sources')]);
     state.sources = new Map(sources.sources.map(source => [source.key, source]));
     const selected = $('#group').value;
-    $('#group').replaceChildren(new Option('Все подключённые группы', ''));
+    $('#group').replaceChildren(new Option('Все группы', ''));
     $('#coverage').replaceChildren();
     for (const group of coverage.groups) {
       $('#group').append(new Option(group.title, group.group));
@@ -55,6 +55,13 @@ async function loadGroups() {
 }
 $('#retry-groups').onclick = loadGroups;
 
+async function loadQuota() {
+  try {
+    const quota = await api('/api/v1/account');
+    $('#quota').replaceChildren(el('span', 'Поисков осталось'), el('strong', `${quota.remaining} из ${quota.limit}`));
+  } catch (_) { $('#quota').hidden = true; }
+}
+
 $('#lookup-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   if (state.busy) return;
@@ -68,9 +75,10 @@ $('#lookup-form').addEventListener('submit', async (event) => {
   notice('#lookup-status', 'Проверяем каталоги. Ответ может занять около минуты.');
   const groupTitle = $('#group').selectedOptions[0].textContent;
   try {
-    const data = await api('/api/v1/lookup', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({oe, group: $('#group').value || null, fresh: $('#fresh').checked})});
+    const data = await api('/api/v1/lookup', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({oe, group: $('#group').value || null})});
     renderLookup(data, groupTitle);
-    notice('#lookup-status', 'Проверка завершена. Результаты и статусы каталогов — ниже.');
+    loadQuota();
+    notice('#lookup-status');
   } catch (error) { notice('#lookup-status', error.message, true); }
   finally { state.busy = false; $('#btn-lookup').disabled = false; $('#btn-lookup').textContent = 'Найти кроссы →'; $('#lookup-form').removeAttribute('aria-busy'); }
 });
@@ -145,6 +153,7 @@ $('#upload-form').addEventListener('submit', async event => {
     notice('#job-out', `Задание создано: ${file.name}. Позиций: ${job.total}. Статус и результат — в истории ниже.`);
     state.file = null; $('#file').value = ''; $('#file-title').textContent = 'Выберите следующий файл'; $('#file-info').textContent = 'XLSX · до 20 МБ';
     await refreshJobs();
+    loadQuota();
   } catch (error) { notice('#job-out', `${error.message} Перед повторной отправкой проверьте историю заданий.`, true); }
   finally { state.uploading = false; $('#btn-upload').disabled = false; $('#file').disabled = false; $('#btn-upload').textContent = 'Обработать файл →'; }
 });
@@ -179,7 +188,7 @@ async function refreshJobs() {
       state.jobsJSON = serialized;
     }
     $('#more-jobs').hidden = jobs.length < state.limit;
-    $('#history-status').textContent = 'Обработано — не обязательно найдено. Проверяйте итоги в деталях задания.';
+    $('#history-status').textContent = '';
   } catch (error) { $('#history-status').textContent = `${error.message} История может быть неактуальна. Нажмите «Обновить».`; }
   finally { state.jobsBusy = false; $('#refresh-jobs').disabled = false; }
 }
@@ -206,4 +215,4 @@ $('#refresh-jobs').onclick = refreshJobs;
 $('#more-jobs').onclick = () => { state.limit += 20; refreshJobs(); };
 async function poll() { if (!document.hidden) await refreshJobs(); setTimeout(poll, state.active ? 5000 : 30000); }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshJobs(); });
-loadGroups(); poll();
+loadGroups(); loadQuota(); poll();

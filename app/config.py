@@ -18,10 +18,11 @@ class Settings(BaseSettings):
     # "key:tenant,key2:tenant2". Empty string disables authentication (dev mode).
     api_keys: str = "demo-key:Demo"
     # Клиентские учётные записи для MVP: "login:password,login2:password2".
-    # При первом запуске создана учётная запись admin / changeme — обязательно
-    # поменяйте её через CP_USERS в production.
-    users: str = "admin:changeme"
+    # Учётные записи выдаются администратором. Тестовая: 0 / 0.
+    users: str = "0:0"
     session_secret: str = "change-this-crossparts-session-secret"
+    # Лимит именно поисковых позиций (один OE-номер = одна позиция), на аккаунт.
+    requests_per_account: int = 1000
 
     source_timeout: int = 45
     job_concurrency: int = 4
