@@ -58,6 +58,19 @@ tbody tr:hover { background:#f4f7ef; }
 @media(prefers-reduced-motion:reduce) { * { transition:none!important; } }
 
 /* A single, keyboard-accessible category picker. Native fallback on mobile. */
+input#username, input#password, input#oe {
+  border: 1px solid transparent;
+  border-bottom-color: #c9d2ca;
+  border-radius: 5px 5px 0 0;
+  background: #f3f5f0;
+  box-shadow: none;
+}
+input#username:focus, input#password:focus, input#oe:focus {
+  outline: none;
+  border-bottom-color: #305a45;
+  box-shadow: inset 0 -1px #305a45;
+  background: #eef2e9;
+}
 select {
   appearance: none;
   padding-right: 44px;
