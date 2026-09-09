@@ -367,7 +367,8 @@ app/
 ## 6. Тесты
 
 ```bash
-python3 -m pytest tests -q          # юнит-тесты
+python3 -m playwright install --with-deps chromium webkit  # браузерные проверки UI
+python3 -m pytest tests -q          # Python + UI в Chromium и WebKit
 CP_LIVE=1 python3 -m pytest tests -q  # + живые запросы к sbparts и brembo
 ```
 

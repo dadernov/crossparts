@@ -1,11 +1,13 @@
 """Browser regressions using real templates/assets and isolated API responses."""
 from pathlib import Path
+import pytest
 
 from jinja2 import Environment, FileSystemLoader
 from playwright.sync_api import sync_playwright
 
 
-def test_frontend_states_and_layout():
+@pytest.mark.parametrize('browser_name', ['chromium', 'webkit'])
+def test_frontend_states_and_layout(browser_name):
     env = Environment(loader=FileSystemLoader('app/templates'), autoescape=True)
     attack = '<img src=x onerror="window.auditXss=1">'
     job = dict(id='test', filename=attack, status='failed', total=10, done=4,
@@ -15,7 +17,7 @@ def test_frontend_states_and_layout():
     calls = {'lookup': 0, 'upload': 0}
     failures = {'jobs': False, 'lookup': False}
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = getattr(p, browser_name).launch()
         page = browser.new_page(viewport={'width': 1440, 'height': 1000})
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
@@ -30,6 +32,8 @@ def test_frontend_states_and_layout():
                 r.fulfill(json={'groups': [{'title': 'Тормозные колодки', 'group': 'brake_pads'}]})
             elif path == '/api/v1/sources':
                 r.fulfill(json={'sources': [dict(key='brembo', title='Brembo', groups=['brake_pads'])], 'default': ['brembo']})
+            elif path == '/api/v1/account':
+                r.fulfill(json={'remaining': 1000, 'limit': 1000})
             elif path.startswith('/api/v1/jobs?'):
                 if failures['jobs']:
                     r.fulfill(status=500, body='<html>Internal error</html>')
@@ -55,6 +59,12 @@ def test_frontend_states_and_layout():
         page.wait_for_selector('.job-row')
         assert page.locator('#theme-picker, .theme-button, .theme-icon').count() == 0
         page.evaluate('document.fonts.ready')
+        page.wait_for_function('document.querySelector("#quota").textContent.includes("1000")')
+        page.set_viewport_size({'width': 390, 'height': 650})
+        assert page.locator('#btn-lookup').bounding_box()['y'] + page.locator('#btn-lookup').bounding_box()['height'] < 600
+        assert page.locator('#quota').bounding_box()['y'] >= page.locator('h1').bounding_box()['y'] + page.locator('h1').bounding_box()['height']
+        page.screenshot(path=f'out/mobile-first-screen-{browser_name}.png')
+        page.set_viewport_size({'width': 1440, 'height': 1000})
         assert 'Ошибка задания' in page.locator('#jobs').inner_text()
         assert page.locator('#jobs img').count() == 0
         page.locator('#oe').fill('58101H5A25')
@@ -113,7 +123,7 @@ def test_frontend_states_and_layout():
                 page.screenshot(path=f'out/redesign-{width}.png', full_page=True)
         assert page.locator('#group').evaluate('(e)=>getComputedStyle(e).fontSize') == '16px'
         assert page.locator('#oe').evaluate('(e)=>e.labels.length') == 1
-        assert page.evaluate('document.fonts.check("16px Golos")')
+        assert page.evaluate('document.fonts.check("16px Onest")')
         page.goto('http://audit.local/login')
         page.locator('#show-password').check()
         assert page.locator('#password').get_attribute('type') == 'text'
