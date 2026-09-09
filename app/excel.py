@@ -52,7 +52,7 @@ def read_input(data: bytes) -> list[dict]:
                             if h and any(p in h for p in GROUP_HEADERS)), None)
         found_name = next((i for i, h in enumerate(headers)
                            if h and any(p in h for p in NAME_HEADERS)), None)
-        if found_sku is not None and found_oe is not None and found_sku != found_oe:
+        if found_oe is not None and found_sku != found_oe:
             sku_col, oe_col, start = found_sku, found_oe, idx + 1
             group_col = found_group if found_group not in (found_sku, found_oe) else None
             name_col = found_name if found_name not in (found_sku, found_oe) else None
@@ -62,7 +62,7 @@ def read_input(data: bytes) -> list[dict]:
     for row in rows[start:]:
         if not row:
             continue
-        sku = clean_number(str(row[sku_col])) if len(row) > sku_col and row[sku_col] else ""
+        sku = clean_number(str(row[sku_col])) if sku_col is not None and len(row) > sku_col and row[sku_col] else ""
         oe = clean_number(str(row[oe_col])) if len(row) > oe_col and row[oe_col] else ""
         group_raw = ""
         part_name = ""
@@ -73,7 +73,7 @@ def read_input(data: bytes) -> list[dict]:
         if not oe:
             # Stop at the first gap after data started — the client's sheet keeps
             # unrelated blocks (site list, output samples) below the input table.
-            if items:
+            if items and ws.title != "Загрузить этот лист":
                 break
             continue
         if _HEADER_HINT.search(oe) and not any(ch.isdigit() for ch in oe):
@@ -202,12 +202,12 @@ def build_template() -> bytes:
     ws.title = "Загрузить этот лист"
     ws.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ"])
     _style_header(ws, {1: 20, 2: 38, 3: 28, 4: 24})
-    ws.append(["BPF159CG", "Колодки тормозные передние", "Тормозные колодки", "58101H5A25"])
-    ws.append(["", "", "", ""])
-    ws.append(["Заполните строки ниже. Обязателен только «Номер ОЕ»; наименование детали поможет не перепутать позиции в результате."])
-    ws.merge_cells("A4:D4")
-    ws["A4"].alignment = Alignment(wrap_text=True)
-    ws["A4"].font = Font(italic=True, color="6B7280")
+    instructions = wb.create_sheet("Инструкция")
+    instructions.append(["Заполните первый лист со второй строки. Обязателен только «Номер ОЕ»."])
+    instructions.append(["Пример (не участвует в обработке):"])
+    instructions.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ"])
+    instructions.append(["BPF159CG", "Колодки тормозные передние", "Тормозные колодки", "58101H5A25"])
+    instructions.column_dimensions["A"].width = 85
     buf = io.BytesIO()
     wb.save(buf)
     return buf.getvalue()

@@ -4,7 +4,27 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 import io
 from openpyxl import Workbook, load_workbook
 
-from app.excel import build_workbook, read_input
+from app.excel import build_template, build_workbook, read_input
+
+
+def test_oe_only_column():
+    items = read_input(_sheet([["Номер ОЕ"], ["58101H5A25"]]))
+    assert len(items) == 1
+    assert items[0]['oe_number'] == '58101H5A25'
+    assert items[0]['our_sku'] == ''
+
+
+def test_template_has_no_sample_data_and_preserves_gaps():
+    assert read_input(build_template()) == []
+    workbook = load_workbook(io.BytesIO(build_template()))
+    workbook.active.append(['A', 'Деталь', '', '111222'])
+    workbook.active.append([])
+    workbook.active.append(['B', 'Другая деталь', '', '333444'])
+    buffer = io.BytesIO()
+    workbook.save(buffer)
+    items = read_input(buffer.getvalue())
+    assert [item['oe_number'] for item in items] == ['111222', '333444']
+    assert items[1]['part_name'] == 'Другая деталь'
 
 SAMPLE = pathlib.Path("/root/Тест - парсинг кроссов.xlsx")
 
