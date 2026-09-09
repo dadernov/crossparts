@@ -23,7 +23,7 @@ def test_frontend_states_and_layout():
         def route(r):
             path = r.request.url.split('http://audit.local')[-1]
             if path.startswith('/static/'):
-                file = Path('app' + path)
+                file = Path('app' + path.split('?', 1)[0])
                 mime = {'.css': 'text/css', '.js': 'application/javascript', '.ttf': 'font/ttf'}[file.suffix]
                 r.fulfill(body=file.read_bytes(), content_type=mime)
             elif path == '/api/v1/groups':
