@@ -88,6 +88,11 @@ select:hover { border-color: var(--green); background-color: #f8faf5; }
 .search-bottom { justify-content: flex-end; }
 .page-heading h1 { margin-bottom: 0; }
 #history-status:empty { display: none; }
+
+
+.live-search { color:#3d7357; font-size:13px; }
+@media(max-width:700px) { .search-bottom { align-items:stretch; }.live-search { display:flex; align-items:center; font-size:12px; } }
+@media(max-width:430px) { .live-search { justify-content:center; }.primary { width:100%; min-height:50px; } }
 @supports (appearance: base-select) {
   select, select::picker(select) { appearance: base-select; }
   select { background-image: none; padding-right: 14px; align-items: center; }

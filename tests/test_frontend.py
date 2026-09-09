@@ -53,6 +53,7 @@ def test_frontend_states_and_layout():
         page.route('**/*', route)
         page.goto('http://audit.local/')
         page.wait_for_selector('.job-row')
+        assert page.locator('#theme-picker, .theme-button, .theme-icon').count() == 0
         page.evaluate('document.fonts.ready')
         assert 'Ошибка задания' in page.locator('#jobs').inner_text()
         assert page.locator('#jobs img').count() == 0
