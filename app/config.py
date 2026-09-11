@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     session_secret: str = "change-this-crossparts-session-secret"
     # Лимит именно поисковых позиций (один OE-номер = одна позиция), на аккаунт.
     requests_per_account: int = 1000
+    # Passwordless demo accounts created from the start page.
+    trial_requests: int = 10
+    # First column of the customer's export format.
+    output_brand: str = "GERAT"
 
     source_timeout: int = 45
     job_concurrency: int = 4

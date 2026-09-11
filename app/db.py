@@ -34,10 +34,16 @@ async def init_db() -> None:
                 await conn.exec_driver_sql(
                     "ALTER TABLE accounts ADD COLUMN queries_used INTEGER NOT NULL DEFAULT 0"
                 )
+            if "queries_limit" not in {column[1] for column in account_columns}:
+                await conn.exec_driver_sql(
+                    "ALTER TABLE accounts ADD COLUMN queries_limit INTEGER NOT NULL "
+                    f"DEFAULT {max(1, _settings.requests_per_account)}"
+                )
     async with SessionLocal() as session:
         for username, password in _settings.user_map.items():
             if await session.get(Account, username) is None:
-                session.add(Account(username=username, password_hash=hash_password(password)))
+                session.add(Account(username=username, password_hash=hash_password(password),
+                                    queries_limit=_settings.requests_per_account))
         await session.commit()
 
 

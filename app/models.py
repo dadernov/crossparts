@@ -85,4 +85,6 @@ class Account(Base):
     username: Mapped[str] = mapped_column(String(64), primary_key=True)
     password_hash: Mapped[str] = mapped_column(String(256))
     queries_used: Mapped[int] = mapped_column(Integer, default=0)
+    # A trial and a paid account have independent limits.
+    queries_limit: Mapped[int] = mapped_column(Integer, default=1000)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

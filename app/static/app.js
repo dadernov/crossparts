@@ -1,5 +1,6 @@
 const $ = (selector) => document.querySelector(selector);
 const KIND = {oem: 'OEM', aftermarket: 'Аналог', standard: 'Стандарт'};
+const EXPORT_KIND = {oem: 'ОЕМ', aftermarket: 'АФТЕРМАРКЕТ', standard: 'СТАНДАРТ'};
 const STATUS = {ok: 'Найдено', not_found: 'Нет совпадений', blocked: 'Недоступен', error: 'Ошибка', no_sources: 'Нет каталогов', pending: 'В очереди', running: 'Обрабатывается', done: 'Завершено', failed: 'Ошибка задания'};
 const state = {crosses: [], sources: new Map(), busy: false, uploading: false, jobsBusy: false, limit: 20, active: false, jobsJSON: '', file: null};
 
@@ -85,6 +86,7 @@ $('#lookup-form').addEventListener('submit', async (event) => {
 
 function renderLookup(data, groupTitle) {
   state.crosses = data.crosses;
+  state.lookup = {oe: data.oe, groupTitle};
   const unavailable = data.sources.filter(s => ['error', 'blocked'].includes(s.status));
   const answered = data.sources.filter(s => ['ok', 'not_found'].includes(s.status));
   let summary;
@@ -110,23 +112,54 @@ function renderRows() {
   const query = $('#result-filter').value.trim().toLocaleLowerCase();
   const kind = $('#kind-filter').value;
   const rows = state.crosses.filter(c => (!kind || c.kind === kind) && `${c.brand} ${c.number}`.toLocaleLowerCase().includes(query));
-  $('#filter-count').textContent = state.crosses.length ? `Показано ${rows.length} из ${state.crosses.length} записей` : '';
+  $('#filter-count').textContent = state.crosses.length ? `Показано ${rows.length} из ${state.crosses.length} кросс-номеров` : '';
   $('#result-rows').replaceChildren(...rows.map(cross => {
     const row = el('tr');
     const number = el('td'); number.append(el('code', cross.number));
-    const source = el('td', (cross.sources || []).map(sourceTitle).join(', '));
-    try {
-      const url = new URL(cross.url);
-      if (['http:', 'https:'].includes(url.protocol)) {
-        const link = el('a', ' ↗'); link.href = url.href; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.setAttribute('aria-label', `Карточка ${cross.number} в каталоге`); source.append(link);
-      }
-    } catch (_) { /* No valid product URL. */ }
-    const action = el('td'); const copy = el('button', 'Копировать', 'copy-button');
-    copy.setAttribute('aria-label', `Копировать номер ${cross.number}`);
-    copy.onclick = async () => { try { await navigator.clipboard.writeText(cross.number); copy.textContent = 'Скопировано'; } catch (_) { copy.textContent = 'Выделите номер'; } };
-    action.append(copy); row.append(el('td', cross.brand), number, el('td', KIND[cross.kind] || 'Не определён'), source, action); return row;
+    row.append(
+      el('td', $('#results').dataset.outputBrand || 'GERAT'),
+      el('td', '—'),
+      el('td', cross.brand),
+      number,
+      el('td', EXPORT_KIND[cross.kind] || '—'),
+      el('td', (cross.sources || []).map(sourceTitle).join(', ') || '—'),
+    );
+    return row;
   }));
-  if (!rows.length) { const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = 5; row.append(cell); $('#result-rows').append(row); }
+  if (!rows.length) {
+    const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = 6; row.append(cell); $('#result-rows').append(row);
+  }
+  renderVariant2(rows);
+}
+
+function renderVariant2(crosses) {
+  const groups = new Map();
+  for (const cross of crosses) {
+    const kind = cross.kind || 'standard';
+    if (!groups.has(kind)) groups.set(kind, []);
+    const numbers = groups.get(kind);
+    const key = String(cross.number || '').replace(/[^\p{L}\p{N}]/gu, '').toUpperCase();
+    if (!numbers.some(entry => entry.key === key)) numbers.push({key, number: cross.number});
+  }
+  const rows = [];
+  for (const kind of ['oem', 'aftermarket', 'standard']) {
+    const numbers = groups.get(kind);
+    if (!numbers?.length) continue;
+    const row = el('tr');
+    row.append(
+      el('td', '—'),
+      el('td', state.lookup?.groupTitle || 'Все группы'),
+      el('td', state.lookup?.oe || '—'),
+      el('td', String(numbers.length)),
+      el('td', EXPORT_KIND[kind]),
+      el('td', numbers.map(entry => entry.number).join(', ')),
+    );
+    rows.push(row);
+  }
+  $('#variant2-rows').replaceChildren(...rows);
+  if (!rows.length) {
+    const row = el('tr'); const cell = el('td', 'Нет номеров для формирования варианта 2.'); cell.colSpan = 6; row.append(cell); $('#variant2-rows').append(row);
+  }
 }
 $('#result-filter').oninput = renderRows; $('#kind-filter').onchange = renderRows;
 

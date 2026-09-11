@@ -5,6 +5,8 @@ import pytest
 from jinja2 import Environment, FileSystemLoader
 from playwright.sync_api import sync_playwright
 
+from app.config import get_settings
+
 
 @pytest.mark.parametrize('browser_name', ['chromium', 'webkit'])
 def test_frontend_states_and_layout(browser_name):
@@ -52,7 +54,9 @@ def test_frontend_states_and_layout(browser_name):
                 r.fulfill(json={'job': job, 'items': [dict(oe_number='123', part_name=attack, status='blocked', crosses_count=0)]})
             else:
                 template = 'login.html' if path == '/login' else 'index.html'
-                r.fulfill(body=env.get_template(template).render(username='demo', error=None), content_type='text/html')
+                r.fulfill(body=env.get_template(template).render(username='demo', error=None,
+                                                                 settings=get_settings(), is_trial=False),
+                          content_type='text/html')
 
         page.route('**/*', route)
         page.goto('http://audit.local/')

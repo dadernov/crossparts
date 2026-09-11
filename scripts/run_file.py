@@ -43,11 +43,7 @@ async def main() -> int:
                     "source_reports": res["sources"]})
 
     dst_path.parent.mkdir(parents=True, exist_ok=True)
-    dst_path.write_bytes(build_workbook(out, meta={
-        "Входной файл": src_path.name,
-        "Источники": ", ".join(keys or settings.default_sources),
-        "Позиций": len(items),
-    }))
+    dst_path.write_bytes(build_workbook(out, output_brand=settings.output_brand))
     print(f"\nГотово: {dst_path}")
     await registry.close()
     return 0

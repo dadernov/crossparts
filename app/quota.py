@@ -11,27 +11,28 @@ async def reserve_queries(session_factory, username: str, count: int, limit: int
     """Reserve ``count`` positions and return the remaining balance.
 
     The conditional update prevents two browser tabs from spending more than the
-    configured account limit at the same time.
+    account limit at the same time. ``limit`` remains a fallback for old data.
     """
     async with session_factory() as session:
         result = await session.execute(
             update(Account)
-            .where(Account.username == username, Account.queries_used + count <= limit)
+            .where(Account.username == username, Account.queries_used + count <= Account.queries_limit)
             .values(queries_used=Account.queries_used + count)
         )
         if result.rowcount != 1:
             await session.rollback()
             raise HTTPException(
                 429,
-                f"Лимит {limit:,} поисков исчерпан. Обратитесь к менеджеру, чтобы продлить доступ.".replace(",", " "),
+                "Лимит поисков исчерпан. Обратитесь к менеджеру, чтобы продлить доступ.",
             )
         account = await session.get(Account, username)
         await session.commit()
-        return limit - account.queries_used
+        return max(0, (account.queries_limit or limit) - account.queries_used)
 
 
 async def quota_status(session_factory, username: str, limit: int) -> dict:
     async with session_factory() as session:
         account = await session.get(Account, username)
         used = account.queries_used if account else 0
-    return {"limit": limit, "used": used, "remaining": max(0, limit - used)}
+        account_limit = account.queries_limit if account else limit
+    return {"limit": account_limit, "used": used, "remaining": max(0, account_limit - used)}

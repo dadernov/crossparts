@@ -79,20 +79,24 @@ def test_build_workbook_layout():
         "crosses": [
             {"brand": "HYUNDAI", "number": "58101-H5A25", "kind": "oem", "sources": ["sbparts"]},
             {"brand": "NIBK", "number": "PN0537", "kind": "aftermarket", "sources": ["sbparts"]},
+            {"brand": "BRANNOR", "number": "XV40", "kind": "aftermarket", "sources": ["brannor"]},
         ],
         "source_reports": [{"source": "sbparts", "status": "ok", "crosses": 2}],
     }])
     wb = load_workbook(io.BytesIO(blob))
-    assert wb.sheetnames[:3] == ["Вариант 1", "Вариант 2", "Отчёт"]
+    assert wb.sheetnames == ["Вариант 1", "Вариант 2"]
     v1 = list(wb["Вариант 1"].iter_rows(values_only=True))
-    assert v1[0][:6] == ("Наш артикул", "Наименование детали", "Товарная группа",
-                          "Номер ОЕ (запрос)", "Бренд", "Номер кросса")
-    assert v1[1][:6] == ("BPF159CG", None, "Тормозные колодки", "58101H5A25",
-                          "HYUNDAI", "58101-H5A25")
+    assert v1[0] == ("brand", "Наш артикул", "Бренд аналога", "Номер аналога",
+                     "Раздел", "Источники")
+    assert v1[1] == ("GERAT", "BPF159CG", "HYUNDAI", "58101-H5A25", "OEM", "sbparts")
     v2 = list(wb["Вариант 2"].iter_rows(values_only=True))
-    assert v2[1][2] == "Тормозные колодки"
-    assert v2[1][4] == 2
-    assert v2[1][5] == "58101-H5A25, PN0537"
+    assert v2[0] == ("Наш артикул", "Товарная группа", "Номер ОЕ (запрос)",
+                     "Кол-во", "ОЕМ/Афтермаркет", "Все кроссы")
+    assert v2[1] == ("BPF159CG", "Тормозные колодки", "58101H5A25", 1,
+                     "ОЕМ", "58101-H5A25")
+    assert v2[2] == ("BPF159CG", "Тормозные колодки", "58101H5A25", 1,
+                     "АФТЕРМАРКЕТ", "PN0537")
+    assert "XV40" not in str(v1) + str(v2)
 
 
 def test_unrecognised_group_is_shown_as_sent():
@@ -105,4 +109,4 @@ def test_unrecognised_group_is_shown_as_sent():
         "source_reports": [],
     }])
     wb = load_workbook(io.BytesIO(blob))
-    assert list(wb["Вариант 2"].iter_rows(values_only=True))[1][2] == "Свечи зажигания"
+    assert list(wb["Вариант 2"].iter_rows(values_only=True))[1][1] == "Свечи зажигания"

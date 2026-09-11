@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import secrets
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
@@ -16,10 +17,10 @@ from .config import get_settings
 from .db import SessionLocal, init_db
 from .excel import build_template, build_workbook, read_input
 from .jobs import JobRunner
-from .models import Job, JobItem
+from .models import Account, Job, JobItem
 from .quota import quota_status, reserve_queries
 from .schemas import JobCreate, JobOut, LookupRequest
-from .security import authenticate, require_tenant
+from .security import authenticate, hash_password, require_tenant
 from .session import SignedSessionMiddleware
 from .sources.registry import SourceRegistry
 
@@ -69,11 +70,12 @@ def _job_out(job: Job) -> JobOut:
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     if not request.session.get("username"):
-        return RedirectResponse("/login", status_code=303)
+        return templates.TemplateResponse(request, "welcome.html", {"settings": settings})
     return templates.TemplateResponse(
         request,
         "index.html", {"sources": registry.describe(), "settings": settings,
-                        "username": request.session["username"]},
+                        "username": request.session["username"],
+                        "is_trial": request.session.get("access") == "trial"},
     )
 
 
@@ -90,15 +92,32 @@ async def login(request: Request, username: str = Form(...), password: str = For
     if account:
         request.session.clear()
         request.session["username"] = account
+        request.session["access"] = "account"
         return RedirectResponse("/", status_code=303)
     return templates.TemplateResponse(request, "login.html",
                                       {"error": "Неверный логин или пароль", "username": username}, status_code=401)
 
 
+@app.post("/trial")
+async def start_trial(request: Request):
+    """Create an isolated, passwordless demo account with ten searches."""
+    if request.session.get("username"):
+        return RedirectResponse("/", status_code=303)
+    username = f"trial-{secrets.token_hex(12)}"
+    async with SessionLocal() as session:
+        session.add(Account(username=username, password_hash=hash_password(secrets.token_urlsafe(24)),
+                            queries_limit=settings.trial_requests))
+        await session.commit()
+    request.session.clear()
+    request.session["username"] = username
+    request.session["access"] = "trial"
+    return RedirectResponse("/", status_code=303)
+
+
 @app.post("/logout")
 async def logout(request: Request):
     request.session.clear()
-    return RedirectResponse("/login", status_code=303)
+    return RedirectResponse("/", status_code=303)
 
 
 @app.get("/template.xlsx")
@@ -292,13 +311,7 @@ async def job_export(job_id: str, tenant: str = Depends(require_tenant)):
         }
         for i in items
     ]
-    blob = build_workbook(payload, meta={
-        "Задание": job.id,
-        "Файл": job.filename or "—",
-        "Источники": ", ".join(job.sources or []),
-        "Позиций": job.total,
-        "Создано": job.created_at.isoformat(),
-    })
+    blob = build_workbook(payload, output_brand=settings.output_brand)
     return Response(
         content=blob,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

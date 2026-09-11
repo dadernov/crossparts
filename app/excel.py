@@ -15,7 +15,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 from . import groups as product_groups
-from .normalize import KIND_AFTERMARKET, KIND_OEM, clean_number
+from .normalize import KIND_AFTERMARKET, KIND_OEM, clean_number, number_key
 
 SKU_HEADERS = ("наш артикул", "артикул", "our sku", "sku")
 OE_HEADERS = ("номер ое", "номер оe", "оригинальный номер", "oe", "oem", "номер для парсинга")
@@ -23,6 +23,7 @@ GROUP_HEADERS = ("тормозная группа", "товарная групп
 NAME_HEADERS = ("наименование детали", "наименование", "название детали", "название", "part name")
 
 _HEADER_HINT = re.compile(r"артикул|номер|sku|oe|oem", re.IGNORECASE)
+_BRANNOR_VEHICLE_CODE = re.compile(r"^[A-Z]{2}\d{2}$")
 
 
 def _norm_header(value) -> str:
@@ -102,23 +103,20 @@ def _style_header(ws, width_map: dict[int, int]) -> None:
     ws.freeze_panes = "A2"
 
 
-def build_workbook(items: list[dict], meta: dict | None = None) -> bytes:
-    """``items`` are dicts with our_sku / oe_number / crosses / source_reports."""
+def build_workbook(items: list[dict], *, output_brand: str = "GERAT") -> bytes:
+    """Build the two layouts from the client's reference workbook."""
     wb = Workbook()
 
     ws1 = wb.active
     ws1.title = "Вариант 1"
-    ws1.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ (запрос)",
-                "Бренд", "Номер кросса", "Тип", "Источники"])
-    _style_header(ws1, {1: 18, 2: 34, 3: 24, 4: 20, 5: 24, 6: 26, 7: 14, 8: 22})
+    ws1.append(["brand", "Наш артикул", "Бренд аналога", "Номер аналога", "Раздел", "Источники"])
+    _style_header(ws1, {1: 18, 2: 20, 3: 24, 4: 26, 5: 18, 6: 24})
     kind_ru = {KIND_OEM: "OEM", KIND_AFTERMARKET: "Афтермаркет", "standard": "Стандарт"}
     for item in items:
-        for cross in item.get("crosses", []):
+        for cross in _export_crosses(item.get("crosses", [])):
             ws1.append([
+                output_brand,
                 item.get("our_sku", ""),
-                item.get("part_name", ""),
-                _group_title(item),
-                item.get("oe_number", ""),
                 cross["brand"],
                 cross["number"],
                 kind_ru.get(cross.get("kind"), cross.get("kind", "")),
@@ -126,49 +124,18 @@ def build_workbook(items: list[dict], meta: dict | None = None) -> bytes:
             ])
 
     ws2 = wb.create_sheet("Вариант 2")
-    ws2.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ (запрос)", "Кол-во", "Все кроссы"])
-    _style_header(ws2, {1: 18, 2: 34, 3: 24, 4: 20, 5: 10, 6: 160})
+    ws2.append(["Наш артикул", "Товарная группа", "Номер ОЕ (запрос)", "Кол-во", "ОЕМ/Афтермаркет", "Все кроссы"])
+    _style_header(ws2, {1: 18, 2: 24, 3: 20, 4: 10, 5: 20, 6: 100})
     for item in items:
-        numbers = _unique(item.get("crosses", []))
-        ws2.append([
-            item.get("our_sku", ""),
-            item.get("part_name", ""),
-            _group_title(item),
-            item.get("oe_number", ""),
-            len(numbers),
-            ", ".join(numbers),
-        ])
-
-    ws3 = wb.create_sheet("Отчёт")
-    ws3.append(["Наш артикул", "Наименование детали", "Товарная группа", "Номер ОЕ", "Статус",
-                "Всего кроссов", "По источникам", "Комментарии"])
-    _style_header(ws3, {1: 18, 2: 34, 3: 24, 4: 20, 5: 14, 6: 16, 7: 40, 8: 70})
-    for item in items:
-        reports = item.get("source_reports", [])
-        per_source = ", ".join(
-            f"{r['source']}: {r.get('crosses', 0)}" for r in reports
-        )
-        notes = "; ".join(
-            f"{r['source']} — {r['status']}" + (f" ({r['message']})" if r.get("message") else "")
-            for r in reports if r["status"] != "ok"
-        )
-        ws3.append([
-            item.get("our_sku", ""),
-            item.get("part_name", ""),
-            _group_title(item),
-            item.get("oe_number", ""),
-            item.get("status", ""),
-            len(item.get("crosses", [])),
-            per_source,
-            notes,
-        ])
-
-    if meta:
-        ws4 = wb.create_sheet("Параметры")
-        ws4.append(["Параметр", "Значение"])
-        _style_header(ws4, {1: 28, 2: 60})
-        for k, v in meta.items():
-            ws4.append([str(k), str(v)])
+        for kind, label in ((KIND_OEM, "ОЕМ"), (KIND_AFTERMARKET, "АФТЕРМАРКЕТ"), ("standard", "СТАНДАРТ")):
+            numbers = _unique([c for c in _export_crosses(item.get("crosses", []))
+                               if c.get("kind") == kind])
+            if not numbers:
+                continue
+            ws2.append([
+                item.get("our_sku", ""), _group_title(item), item.get("oe_number", ""),
+                len(numbers), label, ", ".join(numbers),
+            ])
 
     buf = io.BytesIO()
     wb.save(buf)
@@ -193,6 +160,22 @@ def _unique(crosses: list[dict]) -> list[str]:
             seen.add(k)
             out.append(c["number"])
     return out
+
+
+def _export_crosses(crosses: list[dict]) -> list[dict]:
+    """Hide the old BRANNOR vehicle-page false positives from historical jobs.
+
+    The source now blocks them before saving. This guard also keeps old jobs
+    (created before the fix) clean when the client downloads them again.
+    """
+    return [
+        c for c in crosses
+        if not (
+            c.get("brand") == "BRANNOR"
+            and "brannor" in c.get("sources", [])
+            and _BRANNOR_VEHICLE_CODE.fullmatch(number_key(c.get("number", "")))
+        )
+    ]
 
 
 def build_template() -> bytes:
