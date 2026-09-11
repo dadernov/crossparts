@@ -28,7 +28,9 @@ from .http import build_client
 
 BASE = "https://brannor.ru"
 SEARCH = f"{BASE}/search-oem/"
-_ARTICLE = re.compile(r"^[A-Z]{2,4}\d{2,6}[A-Z]?$")
+# Артикулы BRANNOR: BRP — колодки, BRD — диски.  Короткие обозначения
+# кузовов Toyota (XV40, XA30) похожи на номер, но деталями не являются.
+_ARTICLE = re.compile(r"^BR[PD]\d{3,6}[A-Z]?$")
 
 
 def split_brand_number(text: str) -> tuple[str, str]:
@@ -75,17 +77,20 @@ class BrannorSource(BaseSource):
 
             crosses, products = [], []
             for url, article in links[: self.settings.max_products_per_oe]:
-                if article:
-                    products.append(article)
-                    crosses.extend(self.make_cross("BRANNOR", article,
-                                                   product=article, url=url))
                 try:
                     page = await client.get(url)
                 except Exception:
                     continue
                 if page.status_code >= 400:
                     continue
-                crosses.extend(self.parse_oems(page.text, url=url, product=article))
+                oems = self.parse_oems(page.text, url=url, product=article)
+                # Добавляем собственный артикул лишь после того, как убедились,
+                # что это карточка детали с OEM-номерами, а не страница модели.
+                if oems and article:
+                    products.append(article)
+                    crosses.extend(self.make_cross("BRANNOR", article,
+                                                   product=article, url=url))
+                    crosses.extend(oems)
 
             return SourceResult(
                 self.key,
@@ -108,6 +113,8 @@ class BrannorSource(BaseSource):
             if not href.startswith(BASE):
                 continue
             article = cls.article_from_url(href)
+            if article is None:
+                continue
             marker = article or href
             if marker in seen:
                 continue

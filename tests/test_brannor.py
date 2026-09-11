@@ -26,6 +26,8 @@ def test_same_card_under_several_cars_is_fetched_once():
 def test_article_is_taken_from_the_url_tail():
     assert BrannorSource.article_from_url(
         "https://brannor.ru/brannor-zadnie-tormoznie-kolodki-dlya-audi-a4-brp1386a") == "BRP1386A"
+    assert BrannorSource.article_from_url(
+        "https://brannor.ru/toyota/camry/toyota-camry-2006-xv40/") is None
     assert BrannorSource.article_from_url("https://brannor.ru/o-nas") is None
 
 
