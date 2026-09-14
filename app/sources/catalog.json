@@ -33,8 +33,8 @@
       ],
       "url": "https://nibkbrakes.com/ru/catalog",
       "status": "implemented",
-      "note": "Данные бренда приходят из общего каталога Brixo (источник brixo).",
-      "via": "brixo"
+      "note": "Отдельный адаптер NiBK использует общую публичную базу NiBK/Brixo без дублирования запросов.",
+      "via": "nibkru"
     },
     {
       "brand": "Brembo",

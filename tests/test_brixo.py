@@ -77,5 +77,8 @@ def test_card_without_references_yields_nothing():
     assert src.parse_references({"references": None}, url="u") == []
 
 
-def test_covers_pads_discs_and_radiators():
-    assert BrixoSource.groups == (BRAKE_PADS, BRAKE_DISCS, RADIATORS)
+def test_brixo_covers_radiators_while_nibk_owns_brake_groups():
+    from app.sources.nibkru import NibkRuSource
+
+    assert BrixoSource.groups == (RADIATORS,)
+    assert NibkRuSource.groups == (BRAKE_PADS, BRAKE_DISCS)

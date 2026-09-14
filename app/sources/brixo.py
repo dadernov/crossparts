@@ -17,7 +17,7 @@ API открытый, JSON, без авторизации и без браузе
 """
 from __future__ import annotations
 
-from ..groups import BRAKE_DISCS, BRAKE_PADS, RADIATORS
+from ..groups import RADIATORS
 from .antibot import looks_blocked
 from .base import BaseSource, SourceResult, SourceStatus
 from .http import build_client
@@ -30,11 +30,14 @@ INFO = f"{BASE}/api/sku/info"
 
 class BrixoSource(BaseSource):
     key = "brixo"
-    title = "Brixo: NiBK, SAKURA (brixogroup.com)"
+    title = "Brixo: SAKURA (brixogroup.com)"
     homepage = "https://brixogroup.com/catalog"
     verified = True
-    groups = (BRAKE_PADS, BRAKE_DISCS, RADIATORS)
-    note = "Колодки и диски NiBK, радиаторы SAKURA. Кроссы приходят сразу с брендами."
+    # NiBK has its own public-facing adapter (``nibkru``).  Keeping this
+    # source for radiators prevents two identical API calls for each lookup.
+    groups = (RADIATORS,)
+    note = "Радиаторы SAKURA из общей базы Brixo. Кроссы приходят сразу с брендами."
+    brand_filter: str | None = None
 
     async def lookup(self, oe: str) -> SourceResult:
         started = self.timer()
@@ -91,8 +94,7 @@ class BrixoSource(BaseSource):
 
     # -- разбор данных --------------------------------------------------
 
-    @staticmethod
-    def articles(response) -> list[tuple[str, str]] | None:
+    def articles(self, response) -> list[tuple[str, str]] | None:
         """Пары «артикул, бренд» из ответа поиска. ``None`` — ответ не JSON."""
         try:
             data = response.json()
@@ -105,8 +107,9 @@ class BrixoSource(BaseSource):
             if not isinstance(item, dict):
                 continue
             article = str(item.get("id") or "").strip()
-            if article:
-                out.append((article, str(item.get("sku_brand_title") or "").strip()))
+            brand = str(item.get("sku_brand_title") or "").strip()
+            if article and (self.brand_filter is None or brand.upper() == self.brand_filter):
+                out.append((article, brand))
         return out
 
     def parse_references(self, info: dict, *, url: str, product: str | None = None):

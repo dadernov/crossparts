@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     browser_fallback: bool = True
     # Sources active by default when a request does not name any explicitly.
     enabled_sources: str = (
-        "sbparts,brembo,trialli,brixo,luzar,nissens,kyb,hola,brannor,hel"
+        "sbparts,brembo,trialli,nibkru,brixo,luzar,nissens,kyb,hola,brannor,hel"
     )
 
     @property
