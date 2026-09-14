@@ -103,20 +103,19 @@ def _style_header(ws, width_map: dict[int, int]) -> None:
     ws.freeze_panes = "A2"
 
 
-def build_workbook(items: list[dict], *, output_brand: str = "GERAT") -> bytes:
+def build_workbook(items: list[dict]) -> bytes:
     """Build the two layouts from the client's reference workbook."""
     wb = Workbook()
 
     ws1 = wb.active
     ws1.title = "Вариант 1"
-    ws1.append(["brand", "Наш артикул", "Бренд аналога", "Номер аналога", "Раздел", "Источники"])
-    _style_header(ws1, {1: 18, 2: 20, 3: 24, 4: 26, 5: 18, 6: 24})
+    ws1.append(["Номер ОЕ (запрос)", "Бренд аналога", "Номер аналога", "Раздел", "Источники"])
+    _style_header(ws1, {1: 20, 2: 24, 3: 26, 4: 18, 5: 24})
     kind_ru = {KIND_OEM: "OEM", KIND_AFTERMARKET: "Афтермаркет", "standard": "Стандарт"}
     for item in items:
         for cross in _export_crosses(item.get("crosses", [])):
             ws1.append([
-                output_brand,
-                item.get("our_sku", ""),
+                item.get("oe_number", ""),
                 cross["brand"],
                 number_key(cross["number"]),
                 kind_ru.get(cross.get("kind"), cross.get("kind", "")),

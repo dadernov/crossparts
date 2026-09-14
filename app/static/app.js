@@ -118,7 +118,6 @@ function renderRows() {
     const row = el('tr');
     const number = el('td'); number.append(el('code', canonicalNumber(cross.number)));
     row.append(
-      el('td', $('#results').dataset.outputBrand || 'GERAT'),
       el('td', state.lookup?.oe || '—'),
       el('td', cross.brand),
       number,
@@ -128,7 +127,7 @@ function renderRows() {
     return row;
   }));
   if (!rows.length) {
-    const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = 6; row.append(cell); $('#result-rows').append(row);
+    const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = 5; row.append(cell); $('#result-rows').append(row);
   }
   renderVariant2(rows);
 }

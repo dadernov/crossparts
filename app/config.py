@@ -25,9 +25,6 @@ class Settings(BaseSettings):
     requests_per_account: int = 1000
     # Passwordless demo accounts created from the start page.
     trial_requests: int = 10
-    # First column of the customer's export format.
-    output_brand: str = "GERAT"
-
     source_timeout: int = 45
     job_concurrency: int = 4
     source_concurrency: int = 2

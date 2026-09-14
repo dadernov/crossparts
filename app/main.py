@@ -172,7 +172,7 @@ async def lookup_export(payload: LookupExportRequest, tenant: str = Depends(requ
         "group": product_groups.resolve(payload.group) if payload.group else None,
         "group_raw": payload.group_raw,
         "crosses": [cross.model_dump() for cross in payload.crosses],
-    }], output_brand=settings.output_brand)
+    }])
     filename = number_key(payload.oe_number)[:40] or "lookup"
     return Response(
         content=blob,
@@ -330,7 +330,7 @@ async def job_export(job_id: str, tenant: str = Depends(require_tenant)):
         }
         for i in items
     ]
-    blob = build_workbook(payload, output_brand=settings.output_brand)
+    blob = build_workbook(payload)
     return Response(
         content=blob,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
