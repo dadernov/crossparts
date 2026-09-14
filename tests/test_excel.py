@@ -88,15 +88,32 @@ def test_build_workbook_layout():
     v1 = list(wb["Вариант 1"].iter_rows(values_only=True))
     assert v1[0] == ("brand", "Наш артикул", "Бренд аналога", "Номер аналога",
                      "Раздел", "Источники")
-    assert v1[1] == ("GERAT", "BPF159CG", "HYUNDAI", "58101-H5A25", "OEM", "sbparts")
+    assert v1[1] == ("GERAT", "BPF159CG", "HYUNDAI", "58101H5A25", "OEM", "sbparts")
     v2 = list(wb["Вариант 2"].iter_rows(values_only=True))
     assert v2[0] == ("Наш артикул", "Товарная группа", "Номер ОЕ (запрос)",
                      "Кол-во", "ОЕМ/Афтермаркет", "Все кроссы")
     assert v2[1] == ("BPF159CG", "Тормозные колодки", "58101H5A25", 1,
-                     "ОЕМ", "58101-H5A25")
+                     "ОЕМ", "58101H5A25")
     assert v2[2] == ("BPF159CG", "Тормозные колодки", "58101H5A25", 1,
                      "АФТЕРМАРКЕТ", "PN0537")
     assert "XV40" not in str(v1) + str(v2)
+
+
+def test_export_strips_all_special_characters_from_cross_numbers():
+    blob = build_workbook([{
+        "our_sku": "A1", "oe_number": "12345", "group": None,
+        "crosses": [
+            {"brand": "TEST", "number": "ab-12 / 34.5", "kind": "aftermarket", "sources": ["test"]},
+            {"brand": "OTHER", "number": "AB 12-34/5", "kind": "aftermarket", "sources": ["test"]},
+        ],
+    }])
+    workbook = load_workbook(io.BytesIO(blob))
+    variant_one = list(workbook["Вариант 1"].iter_rows(values_only=True))
+    variant_two = list(workbook["Вариант 2"].iter_rows(values_only=True))
+    assert variant_one[1][3] == "AB12345"
+    assert variant_one[2][3] == "AB12345"
+    assert variant_two[1][3] == 1
+    assert variant_two[1][5] == "AB12345"
 
 
 def test_unrecognised_group_is_shown_as_sent():

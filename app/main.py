@@ -19,7 +19,7 @@ from .excel import build_template, build_workbook, read_input
 from .jobs import JobRunner
 from .models import Account, Job, JobItem
 from .quota import quota_status, reserve_queries
-from .schemas import JobCreate, JobOut, LookupRequest
+from .schemas import JobCreate, JobOut, LookupExportRequest, LookupRequest
 from .security import authenticate, hash_password, require_tenant
 from .session import SignedSessionMiddleware
 from .sources.registry import SourceRegistry
@@ -158,8 +158,27 @@ async def lookup(req: LookupRequest, tenant: str = Depends(require_tenant)):
     """Single OE number, answered synchronously."""
     group = product_groups.resolve(req.group) if req.group else None
     await reserve_queries(SessionLocal, tenant, 1, settings.requests_per_account)
-    # Every lookup must query catalogues live; cached answers are intentionally off.
-    return await aggregator.lookup(req.oe, req.sources, use_cache=False, group=group)
+    return await aggregator.lookup(req.oe, req.sources, use_cache=True, group=group)
+
+
+@app.post("/api/v1/lookup/export.xlsx")
+async def lookup_export(payload: LookupExportRequest, tenant: str = Depends(require_tenant)):
+    """Export the result already shown for one OE lookup without running it again."""
+    from .normalize import number_key
+
+    blob = build_workbook([{
+        "our_sku": "",
+        "oe_number": payload.oe_number,
+        "group": product_groups.resolve(payload.group) if payload.group else None,
+        "group_raw": payload.group_raw,
+        "crosses": [cross.model_dump() for cross in payload.crosses],
+    }], output_brand=settings.output_brand)
+    filename = number_key(payload.oe_number)[:40] or "lookup"
+    return Response(
+        content=blob,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="crosses-{filename}.xlsx"'},
+    )
 
 
 @app.post("/api/v1/jobs", response_model=JobOut)

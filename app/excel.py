@@ -118,7 +118,7 @@ def build_workbook(items: list[dict], *, output_brand: str = "GERAT") -> bytes:
                 output_brand,
                 item.get("our_sku", ""),
                 cross["brand"],
-                cross["number"],
+                number_key(cross["number"]),
                 kind_ru.get(cross.get("kind"), cross.get("kind", "")),
                 ", ".join(cross.get("sources", [])),
             ])
@@ -158,7 +158,7 @@ def _unique(crosses: list[dict]) -> list[str]:
         k = number_key(c["number"])
         if k not in seen:
             seen.add(k)
-            out.append(c["number"])
+            out.append(number_key(c["number"]))
     return out
 
 

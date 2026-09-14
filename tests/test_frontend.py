@@ -47,6 +47,8 @@ def test_frontend_states_and_layout(browser_name):
                     r.fulfill(status=429, body='limit')
                 else:
                     r.fulfill(json=response)
+            elif path == '/api/v1/lookup/export.xlsx':
+                r.fulfill(body=b'fake-xlsx', content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             elif path == '/api/v1/jobs/upload':
                 calls['upload'] += 1
                 r.fulfill(json={**job, 'status': 'pending'})
@@ -74,6 +76,7 @@ def test_frontend_states_and_layout(browser_name):
         page.locator('#oe').fill('58101H5A25')
         page.locator('#btn-lookup').click()
         page.wait_for_function('!document.querySelector("#results").hidden')
+        assert page.get_by_role('button', name='Скачать Excel ↙', exact=True).count() == 1
         assert 'проверить не удалось' in page.locator('#result-summary').inner_text()
         failures['lookup'] = True
         page.locator('#btn-lookup').click()
@@ -89,6 +92,8 @@ def test_frontend_states_and_layout(browser_name):
         page.locator('#result-filter').fill('absent')
         assert 'По этому фильтру' in page.locator('#result-rows').inner_text()
         page.locator('#result-filter').fill('')
+        assert page.locator('#result-rows').inner_text().find('PN123') >= 0
+        assert '-' not in page.locator('#variant2-rows').inner_text()
         page.get_by_role('button', name='Подробнее', exact=True).click()
         page.wait_for_selector('#detail-body table')
         assert 'Недоступен' in page.locator('#detail-body').inner_text()

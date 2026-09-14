@@ -30,6 +30,7 @@ async function api(path, options = {}) {
   return response.json();
 }
 function sourceTitle(key) { return state.sources.get(key)?.title || key; }
+function canonicalNumber(value) { return String(value || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase(); }
 
 async function loadGroups() {
   try {
@@ -115,10 +116,10 @@ function renderRows() {
   $('#filter-count').textContent = state.crosses.length ? `Показано ${rows.length} из ${state.crosses.length} кросс-номеров` : '';
   $('#result-rows').replaceChildren(...rows.map(cross => {
     const row = el('tr');
-    const number = el('td'); number.append(el('code', cross.number));
+    const number = el('td'); number.append(el('code', canonicalNumber(cross.number)));
     row.append(
       el('td', $('#results').dataset.outputBrand || 'GERAT'),
-      el('td', '—'),
+      el('td', state.lookup?.oe || '—'),
       el('td', cross.brand),
       number,
       el('td', EXPORT_KIND[cross.kind] || '—'),
@@ -138,8 +139,8 @@ function renderVariant2(crosses) {
     const kind = cross.kind || 'standard';
     if (!groups.has(kind)) groups.set(kind, []);
     const numbers = groups.get(kind);
-    const key = String(cross.number || '').replace(/[^\p{L}\p{N}]/gu, '').toUpperCase();
-    if (!numbers.some(entry => entry.key === key)) numbers.push({key, number: cross.number});
+    const key = canonicalNumber(cross.number);
+    if (!numbers.some(entry => entry.key === key)) numbers.push({key, number: key});
   }
   const rows = [];
   for (const kind of ['oem', 'aftermarket', 'standard']) {
@@ -162,6 +163,27 @@ function renderVariant2(crosses) {
   }
 }
 $('#result-filter').oninput = renderRows; $('#kind-filter').onchange = renderRows;
+
+$('#btn-export-lookup').onclick = async () => {
+  if (!state.lookup || !state.crosses.length) return;
+  const button = $('#btn-export-lookup');
+  button.disabled = true;
+  button.textContent = 'Готовим Excel…';
+  try {
+    const response = await fetch('/api/v1/lookup/export.xlsx', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({oe_number: state.lookup.oe, group: $('#group').value || null,
+                            group_raw: state.lookup.groupTitle, crosses: state.crosses}),
+    });
+    if (!response.ok) throw new Error('Не удалось сформировать Excel. Повторите попытку.');
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = `crosses-${canonicalNumber(state.lookup.oe)}.xlsx`;
+    document.body.append(link); link.click(); link.remove(); URL.revokeObjectURL(url);
+  } catch (error) { notice('#lookup-status', error.message, true); }
+  finally { button.disabled = false; button.textContent = 'Скачать Excel ↙'; }
+};
 
 function selectFile(file) {
   state.file = file;

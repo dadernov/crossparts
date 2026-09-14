@@ -10,6 +10,20 @@ class LookupRequest(BaseModel):
                               description="Товарная группа: ключ или название из файла")
 
 
+class LookupExportCross(BaseModel):
+    brand: str = ""
+    number: str = ""
+    kind: str | None = None
+    sources: list[str] = Field(default_factory=list)
+
+
+class LookupExportRequest(BaseModel):
+    oe_number: str = Field(..., min_length=2)
+    group: str | None = None
+    group_raw: str = ""
+    crosses: list[LookupExportCross] = Field(default_factory=list)
+
+
 class JobItemIn(BaseModel):
     our_sku: str = ""
     part_name: str = ""

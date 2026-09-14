@@ -188,6 +188,8 @@ footer { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
 .main-page .batch-panel .text-link { color: #574772; }
 .main-page .results-panel { border-radius: 14px; border-color: #d9e2d7; }
 .main-page .count { background: #dcebaa; color: #2e431c; border-radius: 7px; font-weight: 550; padding: 10px 14px; }
+.result-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.result-actions .secondary { min-height: 38px; padding: 8px 13px; font-size: 14px; }
 .main-page th { background: #e9efdf; color: #35482d; }
 .main-page .history-panel { background: #fff; border: 1px solid #e1e5db; border-radius: 14px; padding: 26px 28px 10px; }
 .main-page .job-row:last-child { border-bottom: 0; }
@@ -204,6 +206,7 @@ footer { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
   .main-page .dropzone { min-height: 115px; }
   .main-page .history-panel { padding: 20px 16px 6px; }
   .main-page .job-row { gap: 8px; }
+  .result-actions { width: 100%; justify-content: space-between; }
 }
 
 /* Entry choice and the small trial indicator. */
