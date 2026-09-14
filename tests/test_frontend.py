@@ -76,7 +76,7 @@ def test_frontend_states_and_layout(browser_name):
         page.locator('#oe').fill('58101H5A25')
         page.locator('#btn-lookup').click()
         page.wait_for_function('!document.querySelector("#results").hidden')
-        assert page.get_by_role('button', name='Скачать Excel ↙', exact=True).count() == 1
+        assert page.get_by_role('button', name='Выгрузить в Excel', exact=True).count() == 1
         assert 'проверить не удалось' in page.locator('#result-summary').inner_text()
         failures['lookup'] = True
         page.locator('#btn-lookup').click()

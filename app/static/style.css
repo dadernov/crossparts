@@ -190,6 +190,9 @@ footer { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
 .main-page .count { background: #dcebaa; color: #2e431c; border-radius: 7px; font-weight: 550; padding: 10px 14px; }
 .result-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 .result-actions .secondary { min-height: 38px; padding: 8px 13px; font-size: 14px; }
+.export-button { min-height:42px; padding:10px 15px; border:1px solid #235a44; border-radius:8px; background:#235a44; color:#fff; font:600 14px/1.2 Onest, Golos, sans-serif; box-shadow:0 2px 0 #163c2d; transition:background .15s, transform .15s; }
+.export-button:hover { background:#174831; }.export-button:active { transform:translateY(1px); box-shadow:0 1px 0 #163c2d; }
+.export-hint { margin:0; color:#58695f; font-size:13px; }
 .main-page th { background: #e9efdf; color: #35482d; }
 .main-page .history-panel { background: #fff; border: 1px solid #e1e5db; border-radius: 14px; padding: 26px 28px 10px; }
 .main-page .job-row:last-child { border-bottom: 0; }
@@ -207,6 +210,7 @@ footer { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
   .main-page .history-panel { padding: 20px 16px 6px; }
   .main-page .job-row { gap: 8px; }
   .result-actions { width: 100%; justify-content: space-between; }
+  .export-button { min-height:44px; padding-inline:14px; }
 }
 
 /* Entry choice and the small trial indicator. */

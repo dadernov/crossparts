@@ -181,7 +181,7 @@ $('#btn-export-lookup').onclick = async () => {
     link.href = url; link.download = `crosses-${canonicalNumber(state.lookup.oe)}.xlsx`;
     document.body.append(link); link.click(); link.remove(); URL.revokeObjectURL(url);
   } catch (error) { notice('#lookup-status', error.message, true); }
-  finally { button.disabled = false; button.textContent = 'Скачать Excel ↙'; }
+  finally { button.disabled = false; button.textContent = 'Выгрузить в Excel ↓'; }
 };
 
 function selectFile(file) {
