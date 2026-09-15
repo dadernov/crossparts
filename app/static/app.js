@@ -60,6 +60,55 @@ const GROUP_EXAMPLES = {
   radiators: ['Радиаторы', '8200735038'],
 };
 const SOURCE_LOGOS = {sbparts:'sbparts.svg', brembo:'brembo.svg', trialli:'trialli.svg', brixo:'brixo.svg', luzar:'luzar.svg', nissens:'nissens.svg', kyb:'kyb.png', hola:'hola.svg', brannor:'brannor.svg', hel:'hel.png'};
+const RESULT_BRAND_LOGOS = {
+  'ABS':'abs', 'AKEBONO':'akebono', 'APEC':'apec', 'AUDI':'audi', 'BENDIX':'bendix',
+  'BILSTEIN':'bilstein', 'BMW':'bmw', 'BOSCH':'bosch', 'BRANNOR':'../brands/brannor',
+  'BREMBO':'../brands/brembo', 'BRIXO':'../brands/brixo', 'BORG AND BECK':'borg-beck',
+  'CHEVROLET':'chevrolet', 'CHRYSLER':'chrysler',
+  'CITROEN':'citroen', 'DELPHI':'delphi', 'DENSO':'denso', 'EBC BRAKES':'ebc-brakes',
+  'FEBI':'febi-bilstein', 'FEBI BILSTEIN':'febi-bilstein', 'FERODO':'ferodo',
+  'FIAT':'fiat', 'FORD':'ford', 'GENERAL MOTORS':'general-motors', 'HELLA':'hella', 'HELLA PAGID':'hella',
+  'HEL':'../brands/hel', 'HOLA':'../brands/hola', 'HONDA':'honda', 'HYUNDAI':'hyundai',
+  'JEEP':'jeep', 'KIA':'kia', 'KYB':'../brands/kyb', 'LEXUS':'lexus',
+  'LUZAR':'../brands/luzar', 'MAHLE':'mahle', 'MAZDA':'mazda', 'MERCEDES BENZ':'mercedes',
+  'MEYLE':'meyle', 'NGK':'ngk', 'NIBK':'nibk', 'NISSAN':'nissan', 'NISSENS':'../brands/nissens',
+  'NISSHINBO':'nisshinbo', 'NK':'nk', 'OPEL':'opel', 'PAGID':'pagid', 'PEUGEOT':'peugeot',
+  'PORSCHE':'porsche', 'QUINTON HAZELL':'quinton-hazell', 'REMSA':'remsa',
+  'RENAULT':'renault', 'ROADHOUSE':'roadhouse', 'SB NAGAMOCHI':'../brands/sbparts',
+  'SKF':'skf', 'SKODA':'skoda', 'SUBARU':'subaru', 'SUZUKI':'suzuki', 'TEXTAR':'textar', 'JURID':'jurid',
+  'TOYOTA':'toyota', 'TRIALLI':'../brands/trialli', 'TRW':'trw', 'VALEO':'valeo',
+  'VOLKSWAGEN':'volkswagen', 'VOLVO':'volvo', 'ZIMMERMANN':'zimmermann',
+};
+const BRAND_ALIASES = {
+  'A B S':'ABS', 'DAIMLER':'MERCEDES BENZ', 'DAIMLER AG':'MERCEDES BENZ',
+  'GM':'GENERAL MOTORS', 'MERCEDES':'MERCEDES BENZ', 'MERCEDES BENZ FJDA':'MERCEDES BENZ',
+  'ROBERT BOSCH':'BOSCH', 'VAG':'VOLKSWAGEN', 'VW':'VOLKSWAGEN',
+};
+const BRAND_SUFFIXES = [' BEIJING',' BRILLIANCE',' CHANGAN',' DONGFENG',' FAW',' GAC',' HAINAN'];
+function normalizedBrand(value) {
+  let key = String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase().replace(/&/g, ' AND ').replace(/[^A-Z0-9]+/g, ' ').trim();
+  for (const suffix of BRAND_SUFFIXES) if (key.endsWith(suffix)) key = key.slice(0, -suffix.length);
+  return BRAND_ALIASES[key] || key;
+}
+function brandLogo(value) {
+  const slug = RESULT_BRAND_LOGOS[normalizedBrand(value)];
+  if (!slug) return null;
+  const extension = ['nibk','../brands/kyb','../brands/hel'].includes(slug) ? 'png' : 'svg';
+  return `/static/images/result-brands/${slug}.${extension}`.replace('/result-brands/../brands/', '/brands/');
+}
+function brandCell(value) {
+  const cell = el('td'); const wrap = el('span', undefined, 'result-brand');
+  const logo = brandLogo(value);
+  if (logo) {
+    const image = el('img'); image.src = logo; image.alt = ''; image.loading = 'lazy';
+    image.onerror = () => image.remove(); wrap.append(image);
+  } else {
+    const mark = el('span', String(value || '?').trim().slice(0, 1).toUpperCase(), 'brand-monogram');
+    mark.setAttribute('aria-hidden', 'true'); wrap.append(mark);
+  }
+  wrap.append(el('span', value || '—')); cell.append(wrap); return cell;
+}
 // One styled, keyboard-operated category list; native select retains the value.
 const groupSelect = $('#group');
 const groupPicker = el('div', undefined, 'group-picker');
@@ -275,8 +324,7 @@ function renderRows() {
   }
   $('#result-rows').replaceChildren(...rows.slice(start, start + 12).map((cross, index) => {
     const row = el('tr'); const number = el('td'); number.append(el('code', canonicalNumber(cross.number)));
-    const brand = el('td', cross.brand || '—');
-    row.append(el('td', String(start + index + 1)), el('td', cross.oe_number || state.lookup?.oe || '—'), brand, number, el('td', (cross.sources || []).map(key => sourceTitle(key).replace(/\s*\([^()]*\)\s*$/, '')).join(', ') || '—'));
+    row.append(el('td', String(start + index + 1)), el('td', cross.oe_number || state.lookup?.oe || '—'), brandCell(cross.brand), number, el('td', (cross.sources || []).map(key => sourceTitle(key).replace(/\s*\([^()]*\)\s*$/, '')).join(', ') || '—'));
     return row;
   }));
   if (!rows.length) { const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = 5; row.append(cell); $('#result-rows').append(row); }

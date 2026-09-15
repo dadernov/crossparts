@@ -130,6 +130,15 @@ def test_frontend_states_and_layout(browser_name):
         page.get_by_role('button', name='Подставить 58101H5A25', exact=True).click()
         page.locator('#btn-lookup').click()
         page.wait_for_function('document.querySelector("#btn-export-lookup").hidden === false')
+        page.wait_for_function('document.querySelector("#result-rows .result-brand img")?.naturalWidth > 0')
+        assert page.locator('#result-rows .result-brand').first.inner_text() == 'NiBK'
+        assert page.evaluate("normalizedBrand('VW')") == 'VOLKSWAGEN'
+        assert page.evaluate("normalizedBrand('Volkswagen')") == 'VOLKSWAGEN'
+        assert page.evaluate("normalizedBrand('CITROËN')") == 'CITROEN'
+        assert page.evaluate("normalizedBrand('AUDI (FAW)')") == 'AUDI'
+        assert page.evaluate("normalizedBrand('DAIMLER AG')") == 'MERCEDES BENZ'
+        assert page.evaluate("brandLogo('FEBI BILSTEIN').endsWith('/febi-bilstein.svg')")
+        assert page.evaluate("brandLogo('UNKNOWN BRAND')") is None
         assert page.locator('#result-filter').bounding_box()['x'] < page.locator('#btn-export-lookup').bounding_box()['x']
         if browser_name == 'chromium':
             page.screenshot(path='output/workspace-site/lookup-controls.png')
