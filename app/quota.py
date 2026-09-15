@@ -2,9 +2,25 @@
 from __future__ import annotations
 
 from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import update
 
 from .models import Account
+from .security import is_guest_tenant
+
+
+async def _ensure_guest_account(session_factory, username: str, limit: int) -> None:
+    if not is_guest_tenant(username):
+        return
+    async with session_factory() as session:
+        if await session.get(Account, username) is not None:
+            return
+        session.add(Account(username=username, password_hash="guest", queries_limit=limit))
+        try:
+            await session.commit()
+        except IntegrityError:
+            # Another request from the same IP created the quota row first.
+            await session.rollback()
 
 
 async def reserve_queries(session_factory, username: str, count: int, limit: int) -> int:
@@ -13,6 +29,7 @@ async def reserve_queries(session_factory, username: str, count: int, limit: int
     The conditional update prevents two browser tabs from spending more than the
     account limit at the same time. ``limit`` remains a fallback for old data.
     """
+    await _ensure_guest_account(session_factory, username, limit)
     async with session_factory() as session:
         result = await session.execute(
             update(Account)

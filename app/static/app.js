@@ -24,7 +24,7 @@ async function api(path, options = {}) {
     const messages = {413: 'Файл слишком большой. Максимум — 20 МБ.', 422: 'Проверьте заполнение полей и формат номера.', 429: 'Слишком много запросов. Подождите минуту и повторите.'};
     let detail;
     if ([400, 429].includes(response.status)) { try { detail = (await response.json()).detail; } catch (_) { /* generic fallback */ } }
-    throw new Error(messages[response.status] || (typeof detail === 'string' ? detail : 'Сервис временно недоступен. Повторите позже.'));
+    throw new Error((typeof detail === 'string' ? detail : null) || messages[response.status] || 'Сервис временно недоступен. Повторите позже.');
   }
   return response.json();
 }
@@ -53,6 +53,21 @@ document.addEventListener('keydown', event => {
 document.addEventListener('focusin', event => {
   if (!event.target.closest('.account')) closeProfile();
 });
+const guestOptions = $('#guest-options');
+const guestLogin = $('#guest-login');
+if (guestOptions && guestLogin) {
+  $('#open-inline-login').onclick = () => {
+    guestOptions.hidden = true; guestLogin.hidden = false;
+    $('#header-username').focus();
+  };
+  $('#back-to-access').onclick = () => {
+    guestLogin.hidden = true; guestOptions.hidden = false;
+    $('#open-inline-login').focus();
+  };
+  $('#use-trial').onclick = () => {
+    closeProfile(); $('#oe').focus();
+  };
+}
 
 const GROUP_EXAMPLES = {
   brake_pads: ['Колодки', '58101H5A25'], brake_discs: ['Диски', '1K0615301AA'],

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import ipaddress
 import os
 
 from fastapi import Header, HTTPException, Request, status
@@ -10,6 +11,33 @@ from sqlalchemy import select
 from .models import Account
 
 from .config import get_settings
+
+
+GUEST_PREFIX = "guest-"
+
+
+def client_ip(request: Request) -> str:
+    """Return a canonical client address.
+
+    Uvicorn trusts forwarded headers only from the local nginx proxy, so
+    ``request.client.host`` is already the original visitor in production.
+    """
+    raw = request.client.host if request.client else "0.0.0.0"
+    try:
+        return ipaddress.ip_address(raw).compressed
+    except ValueError:
+        return "0.0.0.0"
+
+
+def guest_tenant(request: Request) -> str:
+    """Stable, non-reversible tenant key used for the IP-bound free quota."""
+    secret = get_settings().session_secret.encode()
+    digest = hmac.new(secret, client_ip(request).encode(), hashlib.sha256).hexdigest()[:40]
+    return GUEST_PREFIX + digest
+
+
+def is_guest_tenant(username: str) -> bool:
+    return username.startswith(GUEST_PREFIX)
 
 
 def hash_password(password: str, salt: bytes | None = None) -> str:
@@ -28,22 +56,19 @@ def check_password(password: str, stored: str) -> bool:
 
 
 async def require_tenant(request: Request, x_api_key: str | None = Header(default=None)) -> str:
-    """Resolve the caller's tenant from ``X-API-Key``.
-
-    An empty ``CP_API_KEYS`` disables auth, which is handy in development.
-    """
+    """Resolve an account, API key, or IP-bound anonymous tenant."""
     keys = get_settings().api_key_map
     username = request.session.get("username")
     if username:
         return username
-    if not keys:
-        return "default"
-    if not x_api_key or x_api_key not in keys:
+    if x_api_key:
+        if x_api_key in keys:
+            return keys[x_api_key]
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Не указан или неверен заголовок X-API-Key",
         )
-    return keys[x_api_key]
+    return guest_tenant(request)
 
 
 async def authenticate(session_factory, username: str, password: str) -> str | None:

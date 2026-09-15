@@ -7,7 +7,7 @@ import pytest
 from playwright.sync_api import sync_playwright
 from app import main
 
-PATHS = ['/', '/features', '/categories', '/pricing', '/integrations', '/contacts', '/demo', '/login']
+PATHS = ['/features', '/categories', '/pricing', '/integrations', '/contacts', '/demo']
 
 async def public_pages():
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=main.app), base_url='https://marketing.local') as client:
@@ -21,9 +21,6 @@ async def public_pages():
 
 def test_public_content():
     pages = asyncio.run(public_pages())
-    assert 'id="login-form"' not in pages['/']
-    assert 'Создайте аккаунт' not in pages['/']
-    assert 'FAQ' not in pages['/']
     for count in ['40', '120', '250']:
         assert f'<strong>{count}</strong>' in pages['/pricing']
     for price in ['20 000', '50 000', '100 000']:
@@ -50,11 +47,12 @@ def test_marketing_browser(browser_name):
                 assert file.is_file(),path
                 r.fulfill(body=file.read_bytes(),content_type=mimetypes.guess_type(str(file))[0] or 'application/octet-stream')
             elif path=='/trial':r.fulfill(body='<h1>Пробный поиск</h1>',content_type='text/html')
+            elif path=='/login':r.fulfill(body='<h1>Вход</h1>',content_type='text/html')
             else:
                 assert path in pages,path
                 r.fulfill(body=pages[path],content_type='text/html')
         page.route('**/*',route)
-        for path in PATHS[:-1]:
+        for path in PATHS:
             page.goto('https://marketing.local'+path)
             page.evaluate('document.fonts.ready')
             assert page.locator('h1').count()==1
@@ -63,31 +61,17 @@ def test_marketing_browser(browser_name):
                 page.set_viewport_size({'width':width,'height':900})
                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),(path,width)
             for href in page.locator('a[href^="/"]').evaluate_all('(els)=>els.map(e=>e.getAttribute("href").split("?")[0])'):
-                assert href in pages or href.startswith('/static/'),href
+                assert href in {'/', '/login'} or href in pages or href.startswith('/static/'),href
             if browser_name=='chromium':
                 out=Path('output/welcome-site');out.mkdir(exist_ok=True)
                 page.screenshot(path=str(out/(('welcome' if path=='/' else path[1:])+'.png')),full_page=True)
-        page.goto('https://marketing.local/')
-        for width,height in [(1440,900),(1366,768),(1280,720)]:
-            page.set_viewport_size({'width':width,'height':height})
-            assert page.evaluate('document.documentElement.scrollHeight <= innerHeight'),(width,height)
-        page.set_viewport_size({'width':390,'height':844})
-        if browser_name=='chromium':page.screenshot(path='output/welcome-site/welcome-mobile.png',full_page=True)
+        page.goto('https://marketing.local/features')
         page.get_by_role('link',name='Категории',exact=True).click()
         assert page.url.endswith('/categories')
         page.evaluate("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async v=>{window.copied=v}}})")
         page.get_by_role('button',name='Копировать 58101H5A25',exact=True).click()
         assert page.evaluate('window.copied')=='58101H5A25'
-        page.goto('https://marketing.local/')
-        assert page.get_by_role('link',name='Посмотреть демо',exact=True).count() == 0
-        assert page.locator('.hero-checklist li').count() == 3
-        page.get_by_role('link',name='Открыть демонстрационный пример CrossParts',exact=True).click()
-        assert page.url.endswith('/demo')
         page.get_by_role('link',name='Войти',exact=True).click()
-        assert page.locator('#password').is_visible()
-        page.goto('https://marketing.local/')
-        page.get_by_role('button',name='Попробовать бесплатно',exact=False).click()
-        page.wait_for_url('https://marketing.local/trial')
-        assert page.url.endswith('/trial')
+        assert page.url.endswith('/login')
         assert not errors
         browser.close()

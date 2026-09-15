@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import secrets
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
@@ -17,11 +16,11 @@ from .config import get_settings
 from .db import SessionLocal, init_db
 from .excel import build_template, build_workbook, read_input
 from .jobs import JobRunner
-from .models import Account, Job, JobItem, utcnow
+from .models import Job, JobItem, utcnow
 from .marketing import context as marketing_context
 from .quota import quota_status, reserve_queries
 from .schemas import JobCreate, JobOut, LookupExportRequest, LookupRequest
-from .security import authenticate, hash_password, require_tenant
+from .security import authenticate, is_guest_tenant, require_tenant
 from .session import SignedSessionMiddleware
 from .sources.registry import SourceRegistry
 
@@ -70,13 +69,12 @@ def _job_out(job: Job) -> JobOut:
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    if not request.session.get("username"):
-        return templates.TemplateResponse(request, "welcome.html", marketing_context(registry, settings))
+    username = request.session.get("username")
     return templates.TemplateResponse(
         request,
         "index.html", {"sources": registry.describe(), "settings": settings,
-                        "username": request.session["username"],
-                        "is_trial": request.session.get("access") == "trial"},
+                        "username": username, "is_guest": not username,
+                        "login_open": False, "login_error": None},
     )
 
 
@@ -96,7 +94,11 @@ async def marketing_page(request: Request):
 async def login_page(request: Request):
     if request.session.get("username"):
         return RedirectResponse("/", status_code=303)
-    return templates.TemplateResponse(request, "login.html", {"error": None, "settings": settings})
+    return templates.TemplateResponse(
+        request, "index.html",
+        {"sources": registry.describe(), "settings": settings, "username": None,
+         "is_guest": True, "login_open": True, "login_error": None},
+    )
 
 
 @app.post("/login", response_class=HTMLResponse)
@@ -107,23 +109,19 @@ async def login(request: Request, username: str = Form(...), password: str = For
         request.session["username"] = account
         request.session["access"] = "account"
         return RedirectResponse("/", status_code=303)
-    return templates.TemplateResponse(request, "login.html",
-                                      {"error": "Неверный логин или пароль", "username": username, "settings": settings}, status_code=401)
+    return templates.TemplateResponse(
+        request, "index.html",
+        {"sources": registry.describe(), "settings": settings, "username": username,
+         "is_guest": True, "login_open": True,
+         "login_error": "Неверный логин или пароль"}, status_code=401,
+    )
 
 
 @app.post("/trial")
 async def start_trial(request: Request):
-    """Create an isolated, passwordless demo account with ten searches."""
+    """The free balance is automatic and bound to the caller's IP."""
     if request.session.get("username"):
         return RedirectResponse("/", status_code=303)
-    username = f"trial-{secrets.token_hex(12)}"
-    async with SessionLocal() as session:
-        session.add(Account(username=username, password_hash=hash_password(secrets.token_urlsafe(24)),
-                            queries_limit=settings.trial_requests))
-        await session.commit()
-    request.session.clear()
-    request.session["username"] = username
-    request.session["access"] = "trial"
     return RedirectResponse("/", status_code=303)
 
 
@@ -163,14 +161,16 @@ async def list_groups(tenant: str = Depends(require_tenant)):
 @app.get("/api/v1/account")
 async def account_status(tenant: str = Depends(require_tenant)):
     """The remaining search positions for the signed-in client."""
-    return await quota_status(SessionLocal, tenant, settings.requests_per_account)
+    limit = settings.trial_requests if is_guest_tenant(tenant) else settings.requests_per_account
+    return await quota_status(SessionLocal, tenant, limit)
 
 
 @app.post("/api/v1/lookup")
 async def lookup(req: LookupRequest, tenant: str = Depends(require_tenant)):
     """Single OE number, answered synchronously."""
     group = product_groups.resolve(req.group) if req.group else None
-    await reserve_queries(SessionLocal, tenant, 1, settings.requests_per_account)
+    limit = settings.trial_requests if is_guest_tenant(tenant) else settings.requests_per_account
+    await reserve_queries(SessionLocal, tenant, 1, limit)
     result = await aggregator.lookup(req.oe, req.sources, use_cache=True, group=group)
     # Persist the result already fetched: no second lookup or quota charge.
     async with SessionLocal() as session:
@@ -239,7 +239,8 @@ async def _create_job(items, sources, tenant, filename) -> JobOut:
     chosen = [s.key for s in registry.resolve(sources)]
     if not chosen:
         raise HTTPException(400, "Не выбран ни один известный источник")
-    await reserve_queries(SessionLocal, tenant, len(items), settings.requests_per_account)
+    limit = settings.trial_requests if is_guest_tenant(tenant) else settings.requests_per_account
+    await reserve_queries(SessionLocal, tenant, len(items), limit)
     async with SessionLocal() as session:
         job = Job(tenant=tenant, sources=chosen, total=len(items), filename=filename)
         session.add(job)
