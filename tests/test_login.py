@@ -49,6 +49,17 @@ def test_login_form_and_native_redirect(monkeypatch):
             assert 'Пробный доступ · 10 поисков' in response.text
             assert 'id="header-password"' in response.text
 
+            response = await client.post('/api/v1/lookup', json={'oe': '58101H5A25'})
+            assert response.status_code == 403
+            assert response.json()['detail'] == 'Выберите пробный доступ или войдите в аккаунт.'
+
+            response = await client.post('/trial')
+            assert response.status_code == 303
+            response = await client.get('/')
+            assert 'data-trial-active="true"' in response.text
+            assert 'id="use-trial"' not in response.text
+            assert '>Войти</button>' in response.text
+
     asyncio.run(check())
 
 
@@ -56,6 +67,7 @@ def test_guest_account_menu_opens_native_login_and_trial():
     env = Environment(loader=FileSystemLoader('app/templates'), autoescape=True)
     html = env.get_template('index.html').render(
         username=None, is_guest=True, login_open=False, login_error=None,
+        trial_active=False,
         settings=get_settings(),
     )
     with sync_playwright() as playwright:
@@ -86,7 +98,11 @@ def test_guest_account_menu_opens_native_login_and_trial():
         assert page.locator('#header-password').is_visible()
         assert page.locator('#header-password').get_attribute('autocomplete') == 'current-password'
         page.get_by_role('button', name='Назад').click()
-        page.get_by_role('button', name='Пробный доступ · 10 поисков').click()
-        assert page.locator('#profile-dropdown').is_hidden()
-        assert page.locator('#oe').evaluate('(element) => element === document.activeElement')
+        page.locator('#profile-toggle').click()
+        page.locator('#oe').fill('58101H5A25')
+        page.get_by_role('button', name='Найти').click()
+        assert page.locator('#profile-dropdown').is_visible()
+        assert page.get_by_role('button', name='Пробный доступ · 10 поисков').evaluate(
+            '(element) => element === document.activeElement'
+        )
         browser.close()

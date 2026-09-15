@@ -23,7 +23,7 @@ async function api(path, options = {}) {
   if (!response.ok) {
     const messages = {413: 'Файл слишком большой. Максимум — 20 МБ.', 422: 'Проверьте заполнение полей и формат номера.', 429: 'Слишком много запросов. Подождите минуту и повторите.'};
     let detail;
-    if ([400, 429].includes(response.status)) { try { detail = (await response.json()).detail; } catch (_) { /* generic fallback */ } }
+    if ([400, 403, 429].includes(response.status)) { try { detail = (await response.json()).detail; } catch (_) { /* generic fallback */ } }
     throw new Error((typeof detail === 'string' ? detail : null) || messages[response.status] || 'Сервис временно недоступен. Повторите позже.');
   }
   return response.json();
@@ -34,6 +34,8 @@ function canonicalNumber(value) { return String(value || '').replace(/[^A-Za-z0-
 // Accessible account disclosure; logout stays a native POST form.
 const profileToggle = $('#profile-toggle');
 const profileDropdown = $('#profile-dropdown');
+const account = document.querySelector('.account');
+const trialRequired = document.body.dataset.guest === 'true' && document.body.dataset.trialActive !== 'true';
 function closeProfile(restoreFocus = false) {
   profileDropdown.hidden = true;
   profileToggle.setAttribute('aria-expanded', 'false');
@@ -55,17 +57,21 @@ document.addEventListener('focusin', event => {
 });
 const guestOptions = $('#guest-options');
 const guestLogin = $('#guest-login');
+function openAccessMenu() {
+  if (!profileDropdown || !profileToggle) return;
+  if (guestOptions && guestLogin) { guestLogin.hidden = true; guestOptions.hidden = false; account?.classList.remove('login-open'); }
+  profileDropdown.hidden = false;
+  profileToggle.setAttribute('aria-expanded', 'true');
+  ($('#use-trial') || $('#open-inline-login'))?.focus();
+}
 if (guestOptions && guestLogin) {
   $('#open-inline-login').onclick = () => {
-    guestOptions.hidden = true; guestLogin.hidden = false;
+    guestOptions.hidden = true; guestLogin.hidden = false; account?.classList.add('login-open');
     $('#header-username').focus();
   };
   $('#back-to-access').onclick = () => {
-    guestLogin.hidden = true; guestOptions.hidden = false;
+    guestLogin.hidden = true; guestOptions.hidden = false; account?.classList.remove('login-open');
     $('#open-inline-login').focus();
-  };
-  $('#use-trial').onclick = () => {
-    closeProfile(); $('#oe').focus();
   };
 }
 
@@ -261,6 +267,7 @@ $('#lookup-form').addEventListener('submit', async event => {
   event.preventDefault(); if (state.busy) return;
   const oe = $('#oe').value.trim();
   if (oe.length < 2) { notice('#lookup-status', 'Введите хотя бы два символа номера.', true); $('#oe').focus(); return; }
+  if (trialRequired) { openAccessMenu(); return; }
   state.busy = true; state.mode = 'lookup'; state.selectedJob = null; highlightJob();
   const request = ++state.viewRequest;
   const group = $('#group').value || null;
@@ -429,6 +436,7 @@ $('#dropzone').ondragleave = () => $('#dropzone').classList.remove('dragging');
 $('#dropzone').ondrop = event => { event.preventDefault(); $('#dropzone').classList.remove('dragging'); if (!state.uploading) selectFile(event.dataTransfer.files[0]); };
 $('#upload-form').addEventListener('submit', async event => {
   event.preventDefault(); if (state.uploading) return;
+  if (trialRequired) { openAccessMenu(); return; }
   const file = state.file;
   if (!file) { $('#file').click(); return; }
   if (!file.name.toLowerCase().endsWith('.xlsx') || file.size > 20*1024*1024) { notice('#job-out','Нужен файл XLSX размером до 20 МБ.',true); return; }

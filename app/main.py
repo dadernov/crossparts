@@ -20,7 +20,7 @@ from .models import Job, JobItem, utcnow
 from .marketing import context as marketing_context
 from .quota import quota_status, reserve_queries
 from .schemas import JobCreate, JobOut, LookupExportRequest, LookupRequest
-from .security import authenticate, is_guest_tenant, require_tenant
+from .security import authenticate, is_guest_tenant, require_search_access, require_tenant
 from .session import SignedSessionMiddleware
 from .sources.registry import SourceRegistry
 
@@ -74,6 +74,7 @@ async def index(request: Request):
         request,
         "index.html", {"sources": registry.describe(), "settings": settings,
                         "username": username, "is_guest": not username,
+                        "trial_active": bool(request.session.get("trial_active")),
                         "login_open": False, "login_error": None},
     )
 
@@ -97,7 +98,8 @@ async def login_page(request: Request):
     return templates.TemplateResponse(
         request, "index.html",
         {"sources": registry.describe(), "settings": settings, "username": None,
-         "is_guest": True, "login_open": True, "login_error": None},
+         "is_guest": True, "trial_active": bool(request.session.get("trial_active")),
+         "login_open": True, "login_error": None},
     )
 
 
@@ -112,16 +114,18 @@ async def login(request: Request, username: str = Form(...), password: str = For
     return templates.TemplateResponse(
         request, "index.html",
         {"sources": registry.describe(), "settings": settings, "username": username,
-         "is_guest": True, "login_open": True,
+         "is_guest": True, "trial_active": bool(request.session.get("trial_active")),
+         "login_open": True,
          "login_error": "Неверный логин или пароль"}, status_code=401,
     )
 
 
 @app.post("/trial")
 async def start_trial(request: Request):
-    """The free balance is automatic and bound to the caller's IP."""
+    """Activate the caller's IP-bound free balance for this browser session."""
     if request.session.get("username"):
         return RedirectResponse("/", status_code=303)
+    request.session["trial_active"] = True
     return RedirectResponse("/", status_code=303)
 
 
@@ -166,7 +170,7 @@ async def account_status(tenant: str = Depends(require_tenant)):
 
 
 @app.post("/api/v1/lookup")
-async def lookup(req: LookupRequest, tenant: str = Depends(require_tenant)):
+async def lookup(req: LookupRequest, tenant: str = Depends(require_search_access)):
     """Single OE number, answered synchronously."""
     group = product_groups.resolve(req.group) if req.group else None
     limit = settings.trial_requests if is_guest_tenant(tenant) else settings.requests_per_account
@@ -209,7 +213,7 @@ async def lookup_export(payload: LookupExportRequest, tenant: str = Depends(requ
 
 
 @app.post("/api/v1/jobs", response_model=JobOut)
-async def create_job(payload: JobCreate, tenant: str = Depends(require_tenant)):
+async def create_job(payload: JobCreate, tenant: str = Depends(require_search_access)):
     if not payload.items:
         raise HTTPException(400, "Пустой список позиций")
     return await _create_job(
@@ -221,7 +225,7 @@ async def create_job(payload: JobCreate, tenant: str = Depends(require_tenant)):
 async def upload_job(
     file: UploadFile = File(...),
     sources: str | None = Form(default=None),
-    tenant: str = Depends(require_tenant),
+    tenant: str = Depends(require_search_access),
 ):
     """Upload the client's xlsx: column «Наш Артикул» + column «Номер ОЕ»."""
     data = await file.read()

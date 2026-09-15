@@ -5,7 +5,7 @@ import hmac
 import ipaddress
 import os
 
-from fastapi import Header, HTTPException, Request, status
+from fastapi import Depends, Header, HTTPException, Request, status
 from sqlalchemy import select
 
 from .models import Account
@@ -69,6 +69,19 @@ async def require_tenant(request: Request, x_api_key: str | None = Header(defaul
             detail="Не указан или неверен заголовок X-API-Key",
         )
     return guest_tenant(request)
+
+
+async def require_search_access(
+    request: Request,
+    tenant: str = Depends(require_tenant),
+) -> str:
+    """Require an account/API key or an explicitly activated IP-bound trial."""
+    if not is_guest_tenant(tenant) or request.session.get("trial_active") is True:
+        return tenant
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Выберите пробный доступ или войдите в аккаунт.",
+    )
 
 
 async def authenticate(session_factory, username: str, password: str) -> str | None:
