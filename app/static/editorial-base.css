@@ -1,0 +1,61 @@
+@font-face {
+  font-family: 'CrossParts Serif';
+  src: url('/static/fonts/LiberationSerif-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+html.ivory-light { --scroll-track: #fefefd; }
+html.ivory-warm { --scroll-track: #f2ead9; }
+html.ivory-light, html.ivory-warm {
+  --serif: 'CrossParts Serif', Georgia, 'Times New Roman', serif;
+  background: var(--scroll-track);
+  scrollbar-color: #b69c9b transparent;
+}
+:is(.ivory-light, .ivory-warm) * { scrollbar-color: #b69c9b transparent; }
+:is(.ivory-light, .ivory-warm)::-webkit-scrollbar { width: 12px; height: 12px; }
+:is(.ivory-light, .ivory-warm)::-webkit-scrollbar-track,
+:is(.ivory-light, .ivory-warm)::-webkit-scrollbar-corner { background: transparent; }
+:is(.ivory-light, .ivory-warm)::-webkit-scrollbar-thumb {
+  background: #b69c9b;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 10px;
+}
+:is(.ivory-light, .ivory-warm)::-webkit-scrollbar-thumb:hover { background: #957970; }
+:is(.ivory-light, .ivory-warm) *::-webkit-scrollbar-track,
+:is(.ivory-light, .ivory-warm) *::-webkit-scrollbar-corner { background: transparent; }
+
+:is(.ivory-light, .ivory-warm)::-webkit-scrollbar,
+:is(.ivory-light, .ivory-warm) *::-webkit-scrollbar { background: transparent; }
+:is(.ivory-light, .ivory-warm)::-webkit-scrollbar-button,
+:is(.ivory-light, .ivory-warm) *::-webkit-scrollbar-button { display: none; background: transparent; }
+/* The page thumb overlays content: no native gutter or track behind it. */
+html.overlay-scrollbar { scrollbar-width: none; }
+html.overlay-scrollbar::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.page-scroll-thumb {
+  position: fixed; right: 2px; top: 0; z-index: 1000;
+  width: 14px; min-height: 36px; padding: 0; border: 0;
+  background: transparent; border-radius: 8px; touch-action: none;
+  cursor: grab; user-select: none;
+}
+.page-scroll-thumb::before {
+  content: ''; position: absolute; inset: 0 3px;
+  background: #9e8780b3; border-radius: 8px;
+}
+.page-scroll-thumb:hover::before, .page-scroll-thumb:focus-visible::before { background: #8d716c; }
+.page-scroll-thumb:active { cursor: grabbing; }
+.page-scroll-thumb:focus-visible { outline: 2px solid #af231c; outline-offset: 0; }
+
+/* Touch scrolling stays native; phones do not need a draggable overlay. */
+@media (max-width: 700px), (hover: none) and (pointer: coarse) {
+  .page-scroll-thumb { display: none; }
+  html.ivory-light, html.ivory-warm { scrollbar-width: none; }
+  :is(.ivory-light, .ivory-warm)::-webkit-scrollbar { display: none; }
+}
+
+@font-face {
+  font-family: Jost; src: url('/static/fonts/Jost.ttf') format('truetype');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+:root { --geometric: 'Century Gothic', Jost, Onest, sans-serif; }

@@ -1,0 +1,15 @@
+/* Keep the existing authentication endpoint consistent while layouts are reviewed. */
+.login-page { --green: #9d172a; --paper: #f2ead9; --ink: #202024; --muted: #665b5d; background: var(--paper); }
+.login-page :focus-visible { outline-color: #b64056; }
+.login-page .login-intro h1 { font-family: var(--serif); font-weight: 700; }
+.login-page .login-intro h1 span { color: var(--green); }
+.login-page .specimen { background: #e9dfcc; transform: none; border-radius: 8px; }
+.login-page .specimen > div, .login-page .login-card, .login-page input, .login-page .notice { border: 0; }
+.login-page .login-card { background: #fffefa; border-radius: 12px; }
+.login-page .login-card > .eyebrow { font: 700 34px/1.1 var(--serif); letter-spacing: -.5px; color: var(--ink); }
+.login-page input:is(#username, #password) { border: 0; box-shadow: none; background: #f3eee3; }
+.login-page label, .login-page .field-help { font-size: 14px; font-weight: 600; }
+.login-page .primary { background: linear-gradient(115deg, #af2c42, #9d172a 48%, #85162b); font-size: 16px; font-weight: 600; }
+.login-page .primary:hover { background: #85162b; }
+.login-page .notice { background: #f4dce3; color: #85162b; }
+.login-page input:is(#username, #password):focus { background: #f3eee3; border: 0; box-shadow: none; outline: 3px solid #b64056; outline-offset: 3px; }

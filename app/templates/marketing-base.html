@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru" class="ivory-light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>{% block title %}CrossParts — кросс-номера автозапчастей{% endblock %}</title>
+<meta name="description" content="Проверенные аналоги по OEM-номерам. Каталоги ведущих производителей, обработка Excel и индивидуальные интеграции для вашей компании.">
+<link rel="icon" href="/static/favicon.svg?v=gerat-4" type="image/svg+xml">
+<link rel="stylesheet" href="/static/editorial-base.css?v=gerat-5">
+<link rel="stylesheet" href="/static/marketing.css?v=9">
+</head>
+<body class="marketing-page {% if page == 'home' %}marketing-home{% endif %}">
+<a class="skip-link" href="#main">К содержимому</a>
+<header class="site-header"><div class="header-inner">
+<a class="brand" href="/" aria-label="CrossParts — главная">Cross<span>Parts</span></a>
+<nav aria-label="Основная навигация">
+{% for key, href, label in [('features','/features','Возможности'),('categories','/categories','Категории'),('pricing','/pricing','Цены'),('integrations','/integrations','Интеграции'),('contacts','/contacts','Контакты')] %}
+<a href="{{ href }}"{% if page == key %} aria-current="page"{% endif %}>{{ label }}</a>
+{% endfor %}
+</nav>
+<div class="header-actions"><a href="/login" class="login-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3.5"/><path d="M5 21v-3a7 7 0 0 1 14 0v3"/></svg>Войти</a><form action="/trial" method="post"><button class="button button-red" type="submit">Попробовать <span aria-hidden="true">↗</span></button></form></div>
+</div></header>
+<div class="marketing-backdrop" aria-hidden="true"><span>58101–H5A25</span><span>OE / OEM</span><span>1K0 615 301 AA</span><span>48510–80378</span>{% if page == 'home' %}<span>8200735038</span><span>1K0611701K</span>{% endif %}</div>
+{% block content %}{% endblock %}
+<footer class="site-footer"><a class="brand" href="/">Cross<span>Parts</span></a><span>Инструмент для профессионалов рынка автозапчастей · MRB</span><a href="/integrations">Решения для вашей компании ↗</a></footer>
+<script src="/static/marketing.js?v=1" defer></script>
+<script src="/static/page-scrollbar.js?v=1" defer></script>
+</body></html>

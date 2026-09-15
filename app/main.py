@@ -18,6 +18,7 @@ from .db import SessionLocal, init_db
 from .excel import build_template, build_workbook, read_input
 from .jobs import JobRunner
 from .models import Account, Job, JobItem
+from .marketing import context as marketing_context
 from .quota import quota_status, reserve_queries
 from .schemas import JobCreate, JobOut, LookupExportRequest, LookupRequest
 from .security import authenticate, hash_password, require_tenant
@@ -70,7 +71,7 @@ def _job_out(job: Job) -> JobOut:
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     if not request.session.get("username"):
-        return templates.TemplateResponse(request, "welcome.html", {"settings": settings})
+        return templates.TemplateResponse(request, "welcome.html", marketing_context(registry, settings))
     return templates.TemplateResponse(
         request,
         "index.html", {"sources": registry.describe(), "settings": settings,
@@ -79,11 +80,23 @@ async def index(request: Request):
     )
 
 
+@app.get("/features", response_class=HTMLResponse)
+@app.get("/categories", response_class=HTMLResponse)
+@app.get("/pricing", response_class=HTMLResponse)
+@app.get("/integrations", response_class=HTMLResponse)
+@app.get("/demo", response_class=HTMLResponse)
+@app.get("/contacts", response_class=HTMLResponse)
+async def marketing_page(request: Request):
+    page = request.url.path.strip("/")
+    return templates.TemplateResponse(request, "marketing-pages.html",
+                                      marketing_context(registry, settings, page))
+
+
 @app.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
     if request.session.get("username"):
         return RedirectResponse("/", status_code=303)
-    return templates.TemplateResponse(request, "login.html", {"error": None})
+    return templates.TemplateResponse(request, "login.html", {"error": None, "settings": settings})
 
 
 @app.post("/login", response_class=HTMLResponse)
@@ -95,7 +108,7 @@ async def login(request: Request, username: str = Form(...), password: str = For
         request.session["access"] = "account"
         return RedirectResponse("/", status_code=303)
     return templates.TemplateResponse(request, "login.html",
-                                      {"error": "Неверный логин или пароль", "username": username}, status_code=401)
+                                      {"error": "Неверный логин или пароль", "username": username, "settings": settings}, status_code=401)
 
 
 @app.post("/trial")

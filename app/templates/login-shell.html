@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru" class="ivory-light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fefefd">
+  <title>CrossParts — поиск кроссов</title>
+  <link rel="icon" href="/static/favicon.svg?v=gerat-4" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=trial-1">
+  <link rel="stylesheet" href="/static/editorial-base.css?v=gerat-5">
+  <link rel="stylesheet" href="/static/welcome.css?v=explanation-10">
+</head>
+<body class="welcome-page">
+  <a class="skip" href="#main">К содержимому</a>
+  <header class="welcome-header">
+    <a class="welcome-logo" href="/" aria-label="CrossParts — главная">Cross<span>Parts</span></a>
+    <p class="welcome-tagline">Поиск кросс-номеров автозапчастей от MRB</p>
+  </header>
+  <div class="background-numbers" aria-hidden="true"><span>58101–H5A25</span><span>1K0 615 301 AA</span><span>OE / OEM</span><span>48510–80378</span></div>
+  <main id="main" class="welcome-layout">
+    <section class="welcome-intro" aria-labelledby="welcome-title">
+      <h1 id="welcome-title">Кросс-номера<br><span>автозапчастей.</span></h1>
+      <p class="welcome-description">Введите OE / OEM-номер или загрузите список из Excel. Получите номера аналогов из подключённых каталогов и выгрузите результат.</p>
+      <div class="welcome-reference" aria-hidden="true">
+        <span class="reference-label">OE / OEM</span>
+        <strong>58101–H5A25</strong>
+        <span>Один номер</span>
+        <span class="reference-catalogs">Разные каталоги ↗</span>
+      </div>
+    </section>
+    <section class="access-choice" aria-label="Вход в CrossParts">
+      <div id="entry-options"{% if login_open|default(false) %} hidden{% endif %}>
+      <h2 id="access-title">Начните с поиска,<br>не с регистрации.</h2>
+      <p class="access-description">Пробный поиск не требует логина. Рабочие задания доступны<br class="desktop-break"> в вашем личном кабинете.</p>
+      <div class="welcome-choices">
+        <form action="/trial" method="post">
+          <button class="entry-card entry-trial" type="submit">
+            <span class="entry-number" aria-hidden="true">{{ settings.trial_requests }}</span>
+            <span class="entry-copy"><strong>Попробовать бесплатно</strong><small>{{ settings.trial_requests }} поисков без регистрации</small></span>
+            <span class="entry-arrow" aria-hidden="true">→</span>
+          </button>
+        </form>
+        <a id="open-login" class="entry-card entry-account" href="/login">
+          <svg class="entry-lock" viewBox="0 0 48 56" fill="none" stroke="currentColor" stroke-width="4" aria-hidden="true"><path d="M12 24V15a12 12 0 0 1 24 0v9"/><rect x="5" y="24" width="38" height="28" rx="4" fill="currentColor" stroke="none"/><path d="M24 34v10" stroke="#fefefd" stroke-linecap="round"/></svg>
+          <span class="entry-copy"><strong>Войти по логину и паролю</strong><small>Продолжить работу с личными заданиями</small></span>
+          <span class="entry-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      </div>
+      <div id="entry-login"{% if not login_open|default(false) %} hidden{% endif %}>
+        <a id="back-to-options" class="back-to-options" href="/">← К выбору входа</a>
+        <h2>С возвращением</h2>
+        <p class="access-description">Войдите, чтобы продолжить работу.</p>
+        {% if error|default(false) %}<p class="login-error" role="alert">{{ error }}</p>{% endif %}
+        <form id="login-form" class="welcome-login-form" action="/login" method="post" autocomplete="on">
+          <label for="username">Логин</label>
+          <input id="username" type="text" name="username" autocomplete="username" {% if login_open|default(false) %}autofocus{% endif %} autocapitalize="none" spellcheck="false" required value="{{ username|default('') }}">
+          <label for="password">Пароль</label>
+          <div class="password-control">
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+            <button id="show-password" type="button" aria-label="Показать пароль" aria-controls="password" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <button class="login-submit" type="submit">Войти в кабинет →</button>
+        </form>
+        <p class="login-help">Если нет доступа, обратитесь к администратору.</p>
+      </div>
+    </section>
+  </main>
+  <script src="/static/welcome.js?v=login-page-3" defer></script>
+<script src="/static/page-scrollbar.js?v=1" defer></script></body>
+</html>

@@ -1,5 +1,21 @@
-<!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>CrossParts — поиск кроссов</title><meta name="theme-color" content="#f7f8f4"><link rel="icon" href="/static/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/static/style.css?v=trial-1"></head>
-<body class="welcome-page"><header class="topbar"><a class="logo" href="/"><span class="mark" aria-hidden="true">cp</span>crossparts</a></header>
-<main class="welcome-layout"><section class="welcome-intro"><p class="eyebrow">Поиск кросс-номеров автозапчастей</p><h1>Начните с поиска, <span>не с регистрации.</span></h1><p>Находите аналоги по OE / OEM-номеру, проверяйте источники и собирайте результат в Excel.</p><div class="specimen" aria-hidden="true"><span>OE / OEM</span><strong>58101–H5A25</strong><div><span>Один номер</span><span>Разные каталоги ↗</span></div></div></section>
-<section class="access-choice" aria-labelledby="access-title"><p class="eyebrow">Вход в сервис</p><h2 id="access-title">Как продолжим?</h2><p class="muted">Пробный поиск не требует логина. Рабочие задания доступны в вашем личном кабинете.</p><form action="/trial" method="post"><button class="trial-choice" type="submit"><span class="choice-icon" aria-hidden="true">10</span><span><strong>Попробовать бесплатно</strong><small>10 поисков без регистрации</small></span><b aria-hidden="true">→</b></button></form><div class="choice-divider"><span>или</span></div><a class="login-choice" href="/login"><span class="choice-icon lock" aria-hidden="true">⌁</span><span><strong>Войти по логину и паролю</strong><small>Продолжить работу с личными заданиями</small></span><b aria-hidden="true">→</b></a></section></main></body></html>
+{% extends 'marketing-base.html' %}
+{% block content %}
+<main id="main" class="landing-main">
+<section class="hero" aria-labelledby="hero-title">
+<div class="hero-copy">
+<p class="eyebrow">Для магазинов автозапчастей</p>
+<h1 id="hero-title">Точные кросс-номера.<br><span>Больше продаж.</span></h1>
+<ul class="hero-description hero-checklist"><li><span aria-hidden="true">✓</span><span>Проверенные аналоги по OEM-номерам.</span></li><li><span aria-hidden="true">✓</span><span>Работаем с каталогами ведущих производителей.</span></li><li><span aria-hidden="true">✓</span><span>Экономим время вашей команды.</span></li></ul>
+<div class="hero-actions"><form action="/trial" method="post"><button class="button button-red" type="submit">Попробовать бесплатно <span aria-hidden="true">→</span></button></form></div>
+<p class="trial-caption">{{ settings.trial_requests }} поисков без регистрации</p>
+<div class="benefit-row">
+<div><svg viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="7" rx="11" ry="4"/><path d="M5 7v18c0 5 22 5 22 0V7M5 13c0 5 22 5 22 0M5 19c0 5 22 5 22 0"/></svg><span><strong>Каталоги<br>производителей</strong><small>Источники, которым<br>вы доверяете</small></span></div>
+<div><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 2h12l7 7v21H7zM19 2v8h7M12 15l9 10m0-10-9 10"/></svg><span><strong>Пакетная<br>обработка Excel</strong><small>Больше позиций,<br>меньше ручной работы</small></span></div>
+<div><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 28h5V17H3zm10 0h5V11h-5zm10 0h5V4h-5M3 10l10-6 6 2 9-5"/></svg><span><strong>Для вашей<br>команды</strong><small>От отдельного магазина<br>до сети компаний</small></span></div>
+</div>
+</div>
+<div class="hero-demo"><a class="demo-preview demo-reference" href="/demo" aria-label="Открыть демонстрационный пример CrossParts"><span class="demo-reference-window"><img src="/static/images/demo-reference.png" width="1672" height="942" alt="Обложка демо CrossParts из референса: тормозные диски и колодки, результаты подбора и кнопка воспроизведения"></span></a><p class="demo-caption">Превью демо · открыть пример работы ↗</p><a href="/integrations" class="integration-note"><span class="integration-icon" aria-hidden="true">↔</span><span><strong>Подстроим сервис под вашу компанию</strong><small>Индивидуальные доработки и интеграции</small></span><span aria-hidden="true">↗</span></a></div>
+</section>
+<section class="brand-strip" aria-label="Подключённые каталоги"><p>Работаем с каталогами<br>ведущих производителей</p><div class="brand-logos">{% for brand in brands %}<a href="{{ brand.url }}" target="_blank" rel="noopener noreferrer" title="{{ brand.name }} — открыть каталог"><img src="{{ brand.image }}" alt="{{ brand.name }}" width="120" height="42"></a>{% endfor %}</div></section>
+</main>
+{% endblock %}
