@@ -137,8 +137,18 @@ def test_frontend_states_and_layout(browser_name):
         assert page.evaluate("normalizedBrand('CITROËN')") == 'CITROEN'
         assert page.evaluate("normalizedBrand('AUDI (FAW)')") == 'AUDI'
         assert page.evaluate("normalizedBrand('DAIMLER AG')") == 'MERCEDES BENZ'
+        assert page.evaluate("normalizedBrand('VW (FAW)')") == 'VOLKSWAGEN'
+        assert page.evaluate("normalizedBrand('VOLVO ASIA')") == 'VOLVO'
         assert page.evaluate("brandLogo('FEBI BILSTEIN').endsWith('/febi-bilstein.svg')")
+        assert page.evaluate("brandLogo('LADA').endsWith('/lada.svg')")
+        assert page.evaluate("brandLogo('SAKURA').endsWith('/sakura.png')")
+        assert page.evaluate("brandLogo('DACIA').endsWith('/dacia.svg')")
+        assert page.evaluate("brandLogo('ATE').endsWith('/ate.png')")
         assert page.evaluate("brandLogo('UNKNOWN BRAND')") is None
+        assert page.evaluate("brandCell('OEM').innerText") == '—'
+        assert page.evaluate("brandCell('UNKNOWN BRAND').querySelector('img') === null") is True
+        assert page.evaluate("brandCell('UNKNOWN BRAND').querySelector('.brand-monogram') === null") is True
+        assert page.evaluate("brandCell('UNKNOWN BRAND').innerText") == 'UNKNOWN BRAND'
         assert page.locator('#result-filter').bounding_box()['x'] < page.locator('#btn-export-lookup').bounding_box()['x']
         if browser_name == 'chromium':
             page.screenshot(path='output/workspace-site/lookup-controls.png')

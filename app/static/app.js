@@ -61,30 +61,40 @@ const GROUP_EXAMPLES = {
 };
 const SOURCE_LOGOS = {sbparts:'sbparts.svg', brembo:'brembo.svg', trialli:'trialli.svg', brixo:'brixo.svg', luzar:'luzar.svg', nissens:'nissens.svg', kyb:'kyb.png', hola:'hola.svg', brannor:'brannor.svg', hel:'hel.png'};
 const RESULT_BRAND_LOGOS = {
-  'ABS':'abs', 'AKEBONO':'akebono', 'APEC':'apec', 'AUDI':'audi', 'BENDIX':'bendix',
+  'ABS':'abs', 'AKEBONO':'akebono', 'ALFA ROMEO':'alfa-romeo', 'APEC':'apec',
+  'ASTON MARTIN':'aston-martin', 'ATE':'ate', 'AUDI':'audi', 'BENDIX':'bendix', 'BENTLEY':'bentley',
   'BILSTEIN':'bilstein', 'BMW':'bmw', 'BOSCH':'bosch', 'BRANNOR':'../brands/brannor',
   'BREMBO':'../brands/brembo', 'BRIXO':'../brands/brixo', 'BORG AND BECK':'borg-beck',
-  'CHEVROLET':'chevrolet', 'CHRYSLER':'chrysler',
-  'CITROEN':'citroen', 'DELPHI':'delphi', 'DENSO':'denso', 'EBC BRAKES':'ebc-brakes',
+  'CHEVROLET':'chevrolet', 'CHERY':'chery', 'CHRYSLER':'chrysler', 'CITROEN':'citroen',
+  'CUPRA':'cupra', 'DACIA':'dacia', 'DELPHI':'delphi', 'DENSO':'denso', 'DODGE':'dodge',
+  'EBC BRAKES':'ebc-brakes',
   'FEBI':'febi-bilstein', 'FEBI BILSTEIN':'febi-bilstein', 'FERODO':'ferodo',
-  'FIAT':'fiat', 'FORD':'ford', 'GENERAL MOTORS':'general-motors', 'HELLA':'hella', 'HELLA PAGID':'hella',
+  'FIAT':'fiat', 'FORD':'ford', 'GEELY':'geely', 'GENERAL MOTORS':'general-motors',
+  'HELLA':'hella', 'HELLA PAGID':'hella', 'HITACHI':'hitachi',
   'HEL':'../brands/hel', 'HOLA':'../brands/hola', 'HONDA':'honda', 'HYUNDAI':'hyundai',
-  'JEEP':'jeep', 'KIA':'kia', 'KYB':'../brands/kyb', 'LEXUS':'lexus',
-  'LUZAR':'../brands/luzar', 'MAHLE':'mahle', 'MAZDA':'mazda', 'MERCEDES BENZ':'mercedes',
+  'JAGUAR':'jaguar', 'JEEP':'jeep', 'KIA':'kia', 'KYB':'../brands/kyb', 'LADA':'lada',
+  'LEXUS':'lexus', 'LINCOLN':'lincoln', 'LPR':'lpr', 'LUZAR':'../brands/luzar',
+  'MAHLE':'mahle', 'MASERATI':'maserati', 'MAZDA':'mazda',
+  'MERCEDES BENZ':'mercedes', 'MITSUBISHI':'mitsubishi',
   'MEYLE':'meyle', 'NGK':'ngk', 'NIBK':'nibk', 'NISSAN':'nissan', 'NISSENS':'../brands/nissens',
   'NISSHINBO':'nisshinbo', 'NK':'nk', 'OPEL':'opel', 'PAGID':'pagid', 'PEUGEOT':'peugeot',
   'PORSCHE':'porsche', 'QUINTON HAZELL':'quinton-hazell', 'REMSA':'remsa',
-  'RENAULT':'renault', 'ROADHOUSE':'roadhouse', 'SB NAGAMOCHI':'../brands/sbparts',
-  'SKF':'skf', 'SKODA':'skoda', 'SUBARU':'subaru', 'SUZUKI':'suzuki', 'TEXTAR':'textar', 'JURID':'jurid',
-  'TOYOTA':'toyota', 'TRIALLI':'../brands/trialli', 'TRW':'trw', 'VALEO':'valeo',
-  'VOLKSWAGEN':'volkswagen', 'VOLVO':'volvo', 'ZIMMERMANN':'zimmermann',
+  'RAM':'ram', 'RENAULT':'renault', 'ROADHOUSE':'roadhouse', 'ROLLS ROYCE':'rolls-royce',
+  'SAAB':'saab', 'SAKURA':'sakura', 'SB NAGAMOCHI':'../brands/sbparts', 'SBS':'sbs',
+  'SEAT':'seat', 'SKF':'skf', 'SKODA':'skoda', 'SUBARU':'subaru', 'SUZUKI':'suzuki',
+  'TESLA':'tesla', 'TEXTAR':'textar', 'JURID':'jurid', 'TOYOTA':'toyota',
+  'TRIALLI':'../brands/trialli', 'TRW':'trw', 'VALEO':'valeo',
+  'VAUXHALL':'vauxhall', 'VOLKSWAGEN':'volkswagen', 'VOLVO':'volvo',
+  'ZIMMERMANN':'zimmermann', 'BECK ARNLEY':'beck-arnley', 'BYD':'byd',
 };
 const BRAND_ALIASES = {
   'A B S':'ABS', 'DAIMLER':'MERCEDES BENZ', 'DAIMLER AG':'MERCEDES BENZ',
   'GM':'GENERAL MOTORS', 'MERCEDES':'MERCEDES BENZ', 'MERCEDES BENZ FJDA':'MERCEDES BENZ',
-  'ROBERT BOSCH':'BOSCH', 'VAG':'VOLKSWAGEN', 'VW':'VOLKSWAGEN',
+  'FAW VW':'VOLKSWAGEN', 'ROBERT BOSCH':'BOSCH', 'SAIC VOLKSWAGEN':'VOLKSWAGEN',
+  'VAG':'VOLKSWAGEN', 'VAG JZW':'VOLKSWAGEN', 'VW':'VOLKSWAGEN',
 };
-const BRAND_SUFFIXES = [' BEIJING',' BRILLIANCE',' CHANGAN',' DONGFENG',' FAW',' GAC',' HAINAN'];
+const BRAND_SUFFIXES = [' ASIA',' BEIJING',' BRILLIANCE',' CHANGAN',' DONGFENG',' FAW',' GAC',' HAINAN',' SVW',' USA'];
+const NON_BRANDS = new Set(['OEM','OTHER','TEST']);
 function normalizedBrand(value) {
   let key = String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
     .toUpperCase().replace(/&/g, ' AND ').replace(/[^A-Z0-9]+/g, ' ').trim();
@@ -94,18 +104,17 @@ function normalizedBrand(value) {
 function brandLogo(value) {
   const slug = RESULT_BRAND_LOGOS[normalizedBrand(value)];
   if (!slug) return null;
-  const extension = ['nibk','../brands/kyb','../brands/hel'].includes(slug) ? 'png' : 'svg';
+  const extension = ['ate','nibk','sakura','../brands/kyb','../brands/hel'].includes(slug) ? 'png' : 'svg';
   return `/static/images/result-brands/${slug}.${extension}`.replace('/result-brands/../brands/', '/brands/');
 }
 function brandCell(value) {
   const cell = el('td'); const wrap = el('span', undefined, 'result-brand');
+  const normalized = normalizedBrand(value);
+  if (NON_BRANDS.has(normalized)) { wrap.append(el('span', '—')); cell.append(wrap); return cell; }
   const logo = brandLogo(value);
   if (logo) {
     const image = el('img'); image.src = logo; image.alt = ''; image.loading = 'lazy';
     image.onerror = () => image.remove(); wrap.append(image);
-  } else {
-    const mark = el('span', String(value || '?').trim().slice(0, 1).toUpperCase(), 'brand-monogram');
-    mark.setAttribute('aria-hidden', 'true'); wrap.append(mark);
   }
   wrap.append(el('span', value || '—')); cell.append(wrap); return cell;
 }
