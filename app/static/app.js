@@ -111,11 +111,6 @@ function brandCell(value) {
   const cell = el('td'); const wrap = el('span', undefined, 'result-brand');
   const normalized = normalizedBrand(value);
   if (NON_BRANDS.has(normalized)) { wrap.append(el('span', '—')); cell.append(wrap); return cell; }
-  const logo = brandLogo(value);
-  if (logo) {
-    const image = el('img'); image.src = logo; image.alt = ''; image.loading = 'lazy';
-    image.onerror = () => image.remove(); wrap.append(image);
-  }
   wrap.append(el('span', value || '—')); cell.append(wrap); return cell;
 }
 // One styled, keyboard-operated category list; native select retains the value.

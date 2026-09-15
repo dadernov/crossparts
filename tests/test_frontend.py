@@ -130,8 +130,8 @@ def test_frontend_states_and_layout(browser_name):
         page.get_by_role('button', name='Подставить 58101H5A25', exact=True).click()
         page.locator('#btn-lookup').click()
         page.wait_for_function('document.querySelector("#btn-export-lookup").hidden === false')
-        page.wait_for_function('document.querySelector("#result-rows .result-brand img")?.naturalWidth > 0')
         assert page.locator('#result-rows .result-brand').first.inner_text() == 'NiBK'
+        assert page.locator('#result-rows .result-brand img').count() == 0
         assert page.evaluate("normalizedBrand('VW')") == 'VOLKSWAGEN'
         assert page.evaluate("normalizedBrand('Volkswagen')") == 'VOLKSWAGEN'
         assert page.evaluate("normalizedBrand('CITROËN')") == 'CITROEN'
