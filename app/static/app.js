@@ -183,7 +183,7 @@ function clearResult() {
   $('#result-rows').replaceChildren(); $('#result-table').hidden = true; $('#result-tools').hidden = true;
   $('#result-empty').hidden = true; $('#result-filter').value = ''; $('#filter-count').textContent = '';
   $('#result-count').textContent = ''; $('#result-query').textContent = '';
-  $('#btn-export-lookup').hidden = true; $('#job-export').hidden = true;
+  $('#btn-export-lookup').hidden = true; $('#job-export').hidden = true; $('#export-format').hidden = true;
   $('#source-details').hidden = true; $('#job-details').hidden = true;
 }
 function highlightJob() {
@@ -217,8 +217,8 @@ $('#lookup-form').addEventListener('submit', async event => {
     $('#source-reports').replaceChildren(...data.sources.map(source => el('span', `${sourceTitle(source.source).replace(/\s*\([^()]*\)\s*$/, '')}: ${STATUS[source.status] || source.status}`, `badge ${['error','blocked'].includes(source.status)?'warning':'neutral'}`)));
     $('#source-summary').textContent = `Каталоги: ${answered.length} из ${data.sources.length}`;
     $('#source-details').hidden = !unavailable.length; $('#source-details').open = Boolean(unavailable.length);
-    $('#btn-export-lookup').hidden = !data.crosses.length;
-    renderRows(); loadQuota(); notice('#lookup-status');
+    $('#btn-export-lookup').hidden = !data.crosses.length; $('#export-format').hidden = !data.crosses.length;
+    renderRows(); loadQuota(); refreshJobs(); notice('#lookup-status');
   } catch (error) { if (request === state.viewRequest) { notice('#lookup-status', error.message, true); $('#result-summary').textContent = error.message; } }
   finally { state.busy = false; $('#btn-lookup').disabled = false; $('#btn-lookup').textContent = 'Найти'; $('#lookup-form').removeAttribute('aria-busy'); }
 });
@@ -282,8 +282,64 @@ function renderRows() {
   if (!rows.length) { const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = 5; row.append(cell); $('#result-rows').append(row); }
 }
 $('#result-filter').oninput = () => { state.page = 1; renderRows(); };
+// Styled format selector with native value retained for export handlers.
+function styleFormat(select) {
+  const wrapper = el('div', undefined, 'format-picker');
+  const trigger = el('button', select.value.toUpperCase(), 'format-trigger'); trigger.type = 'button';
+  trigger.setAttribute('aria-label', select.getAttribute('aria-label') || 'Формат скачивания');
+  trigger.setAttribute('aria-haspopup', 'listbox'); trigger.setAttribute('aria-expanded', 'false');
+  const list = el('div', undefined, 'format-options'); list.hidden = true; list.setAttribute('role', 'listbox');
+  list.setAttribute('aria-label', 'Форматы файлов');
+  const close = () => { list.hidden = true; trigger.setAttribute('aria-expanded','false'); };
+  const items = [];
+  const sync = () => {
+    trigger.textContent = select.value.toUpperCase();
+    items.forEach(item => item.setAttribute('aria-selected', String(item.dataset.value === select.value)));
+  };
+  for (const option of select.options) {
+    const item = el('button', undefined, 'format-option'); item.type = 'button'; item.dataset.value = option.value;
+    item.setAttribute('role','option');
+    item.append(el('strong', option.textContent));
+    item.onclick = () => { select.value = option.value; select.dispatchEvent(new Event('change', {bubbles:true})); close(); trigger.focus(); };
+    item.onkeydown = event => {
+      const index = items.indexOf(item);
+      if (['ArrowDown','ArrowUp','Home','End'].includes(event.key)) {
+        event.preventDefault(); items[event.key === 'Home' ? 0 : event.key === 'End' ? items.length-1 : (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
+      }
+    };
+    items.push(item); list.append(item);
+  }
+  const open = () => { list.hidden = false; trigger.setAttribute('aria-expanded','true'); items.find(item => item.dataset.value === select.value)?.focus(); };
+  trigger.onclick = () => list.hidden ? open() : close();
+  trigger.onkeydown = event => { if (['ArrowDown','ArrowUp'].includes(event.key)) { event.preventDefault(); open(); } };
+  wrapper.onkeydown = event => { if (event.key === 'Escape') { close(); trigger.focus(); event.preventDefault(); } };
+  wrapper.addEventListener('focusout', event => { if (!wrapper.contains(event.relatedTarget)) close(); });
+  wrapper.append(trigger,list); select.after(wrapper); select.classList.add('format-native'); select.tabIndex = -1;
+  select.addEventListener('change', sync); sync();
+}
+styleFormat($('#export-format'));
+function downloadRows(rows, format, filename, oe = '') {
+  const data = rows.map(row => ({...row, oe_number:row.oe_number || oe}));
+  let content, type;
+  if (format === 'json') { content = JSON.stringify(data, null, 2); type = 'application/json;charset=utf-8'; }
+  else {
+    const quote = value => { let text = String(value ?? ''); if (/^[\s]*[=+@-]/.test(text)) text = "'" + text; return '"' + text.replace(/"/g, '""') + '"'; };
+    const records = data.map(row => [row.oe_number, row.brand, row.number, (row.sources || []).map(sourceTitle).join(', ')]);
+    content = '\uFEFF' + [['Номер OE / OEM','Бренд','Номер аналога','Источник'], ...records].map(row => row.map(quote).join(';')).join('\r\n');
+    type = 'text/csv;charset=utf-8';
+  }
+  const url = URL.createObjectURL(new Blob([content], {type}));
+  const link = el('a'); link.href = url; link.download = `${filename}.${format}`; document.body.append(link); link.click(); link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+$('#job-export').onclick = event => {
+  const format = $('#export-format').value;
+  if (format !== 'xlsx') { event.preventDefault(); downloadRows(state.crosses, format, `crosses-${state.selectedJob}`); }
+};
 $('#btn-export-lookup').onclick = async () => {
   if (!state.lookup || !state.crosses.length) return;
+  const format = $('#export-format').value;
+  if (format !== 'xlsx') { downloadRows(state.crosses, format, `crosses-${canonicalNumber(state.lookup.oe)}`, state.lookup.oe); return; }
   const button = $('#btn-export-lookup'); button.disabled = true; button.textContent = 'Готовим Excel…';
   const lookup = state.lookup, crosses = state.crosses;
   try {
@@ -292,7 +348,7 @@ $('#btn-export-lookup').onclick = async () => {
     const url = URL.createObjectURL(await response.blob()); const link = el('a');
     link.href = url; link.download = `crosses-${canonicalNumber(lookup.oe)}.xlsx`; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) { notice('#lookup-status', error.message, true); }
-  finally { button.disabled = false; button.textContent = 'Скачать Excel'; }
+  finally { button.disabled = false; button.textContent = 'Скачать'; }
 };
 function selectFile(file) {
   state.file = file;
@@ -326,10 +382,23 @@ function jobRow(job) {
   name.append(el('time',new Date(job.created_at).toLocaleString('ru-RU',{dateStyle:'short',timeStyle:'short'}),'job-date'));
   const status = el('span',STATUS[job.status] || 'Неизвестный статус',`badge ${job.status === 'failed'?'warning':job.status === 'done'?'job-done':'neutral'}`);
   const actions = el('div',undefined,'job-actions');
-  if (job.status === 'done') { const link = el('a','Скачать Excel','text-link'); link.href = `/api/v1/jobs/${encodeURIComponent(job.id)}/export.xlsx`; actions.append(link); }
-  const details = el('button','Подробнее','text-button'); details.type = 'button'; details.dataset.focusKey = job.id; details.onclick = () => showJob(job.id); actions.append(details);
+  if (job.status === 'done') {
+    const format = el('select', undefined, 'export-format'); format.setAttribute('aria-label', `Формат скачивания ${job.filename || 'задания'}`);
+    for (const value of ['xlsx','csv','json']) { const option = el('option', value.toUpperCase()); option.value = value; format.append(option); }
+    const link = el('a','Скачать','text-link'); link.href = `/api/v1/jobs/${encodeURIComponent(job.id)}/export.xlsx`;
+    link.onclick = async event => {
+      if (format.value === 'xlsx') return;
+      event.preventDefault(); if (link.dataset.busy) return;
+      const selectedFormat = format.value; link.dataset.busy = '1'; link.textContent = 'Готовим…';
+      try { const data = await api(`/api/v1/jobs/${encodeURIComponent(job.id)}/results`); downloadRows(data.rows, selectedFormat, `crosses-${job.id}`); }
+      catch (error) { $('#history-status').textContent = error.message; }
+      finally { delete link.dataset.busy; link.textContent = 'Скачать'; }
+    };
+    actions.append(format,link); styleFormat(format);
+  }
+  const details = el('button','Открыть','text-button'); details.type = 'button'; details.dataset.focusKey = job.id; details.onclick = () => { showJob(job.id); $('#results').scrollIntoView({block:'start', behavior:'smooth'}); }; actions.append(details);
   row.append(name,status);
-  if (['pending','running'].includes(job.status)) {
+  {
     const progress = el('div',`Обработано ${job.done} из ${job.total}`,'job-progress'); const bar = el('progress'); bar.max = Math.max(1,job.total); bar.value = job.done; bar.setAttribute('aria-label',`Обработка ${job.filename || 'задания'}`); progress.append(bar); row.append(progress);
   }
   row.append(actions); return row;
@@ -338,17 +407,17 @@ async function showJob(id, background = false) {
   if (background && (state.mode !== 'job' || state.selectedJob !== id)) return;
   const request = ++state.viewRequest;
   state.mode = 'job'; state.selectedJob = id; highlightJob();
-  if (!background) { clearResult(); $('#results-title').textContent = 'Результат обработки'; $('#result-summary').textContent = 'Загружаем результат…'; }
+  if (!background) { clearResult(); $('#results-title').textContent = 'Результаты поиска'; $('#result-summary').textContent = 'Загружаем результат…'; }
   try {
     const [data, results] = await Promise.all([api(`/api/v1/jobs/${encodeURIComponent(id)}`),api(`/api/v1/jobs/${encodeURIComponent(id)}/results`)]);
     if (request !== state.viewRequest) return;
     state.jobVersion = JSON.stringify(data.job);
     state.crosses = results.rows; state.lookup = null;
-    $('#results-title').textContent = 'Результат обработки'; $('#result-query').textContent = data.job.filename || 'Задание из API';
+    $('#results-title').textContent = 'Результаты поиска'; $('#result-query').textContent = data.job.filename || 'Задание из API';
     $('#result-summary').textContent = data.job.status === 'done' ? '' : `${STATUS[data.job.status] || data.job.status} · обработано ${data.job.done} из ${data.job.total}.`;
     const problematic = data.items.filter(i => ['blocked','error','no_sources'].includes(i.status)).length;
     if (problematic) $('#result-summary').textContent += ` Для ${problematic} позиций проверка неполная — смотрите статус позиций.`;
-    $('#job-export').href = `/api/v1/jobs/${encodeURIComponent(id)}/export.xlsx`; $('#job-export').hidden = data.job.status !== 'done';
+    $('#job-export').href = `/api/v1/jobs/${encodeURIComponent(id)}/export.xlsx`; $('#job-export').hidden = data.job.status !== 'done'; $('#export-format').hidden = data.job.status !== 'done';
     $('#btn-export-lookup').hidden = true; $('#source-details').hidden = true; $('#result-empty').hidden = true;
     renderRows();
     const table = el('table'), thead = el('thead'), head = el('tr'), tbody = el('tbody');
@@ -357,7 +426,7 @@ async function showJob(id, background = false) {
     for (const item of data.items) { const row = el('tr'); row.append(el('td',item.oe_number),el('td',item.part_name || item.our_sku || '—'),el('td',STATUS[item.status] || item.status),el('td',String(item.crosses_count))); tbody.append(row); }
     table.append(thead,tbody); $('#detail-body').replaceChildren(table); $('#job-details').hidden = !problematic && data.job.status === 'done';
     if (!background) $('#job-details').open = Boolean(problematic || data.job.status === 'failed');
-  } catch (error) { if (request === state.viewRequest) { $('#result-summary').textContent = `${error.message} Нажмите «Подробнее» в истории, чтобы повторить.`; state.jobVersion = ''; } }
+  } catch (error) { if (request === state.viewRequest) { $('#result-summary').textContent = `${error.message} Нажмите «Открыть» в истории, чтобы повторить.`; state.jobVersion = ''; } }
 }
 async function refreshJobs() {
   if (state.jobsBusy) return;

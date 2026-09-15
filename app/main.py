@@ -17,7 +17,7 @@ from .config import get_settings
 from .db import SessionLocal, init_db
 from .excel import build_template, build_workbook, read_input
 from .jobs import JobRunner
-from .models import Account, Job, JobItem
+from .models import Account, Job, JobItem, utcnow
 from .marketing import context as marketing_context
 from .quota import quota_status, reserve_queries
 from .schemas import JobCreate, JobOut, LookupExportRequest, LookupRequest
@@ -171,7 +171,21 @@ async def lookup(req: LookupRequest, tenant: str = Depends(require_tenant)):
     """Single OE number, answered synchronously."""
     group = product_groups.resolve(req.group) if req.group else None
     await reserve_queries(SessionLocal, tenant, 1, settings.requests_per_account)
-    return await aggregator.lookup(req.oe, req.sources, use_cache=True, group=group)
+    result = await aggregator.lookup(req.oe, req.sources, use_cache=True, group=group)
+    # Persist the result already fetched: no second lookup or quota charge.
+    async with SessionLocal() as session:
+        job = Job(tenant=tenant, status="done", total=1, done=1,
+                  filename=f"Поиск · {req.oe}"[:255],
+                  sources=[source["source"] for source in result["sources"]],
+                  finished_at=utcnow())
+        session.add(job)
+        await session.flush()
+        session.add(JobItem(job_id=job.id, position=0, oe_number=req.oe,
+                            group=group, group_raw=req.group,
+                            status=result["status"], crosses=result["crosses"],
+                            source_reports=result["sources"]))
+        await session.commit()
+    return result
 
 
 @app.post("/api/v1/lookup/export.xlsx")

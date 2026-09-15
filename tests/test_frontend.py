@@ -102,7 +102,7 @@ def test_frontend_states_and_layout(browser_name):
         assert page.locator('#profile-dropdown').is_visible()
         page.locator('h1').click()
         assert page.locator('#profile-dropdown').is_hidden()
-        assert page.locator('.results-panel').bounding_box()['x'] < page.locator('.history-panel').bounding_box()['x']
+        assert page.locator('.results-panel').bounding_box()['y'] < page.locator('.history-panel').bounding_box()['y']
         assert page.locator('#job-export').get_attribute('href') == '/api/v1/jobs/test/export.xlsx'
         Path('output/workspace-site').mkdir(parents=True, exist_ok=True)
         for width in [320, 390, 768, 1024, 1440, 1920, 2560]:
@@ -113,9 +113,9 @@ def test_frontend_states_and_layout(browser_name):
         page.set_viewport_size({'width':1440,'height':1000})
         search_box = page.locator('.combined-search').bounding_box()
         catalog_box = page.locator('.catalogues').bounding_box()
-        assert abs(search_box['y'] - catalog_box['y']) < 2
-        assert abs(search_box['height'] - catalog_box['height']) < 2
-        assert page.locator('.history-panel').bounding_box()['y'] > catalog_box['y']
+        assert search_box['y'] < catalog_box['y']
+        assert abs(search_box['width'] - catalog_box['width']) < 2
+        assert page.locator('.history-panel').bounding_box()['y'] < catalog_box['y']
         assert page.locator('#result-table th').first.evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(244, 245, 248)'
         # Choosing a file is an explicit picker, never an automatic upload.
         with page.expect_file_chooser():
@@ -178,6 +178,40 @@ def test_frontend_states_and_layout(browser_name):
         with page.expect_download():
             page.locator('#btn-export-lookup').click()
         assert calls['export']['group'] == 'brake_pads'
+        def choose_format(selector, value):
+            picker = page.locator(selector).locator('xpath=following-sibling::div[1]')
+            picker.locator('.format-trigger').click()
+            picker.locator(f'[data-value="{value}"]').click()
+            assert picker.locator('.format-options').is_hidden()
+        picker = page.locator('#export-format').locator('xpath=following-sibling::div[1]')
+        picker.locator('.format-trigger').focus()
+        page.keyboard.press('ArrowDown')
+        assert picker.locator('.format-options').is_visible()
+        page.keyboard.press('End')
+        page.keyboard.press('Enter')
+        assert page.locator('#export-format').input_value() == 'json'
+        picker.locator('.format-trigger').click()
+        page.keyboard.press('Escape')
+        assert picker.locator('.format-options').is_hidden()
+        assert page.locator('#result-rows tr').nth(1).evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(231, 235, 240)'
+        # All rows export, including those outside the current page/filter.
+        import json
+        choose_format('#export-format', 'json')
+        with page.expect_download() as info:
+            page.locator('#btn-export-lookup').click()
+        exported = json.loads(Path(info.value.path()).read_text())
+        assert len(exported) == 1200
+        assert exported[0]['oe_number'] == '58101H5A25'
+        choose_format('#export-format', 'csv')
+        with page.expect_download() as info:
+            page.locator('#btn-export-lookup').click()
+        csv = Path(info.value.path()).read_text(encoding='utf-8-sig')
+        assert 'Номер OE / OEM' in csv and 'PN1199' in csv
+        choose_format('.job-actions select', 'json')
+        with page.expect_download() as info:
+            page.locator('.job-actions a').click()
+        assert json.loads(Path(info.value.path()).read_text())[0]['number'] == 'PN0537'
+        choose_format('#export-format', 'xlsx')
         page.locator('#result-filter').fill('nothing matches')
         assert 'По этому фильтру' in page.locator('#result-rows').inner_text()
         page.locator('#result-filter').fill('')
@@ -201,7 +235,7 @@ def test_frontend_states_and_layout(browser_name):
         page.locator('#btn-lookup').click()
         page.wait_for_timeout(100)
         assert calls['held'] is not None
-        page.get_by_role('button', name='Подробнее', exact=True).click()
+        page.get_by_role('button', name='Открыть', exact=True).click()
         page.wait_for_function('document.querySelector("#result-query").textContent.includes("сентябрь")')
         calls['held'].fulfill(json=lookup)
         page.wait_for_function('!document.querySelector("#btn-lookup").disabled')
