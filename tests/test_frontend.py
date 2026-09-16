@@ -76,7 +76,8 @@ def test_frontend_states_and_layout(browser_name):
 
         page.route('**/*', route)
         page.goto('http://audit.local/')
-        page.wait_for_selector('#result-rows code')
+        page.wait_for_function('document.querySelectorAll("#coverage .catalog-card").length === 10')
+        page.wait_for_function('document.querySelectorAll("#jobs .job-row").length === 1')
         page.evaluate('document.fonts.ready')
         page.wait_for_function('document.querySelectorAll("#coverage img").length === 10 && [...document.querySelectorAll("#coverage img")].every(i => i.complete && i.naturalWidth > 0)')
         assert page.locator('#single-search').is_visible()
@@ -85,9 +86,12 @@ def test_frontend_states_and_layout(browser_name):
         assert page.locator('#coverage .catalog-card').count() == 10
         assert page.locator('.topbar a', has_text='Поддержка').get_attribute('href') == 'https://t.me/mrbdigital'
         assert page.locator('body').evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(225, 229, 233)'
-        for selector in ['h1','h2','.logo','button','input','th','code']:
+        for selector in ['h1','h2','.logo','button','input','th']:
             assert 'Onest' in page.locator(selector).first.evaluate('(e)=>getComputedStyle(e).fontFamily')
         assert page.locator('#profile-dropdown').is_hidden()
+        assert page.locator('.results-panel').is_hidden()
+        assert page.locator('.history-panel').is_hidden()
+        assert page.locator('.catalogues').is_visible()
         page.locator('#profile-toggle').click()
         assert page.locator('#profile-dropdown').is_visible()
         assert page.locator('#profile-dropdown button').count() == 1
@@ -102,8 +106,6 @@ def test_frontend_states_and_layout(browser_name):
         assert page.locator('#profile-dropdown').is_visible()
         page.locator('h1').click()
         assert page.locator('#profile-dropdown').is_hidden()
-        assert page.locator('.results-panel').bounding_box()['y'] < page.locator('.history-panel').bounding_box()['y']
-        assert page.locator('#job-export').get_attribute('href') == '/api/v1/jobs/test/export.xlsx'
         Path('output/workspace-site').mkdir(parents=True, exist_ok=True)
         for width in [320, 390, 768, 1024, 1440, 1920, 2560]:
             page.set_viewport_size({'width':width, 'height':1000})
@@ -115,7 +117,6 @@ def test_frontend_states_and_layout(browser_name):
         catalog_box = page.locator('.catalogues').bounding_box()
         assert search_box['y'] < catalog_box['y']
         assert abs(search_box['width'] - catalog_box['width']) < 2
-        assert page.locator('.history-panel').bounding_box()['y'] < catalog_box['y']
         assert page.locator('#result-table th').first.evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(244, 245, 248)'
         # Choosing a file is an explicit picker, never an automatic upload.
         with page.expect_file_chooser():
@@ -130,6 +131,11 @@ def test_frontend_states_and_layout(browser_name):
         page.get_by_role('button', name='Подставить 58101H5A25', exact=True).click()
         page.locator('#btn-lookup').click()
         page.wait_for_function('document.querySelector("#btn-export-lookup").hidden === false')
+        assert 'Onest' in page.locator('#result-rows code').first.evaluate('(e)=>getComputedStyle(e).fontFamily')
+        assert page.locator('.results-panel').is_visible()
+        assert page.locator('.history-panel').is_visible()
+        assert page.locator('.results-panel').bounding_box()['y'] < page.locator('.history-panel').bounding_box()['y']
+        assert page.locator('.history-panel').bounding_box()['y'] < page.locator('.catalogues').bounding_box()['y']
         assert page.locator('#result-rows .result-brand').first.inner_text() == 'NiBK'
         assert page.locator('#result-rows .result-brand img').count() == 0
         assert page.evaluate("normalizedBrand('VW')") == 'VOLKSWAGEN'

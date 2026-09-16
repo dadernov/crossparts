@@ -260,6 +260,10 @@ function clearResult() {
   $('#btn-export-lookup').hidden = true; $('#job-export').hidden = true; $('#export-format').hidden = true;
   $('#source-details').hidden = true; $('#job-details').hidden = true;
 }
+function revealSearchActivity() {
+  $('#results').hidden = false;
+  $('.history-panel').hidden = false;
+}
 function highlightJob() {
   for (const row of $('#jobs').children) row.classList.toggle('selected', row.dataset.job === state.selectedJob);
 }
@@ -268,6 +272,7 @@ $('#lookup-form').addEventListener('submit', async event => {
   const oe = $('#oe').value.trim();
   if (oe.length < 2) { notice('#lookup-status', 'Введите хотя бы два символа номера.', true); $('#oe').focus(); return; }
   if (trialRequired) { openAccessMenu(); return; }
+  revealSearchActivity();
   state.busy = true; state.mode = 'lookup'; state.selectedJob = null; highlightJob();
   const request = ++state.viewRequest;
   const group = $('#group').value || null;
@@ -440,6 +445,7 @@ $('#upload-form').addEventListener('submit', async event => {
   const file = state.file;
   if (!file) { $('#file').click(); return; }
   if (!file.name.toLowerCase().endsWith('.xlsx') || file.size > 20*1024*1024) { notice('#job-out','Нужен файл XLSX размером до 20 МБ.',true); return; }
+  revealSearchActivity();
   state.uploading = true; $('#btn-upload').disabled = true; $('#file').disabled = true;
   $('#btn-upload').textContent = 'Отправляем…'; notice('#job-out','Загружаем файл. Не закрывайте страницу.');
   const body = new FormData(); body.append('file',file);
@@ -479,6 +485,7 @@ function jobRow(job) {
   row.append(actions); return row;
 }
 async function showJob(id, background = false) {
+  revealSearchActivity();
   if (background && (state.mode !== 'job' || state.selectedJob !== id)) return;
   const request = ++state.viewRequest;
   state.mode = 'job'; state.selectedJob = id; highlightJob();
@@ -521,8 +528,7 @@ async function refreshJobs() {
       state.jobsJSON = serialized;
     }
     $('#more-jobs').hidden = jobs.length < state.limit; $('#more-jobs').setAttribute('aria-expanded', String(state.limit > 2)); $('#collapse-jobs').hidden = state.limit <= 2; $('#history-status').textContent = '';
-    if (state.mode === 'empty' && jobs.length) await showJob(jobs[0].id);
-    else if (state.mode === 'job') {
+    if (state.mode === 'job') {
       const selected = jobs.find(j => j.id === state.selectedJob);
       if (selected && JSON.stringify(selected) !== state.jobVersion) await showJob(selected.id,true);
     }
