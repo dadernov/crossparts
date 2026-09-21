@@ -1,0 +1,43 @@
+server {
+    server_name mrb-cross-search-test.duckdns.org;
+
+    client_max_body_size 20m;
+    limit_conn cp_conn 20;
+
+    access_log /var/log/nginx/crossparts.access.log;
+    error_log  /var/log/nginx/crossparts.error.log;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+
+    location / {
+        # cp_scrape срабатывает только на POST (см. map в conf.d/crossparts-limits.conf)
+        limit_req zone=cp_scrape  burst=10 nodelay;
+        limit_req zone=cp_general burst=120 nodelay;
+        proxy_pass http://127.0.0.1:8000;
+        include /etc/nginx/snippets/crossparts-proxy.conf;
+        proxy_read_timeout 300s;
+    }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/mrb-cross-search-test.duckdns.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/mrb-cross-search-test.duckdns.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = mrb-cross-search-test.duckdns.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    listen [::]:80;
+    server_name mrb-cross-search-test.duckdns.org;
+    return 404; # managed by Certbot
+
+
+}
