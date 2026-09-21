@@ -3,11 +3,12 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+from dataclasses import replace
 
 from sqlalchemy import select
 
 from .models import CacheEntry, utcnow
-from .normalize import number_key
+from .normalize import KIND_AFTERMARKET, KIND_OEM, looks_like_part_number, number_key
 from .sources.base import SourceResult, SourceStatus
 
 
@@ -27,12 +28,71 @@ class Aggregator:
         results = await asyncio.gather(
             *(self._run_source(src, oe, use_cache) for src in sources)
         )
+        attempts = None
+        if getattr(self.settings, "circular_search_enabled", False):
+            results, attempts = await self._circular_search(oe, sources, results, use_cache)
         merged = self.merge(oe, results)
+        if attempts is not None:
+            merged["circular_search"] = {"attempts": attempts}
         merged["group"] = group
         if not sources:
             merged["status"] = "no_sources"
             merged["message"] = "для этой товарной группы пока нет готовых источников"
         return merged
+
+    async def _circular_search(self, oe, sources, results, use_cache):
+        """One bounded pass using only direct matches; never recurse or cache expansion."""
+        candidates = []
+        seen = {number_key(oe)}
+        for result in results:
+            if result.status is not SourceStatus.OK:
+                continue
+            for cross in result.crosses:
+                key = number_key(cross.number)
+                if (key in seen or cross.kind not in (KIND_OEM, KIND_AFTERMARKET)
+                        or not looks_like_part_number(key)):
+                    continue
+                seen.add(key)
+                candidates.append(key)
+
+        # Each source receives the same first candidate before any gets a second.
+        active = [i for i, result in enumerate(results)
+                  if result.status is SourceStatus.NOT_FOUND]
+        expanded = list(results)
+        attempts = []
+        budget = self.settings.circular_search_max_queries
+        deadline = asyncio.get_running_loop().time() + self.settings.circular_search_timeout
+
+        async def query(index, number, remaining):
+            try:
+                return await asyncio.wait_for(
+                    self._run_source(sources[index], number, use_cache), remaining)
+            except asyncio.TimeoutError:
+                return SourceResult(sources[index].key, SourceStatus.ERROR,
+                                    message="таймаут кругового поиска")
+
+        for number in candidates[:self.settings.circular_search_max_queries_per_source]:
+            remaining = deadline - asyncio.get_running_loop().time()
+            if not active or budget <= 0 or remaining <= 0:
+                break
+            batch = active[:budget]
+            budget -= len(batch)
+            replies = await asyncio.gather(*(query(i, number, remaining) for i in batch))
+            for index, reply in zip(batch, replies):
+                attempts.append({"source": reply.source, "number": number,
+                                 "status": reply.status.value, "crosses": len(reply.crosses),
+                                 "message": reply.message})
+                if reply.status is SourceStatus.OK and reply.crosses:
+                    original = results[index]
+                    # Copy instead of mutating a cached direct response. Reports remain
+                    # one per catalogue, with the successful indirect query explained.
+                    expanded[index] = replace(
+                        reply, elapsed_ms=original.elapsed_ms + reply.elapsed_ms,
+                        message=f"Найдено через кросс {number}")
+                    active.remove(index)
+                elif reply.status in (SourceStatus.BLOCKED, SourceStatus.ERROR):
+                    active.remove(index)
+        return expanded, attempts
 
     # -- one source -----------------------------------------------------
 

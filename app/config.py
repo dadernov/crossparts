@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -30,6 +31,11 @@ class Settings(BaseSettings):
     source_concurrency: int = 2
     cache_ttl_hours: int = 168
     max_products_per_oe: int = 5
+    # Hidden, opt-in second pass through catalogues that returned not_found.
+    circular_search_enabled: bool = False
+    circular_search_max_queries: int = Field(default=6, ge=0, le=100)
+    circular_search_max_queries_per_source: int = Field(default=2, ge=0, le=20)
+    circular_search_timeout: float = Field(default=20, gt=0, le=300)
     user_agent: str = (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
