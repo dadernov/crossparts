@@ -46,7 +46,10 @@ def test_login_form_and_native_redirect(monkeypatch):
             assert response.status_code == 200
             assert 'id="lookup-form"' in response.text
             assert 'Не авторизован' in response.text
-            assert 'Пробный доступ · 10 поисков' in response.text
+            assert 'Запросить полный доступ' in response.text
+            assert 'id="request-full-access"' in response.text
+            assert 'href="https://t.me/mrbdigital"' in response.text
+            assert 'action="/trial"' not in response.text
             assert 'id="header-password"' in response.text
 
             response = await client.post('/api/v1/lookup', json={'oe': '58101H5A25'})
@@ -102,7 +105,23 @@ def test_guest_account_menu_opens_native_login_and_trial():
         page.locator('#oe').fill('58101H5A25')
         page.get_by_role('button', name='Найти').click()
         assert page.locator('#profile-dropdown').is_visible()
-        assert page.get_by_role('button', name='Пробный доступ · 10 поисков').evaluate(
+        access_link = page.get_by_role('link', name='Запросить полный доступ')
+        assert access_link.evaluate(
             '(element) => element === document.activeElement'
         )
+        styles = access_link.evaluate("""element => {
+            const style = getComputedStyle(element);
+            return {
+                display: style.display,
+                height: element.getBoundingClientRect().height,
+                color: style.color,
+                background: style.backgroundColor,
+                decoration: style.textDecorationLine,
+                radius: style.borderRadius,
+            };
+        }""")
+        assert styles == {
+            'display': 'flex', 'height': 42, 'color': 'rgb(255, 255, 255)',
+            'background': 'rgb(178, 36, 36)', 'decoration': 'none', 'radius': '5px',
+        }
         browser.close()

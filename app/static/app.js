@@ -62,7 +62,7 @@ function openAccessMenu() {
   if (guestOptions && guestLogin) { guestLogin.hidden = true; guestOptions.hidden = false; account?.classList.remove('login-open'); }
   profileDropdown.hidden = false;
   profileToggle.setAttribute('aria-expanded', 'true');
-  ($('#use-trial') || $('#open-inline-login'))?.focus();
+  ($('#request-full-access') || $('#open-inline-login'))?.focus();
 }
 if (guestOptions && guestLogin) {
   $('#open-inline-login').onclick = () => {
