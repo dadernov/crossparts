@@ -1,0 +1,524 @@
+schema_version: 1
+source: mintex
+group: brake_discs
+captured_at: '2026-09-22'
+source_url: https://mintex.brakebook.com/
+completeness_scope: Полная OE-Referenzen таблица сохранённой карточки BPD2244_402; transport остаётся blocked Cloudflare.
+reviewed_by: codex
+review_evidence: См. tests/fixtures/SOURCE.md.
+fixtures:
+  ../../../brakebook_datasheet_BPD2244.html: ee6a48a4dde0472aa5ebe56baac4171e56ce85eeef8ba304020539c65d50e9c1
+  ../../../brakebook_search.html: 5324c9c60e8a79a993f302979b09dda1a470409f276032bb37f370fe86bdc4ef
+cases:
+- case_id: mintex-brake_discs-positive-001
+  query_raw: 7B0698151E
+  query_key: 7B0698151E
+  expected_status: ok
+  expected_products:
+  - BPD2244_402
+  expected_pairs:
+  - brand_raw: AUDI
+    brand_canonical: AUDI
+    number_raw: 7B0698151E
+    number_key: 7B0698151E
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: AUDI
+    brand_canonical: AUDI
+    number_raw: 7B0698151G
+    number_key: 7B0698151G
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: AUDI
+    brand_canonical: AUDI
+    number_raw: 7B0698151H
+    number_key: 7B0698151H
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: AUDI
+    brand_canonical: AUDI
+    number_raw: 7B0698151J
+    number_key: 7B0698151J
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: AUDI
+    brand_canonical: AUDI
+    number_raw: 7B0698151K
+    number_key: 7B0698151K
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: AUDI
+    brand_canonical: AUDI
+    number_raw: 7B0698151L
+    number_key: 7B0698151L
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068144163AA
+    number_key: 068144163AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068144163AB
+    number_key: 068144163AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068144163AC
+    number_key: 068144163AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068144163AD
+    number_key: 068144163AD
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068144163AE
+    number_key: 068144163AE
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068159579AA
+    number_key: 068159579AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068159579AB
+    number_key: 068159579AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068159579AC
+    number_key: 068159579AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 068317914AA
+    number_key: 068317914AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 2AMV3163AA
+    number_key: 2AMV3163AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68144163AA
+    number_key: 68144163AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68144163AB
+    number_key: 68144163AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68144163AC
+    number_key: 68144163AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68144163AD
+    number_key: 68144163AD
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68144163AE
+    number_key: 68144163AE
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68159579AA
+    number_key: 68159579AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68159579AB
+    number_key: 68159579AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68159579AC
+    number_key: 68159579AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68317914AA
+    number_key: 68317914AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: DODGE
+    brand_canonical: DODGE
+    number_raw: 68144163AE
+    number_key: 68144163AE
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: DODGE
+    brand_canonical: DODGE
+    number_raw: 68144163AF
+    number_key: 68144163AF
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: DODGE
+    brand_canonical: DODGE
+    number_raw: 68260870AA
+    number_key: 68260870AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: DODGE
+    brand_canonical: DODGE
+    number_raw: 68260870AB
+    number_key: 68260870AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: DODGE
+    brand_canonical: DODGE
+    number_raw: V1013152AA
+    number_key: V1013152AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: DODGE
+    brand_canonical: DODGE
+    number_raw: V1014163AD
+    number_key: V1014163AD
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: 00K68509193AA
+    number_key: 00K68509193AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: K68144163AF
+    number_key: K68144163AF
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: K68159579AA
+    number_key: K68159579AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: K68159579AB
+    number_key: K68159579AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: K68159579AC
+    number_key: K68159579AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: K68258389AA
+    number_key: K68258389AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: K68260870AA
+    number_key: K68260870AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: K68260870AB
+    number_key: K68260870AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: K68260870AC
+    number_key: K68260870AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: JEEP
+    brand_canonical: JEEP
+    number_raw: 68383243AA
+    number_key: 68383243AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: JEEP
+    brand_canonical: JEEP
+    number_raw: 68409860AA
+    number_key: 68409860AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: JEEP
+    brand_canonical: JEEP
+    number_raw: 68409860AC
+    number_key: 68409860AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: JEEP
+    brand_canonical: JEEP
+    number_raw: 68456066AA
+    number_key: 68456066AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: JEEP
+    brand_canonical: JEEP
+    number_raw: 68456066AB
+    number_key: 68456066AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: JEEP
+    brand_canonical: JEEP
+    number_raw: K68383243AA
+    number_key: K68383243AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: LANCIA
+    brand_canonical: LANCIA
+    number_raw: K68144163AA
+    number_key: K68144163AA
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: LANCIA
+    brand_canonical: LANCIA
+    number_raw: K68144163AB
+    number_key: K68144163AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: LANCIA
+    brand_canonical: LANCIA
+    number_raw: K68144163AC
+    number_key: K68144163AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: LANCIA
+    brand_canonical: LANCIA
+    number_raw: K68144163AD
+    number_key: K68144163AD
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: LANCIA
+    brand_canonical: LANCIA
+    number_raw: K68144163AE
+    number_key: K68144163AE
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: LANCIA
+    brand_canonical: LANCIA
+    number_raw: K68144163AF
+    number_key: K68144163AF
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: LANCIA
+    brand_canonical: LANCIA
+    number_raw: K68260870AB
+    number_key: K68260870AB
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: LANCIA
+    brand_canonical: LANCIA
+    number_raw: K68260870AC
+    number_key: K68260870AC
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SEAT
+    brand_canonical: SEAT
+    number_raw: 7B0698151E
+    number_key: 7B0698151E
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SEAT
+    brand_canonical: SEAT
+    number_raw: 7B0698151G
+    number_key: 7B0698151G
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SEAT
+    brand_canonical: SEAT
+    number_raw: 7B0698151H
+    number_key: 7B0698151H
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SEAT
+    brand_canonical: SEAT
+    number_raw: 7B0698151J
+    number_key: 7B0698151J
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SEAT
+    brand_canonical: SEAT
+    number_raw: 7B0698151K
+    number_key: 7B0698151K
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SEAT
+    brand_canonical: SEAT
+    number_raw: 7B0698151L
+    number_key: 7B0698151L
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SKODA
+    brand_canonical: SKODA
+    number_raw: 7B0698151E
+    number_key: 7B0698151E
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SKODA
+    brand_canonical: SKODA
+    number_raw: 7B0698151G
+    number_key: 7B0698151G
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SKODA
+    brand_canonical: SKODA
+    number_raw: 7B0698151H
+    number_key: 7B0698151H
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SKODA
+    brand_canonical: SKODA
+    number_raw: 7B0698151J
+    number_key: 7B0698151J
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SKODA
+    brand_canonical: SKODA
+    number_raw: 7B0698151K
+    number_key: 7B0698151K
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: SKODA
+    brand_canonical: SKODA
+    number_raw: 7B0698151L
+    number_key: 7B0698151L
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: VW
+    brand_canonical: VW
+    number_raw: 7B0698151E
+    number_key: 7B0698151E
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: VW
+    brand_canonical: VW
+    number_raw: 7B0698151G
+    number_key: 7B0698151G
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: VW
+    brand_canonical: VW
+    number_raw: 7B0698151H
+    number_key: 7B0698151H
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: VW
+    brand_canonical: VW
+    number_raw: 7B0698151J
+    number_key: 7B0698151J
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: VW
+    brand_canonical: VW
+    number_raw: 7B0698151K
+    number_key: 7B0698151K
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  - brand_raw: VW
+    brand_canonical: VW
+    number_raw: 7B0698151L
+    number_key: 7B0698151L
+    kind: oem
+    source_product: BPD2244_402
+    evidence_locator: captured official response
+  forbidden_pairs: []

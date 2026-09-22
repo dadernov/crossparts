@@ -1,0 +1,318 @@
+{
+  "id": "3631-1002",
+  "brand_id": 4630,
+  "bar_code": "",
+  "quant_unit": 1,
+  "quant_per_unit": 1,
+  "is_actual": 1,
+  "sku_category_id": 470,
+  "refkey_1c": "a19b8db2-f8ca-11e6-8126-00155d030904",
+  "is_visible": true,
+  "discontinued": null,
+  "is_discontinued": false,
+  "sku_1c_category_id": 7,
+  "description": "Радиатор охлаждения двигателя",
+  "sku_group": 32,
+  "weight": "2.543",
+  "weight_measure": 1,
+  "volume": "0.03831",
+  "volume_measure": 2,
+  "sku_1c_status": 5,
+  "sku_1c_abc_status": 24,
+  "size_length": "0.645",
+  "size_width": "0.495",
+  "size_height": "0.12",
+  "size_measure": 3,
+  "bar_code_1c": "736311002012",
+  "sku_oem_category_id": 14,
+  "tnved_1c": "8708913509",
+  "full_description_1c": "Радиатор охлаждения двигателя Sakura 3631-1002",
+  "category_normal_title": "Радиатор двигателя",
+  "sku_1c_status_title": "ВМатрице",
+  "sku_category_name": "Радиатор, охлаждение двигателя",
+  "sku_category_name_en": "Radiator, engine cooling",
+  "sku_brand_title": "SAKURA",
+  "changed_to": null,
+  "marketplaces": [],
+  "files": [
+    {
+      "id": 1899314,
+      "name": "1764079036.JPG",
+      "number": "0",
+      "sku_id": "3631-1002",
+      "path": "https://core.brixogroup.com/storage/sku-images/3631-1002/1764079036.JPG",
+      "created_at": "2025-11-25 16:57:17",
+      "updated_at": "2025-11-25 16:57:17"
+    },
+    {
+      "id": 1896678,
+      "name": "0_1739284503.jpg",
+      "number": "0",
+      "sku_id": "3631-1002",
+      "path": "https://core.brixogroup.com/storage/sku-images/3631-1002/0_1739284503.jpg",
+      "created_at": "2025-02-11 14:35:03",
+      "updated_at": "2025-02-11 14:35:03"
+    }
+  ],
+  "characteristics": [
+    {
+      "s2c_id": 9835843,
+      "id": 565,
+      "name": "Оснащение / оборудование",
+      "name_en": "Vehicle Equipment",
+      "value_id": "50",
+      "value": "для автомобилей без кондиционера",
+      "value_en": "for vehicles without air conditioning"
+    },
+    {
+      "s2c_id": 9835841,
+      "id": 916,
+      "name": "Впускн. Ø [мм]",
+      "name_en": "Inlet Ø [mm]",
+      "value_id": "32",
+      "value": "32",
+      "value_en": "32"
+    },
+    {
+      "s2c_id": 9835842,
+      "id": 917,
+      "name": "Выпускн.-Ø [мм]",
+      "name_en": "Outlet Ø [mm]",
+      "value_id": "32",
+      "value": "32",
+      "value_en": "32"
+    },
+    {
+      "s2c_id": 9835838,
+      "id": 2677,
+      "name": "Материал ребра охлаждения",
+      "name_en": "Cooling fins material",
+      "value_id": "1",
+      "value": "алюминий",
+      "value_en": "Aluminium"
+    },
+    {
+      "s2c_id": 9835840,
+      "id": 2678,
+      "name": "Конструкция радиатора",
+      "name_en": "Radiator type",
+      "value_id": "1",
+      "value": "Ребра охлаждения припаянные",
+      "value_en": "Brazed cooling fins"
+    },
+    {
+      "s2c_id": 9835839,
+      "id": 2679,
+      "name": "Материал бачка (радиатор)",
+      "name_en": "Water Tank Material (radiator)",
+      "value_id": "6",
+      "value": "полимерный материал",
+      "value_en": "Plastic"
+    },
+    {
+      "s2c_id": 9835844,
+      "id": 3426,
+      "name": "Длина сети [мм]",
+      "name_en": "Core Length [mm]",
+      "value_id": "480",
+      "value": "480",
+      "value_en": "480"
+    },
+    {
+      "s2c_id": 9835845,
+      "id": 3427,
+      "name": "Ширина сети [мм]",
+      "name_en": "Core Width [mm]",
+      "value_id": "398",
+      "value": "398",
+      "value_en": "398"
+    },
+    {
+      "s2c_id": 9835846,
+      "id": 3428,
+      "name": "Глубина сети [мм]",
+      "name_en": "Core Depth [mm]",
+      "value_id": "15,5",
+      "value": "15,5",
+      "value_en": "15,5"
+    }
+  ],
+  "comments": [],
+  "references": [
+    {
+      "manufacturer_id": 244,
+      "manufacturer": "DACIA",
+      "number": "8200735038"
+    },
+    {
+      "manufacturer_id": 3742,
+      "manufacturer": "RENAULT",
+      "number": "214104AA0A"
+    },
+    {
+      "manufacturer_id": 3742,
+      "manufacturer": "RENAULT",
+      "number": "214104453R"
+    },
+    {
+      "manufacturer_id": 2789,
+      "manufacturer": "LADA",
+      "number": "214104453R"
+    },
+    {
+      "manufacturer_id": 2789,
+      "manufacturer": "LADA",
+      "number": "8200735038"
+    },
+    {
+      "manufacturer_id": 3742,
+      "manufacturer": "RENAULT",
+      "number": "8200735038"
+    }
+  ],
+  "vehicles": [
+    {
+      "brand_title": "RENAULT",
+      "model_title": "SANDERO/STEPWAY I (BS_)",
+      "model_title_en": "SANDERO/STEPWAY I (BS_)",
+      "vehicle_number": 32993,
+      "vehicle_name": "1.6 (BS0H, BS0F)",
+      "vehicle_name_en": "1.6 (BS0H, BS0F)",
+      "horse_power": "87",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K7M 710, K7M 718",
+      "year": "200902-201210"
+    },
+    {
+      "brand_title": "DACIA",
+      "model_title": "SANDERO",
+      "model_title_en": "SANDERO (BS_)",
+      "vehicle_number": 27577,
+      "vehicle_name": "1.6 (BS0D, BS0B, BS0F, BS0H)",
+      "vehicle_name_en": "1.6 (BS0D, BS0B, BS0F, BS0H)",
+      "horse_power": "87",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K7M 710, K7M 718",
+      "year": "200806-201212"
+    },
+    {
+      "brand_title": "RENAULT",
+      "model_title": "LOGAN I (LS_)",
+      "model_title_en": "LOGAN I (LS_)",
+      "vehicle_number": 24524,
+      "vehicle_name": "1.4",
+      "vehicle_name_en": "1.4",
+      "horse_power": "75",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K7J 710",
+      "year": "200409"
+    },
+    {
+      "brand_title": "RENAULT",
+      "model_title": "LOGAN I (LS_)",
+      "model_title_en": "LOGAN I (LS_)",
+      "vehicle_number": 24525,
+      "vehicle_name": "1.6",
+      "vehicle_name_en": "1.6",
+      "horse_power": "87",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K7M 710",
+      "year": "200409"
+    },
+    {
+      "brand_title": "DACIA",
+      "model_title": "SANDERO",
+      "model_title_en": "SANDERO (BS_)",
+      "vehicle_number": 12506,
+      "vehicle_name": "1.6 16V Bifuel",
+      "vehicle_name_en": "1.6 16V Bifuel",
+      "horse_power": "105",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K4M 690, K4M 696, K4M 694",
+      "year": "201101-201212"
+    },
+    {
+      "brand_title": "LADA",
+      "model_title": "LARGUS Фургон (FS0_, FSA_)",
+      "model_title_en": "LARGUS Van (FS0_, FSA_)",
+      "vehicle_number": null,
+      "vehicle_name": "1.6 (FS0Y5)",
+      "vehicle_name_en": "1.6 (FS0Y5)",
+      "horse_power": "105",
+      "drive_type": "Привод на передние колеса",
+      "engine_type": "Бензиновый двигатель",
+      "engines": "K4M",
+      "year": "201203"
+    },
+    {
+      "brand_title": "LADA",
+      "model_title": "LARGUS Фургон/универсал (KS0_, RS0_, KSA_)",
+      "model_title_en": "LARGUS Estate Van (KS0_, RS0_, KSA_)",
+      "vehicle_number": 55620,
+      "vehicle_name": "1.6 (KS0Y5, RS0Y5)",
+      "vehicle_name_en": "1.6 (KS0Y5, RS0Y5)",
+      "horse_power": "105",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K4M",
+      "year": "201203"
+    },
+    {
+      "brand_title": "LADA",
+      "model_title": "LARGUS (KS0_, RS0_, KSA_)",
+      "model_title_en": "LARGUS (KS0_, RS0_, KSA_)",
+      "vehicle_number": 142291,
+      "vehicle_name": "1.6 (KS0Y5, RS0Y5)",
+      "vehicle_name_en": "1.6 (KS0Y5, RS0Y5)",
+      "horse_power": "105",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K4M",
+      "year": "201203"
+    },
+    {
+      "brand_title": "LADA",
+      "model_title": "LARGUS (KS0_, RS0_, KSA_)",
+      "model_title_en": "LARGUS (KS0_, RS0_, KSA_)",
+      "vehicle_number": 142288,
+      "vehicle_name": "1.6 (RS0Y5, KS0Y5)",
+      "vehicle_name_en": "1.6 (RS0Y5, KS0Y5)",
+      "horse_power": "84",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K7M",
+      "year": "201203"
+    },
+    {
+      "brand_title": "LADA",
+      "model_title": "LARGUS Фургон (FS0_, FSA_)",
+      "model_title_en": "LARGUS Van (FS0_, FSA_)",
+      "vehicle_number": null,
+      "vehicle_name": "1.6 (FS015)",
+      "vehicle_name_en": "1.6 (FS015)",
+      "horse_power": "84",
+      "drive_type": "Привод на передние колеса",
+      "engine_type": "Бензиновый двигатель",
+      "engines": "K7M",
+      "year": "201203"
+    },
+    {
+      "brand_title": "LADA",
+      "model_title": "LARGUS Фургон/универсал (KS0_, RS0_, KSA_)",
+      "model_title_en": "LARGUS Estate Van (KS0_, RS0_, KSA_)",
+      "vehicle_number": 55619,
+      "vehicle_name": "1.6 (KS0Y5, RS0Y5)",
+      "vehicle_name_en": "1.6 (KS0Y5, RS0Y5)",
+      "horse_power": "84",
+      "drive_type": "Front-Wheel Drive",
+      "engine_type": "Petrol Engine",
+      "engines": "K7M",
+      "year": "201203"
+    }
+  ]
+}

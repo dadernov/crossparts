@@ -1,0 +1,566 @@
+schema_version: 1
+source: sbparts
+group: brake_pads
+captured_at: '2026-09-22'
+source_url: https://sbparts.ru/catalog/BP11537
+completeness_scope: Полный блок аналогов карточки BP11537; дубли строк отражены отдельно в baseline-тесте.
+reviewed_by: codex
+review_evidence: Снято с официального сайта 2026-09-22; search и карточка очищены от служебных данных.
+fixtures:
+  product_BP11537.html: 57e8cb6c0131421ca58b09afeb2d2a254ee90a2b3f317d905c341bc589edf650
+  search.json: aacaad85087ae5c8b5d42e0bdfbc7d524f2547f407a7e689cf3e756c18a9bd6a
+cases:
+- case_id: sbparts-brake_pads-positive-001
+  query_raw: 58101H5A25
+  query_key: 58101H5A25
+  expected_status: ok
+  expected_products:
+  - BP11537
+  expected_pairs:
+  - brand_raw: SB NAGAMOCHI
+    brand_canonical: SB NAGAMOCHI
+    number_raw: BP11537
+    number_key: BP11537
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: BENDIX AUS
+    brand_canonical: BENDIX AUS
+    number_raw: DB2240
+    number_key: DB2240
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: BENDIX AUS
+    brand_canonical: BENDIX AUS
+    number_raw: DB2272
+    number_key: DB2272
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: FMSI
+    brand_canonical: FMSI
+    number_raw: D1543-8751
+    number_key: D15438751
+    kind: standard
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: FMSI
+    brand_canonical: FMSI
+    number_raw: D1593-8806
+    number_key: D15938806
+    kind: standard
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: FMSI
+    brand_canonical: FMSI
+    number_raw: D2292-9528
+    number_key: D22929528
+    kind: standard
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: GEELY
+    brand_canonical: GEELY
+    number_raw: '1014031279'
+    number_key: '1014031279'
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: GEELY
+    brand_canonical: GEELY
+    number_raw: 1064001724-02
+    number_key: '106400172402'
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-1RA00
+    number_key: 581011RA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-1RA01
+    number_key: 581011RA01
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-1RA05
+    number_key: 581011RA05
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-1RA10
+    number_key: 581011RA10
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-2VA00
+    number_key: 581012VA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-2VA10
+    number_key: 581012VA10
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-2VA50
+    number_key: 581012VA50
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-2VA60
+    number_key: 581012VA60
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-3XA00
+    number_key: 581013XA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-3XA20
+    number_key: 581013XA20
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-4LA00
+    number_key: 581014LA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-A5A00
+    number_key: 58101A5A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-A6A00
+    number_key: 58101A6A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-A6A02
+    number_key: 58101A6A02
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-AYA05
+    number_key: 58101AYA05
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-B1A00
+    number_key: 58101B1A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-B1A01
+    number_key: 58101B1A01
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-C7A00
+    number_key: 58101C7A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-C7A50
+    number_key: 58101C7A50
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-C7A51
+    number_key: 58101C7A51
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-C8A00
+    number_key: 58101C8A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-C8A50
+    number_key: 58101C8A50
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-C8A60
+    number_key: 58101C8A60
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-H5A25
+    number_key: 58101H5A25
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-H6A15
+    number_key: 58101H6A15
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-R1A30
+    number_key: 58101R1A30
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-1RA00
+    number_key: 581011RA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101-1VA00
+    number_key: 581011VA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-1VA00
+    number_key: 581011VA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 581011WA00
+    number_key: 581011WA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 581011WA00
+    number_key: 581011WA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 581013XA10
+    number_key: 581013XA10
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 581013XA10
+    number_key: 581013XA10
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101C8A60
+    number_key: 58101C8A60
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H5A25
+    number_key: 58101H5A25
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H7A00
+    number_key: 58101H7A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H7A00
+    number_key: 58101H7A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H7A10
+    number_key: 58101H7A10
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H7A10
+    number_key: 58101H7A10
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H8A00
+    number_key: 58101H8A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H8A00
+    number_key: 58101H8A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H9A10
+    number_key: 58101H9A10
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H9A10
+    number_key: 58101H9A10
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D-11268M-01
+    number_key: D11268M01
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D-11283M-01
+    number_key: D11283M01
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D11268
+    number_key: D11268
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D11268M
+    number_key: D11268M
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D11268MH
+    number_key: D11268MH
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D11283
+    number_key: D11283
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D11283M
+    number_key: D11283M
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D11283MH
+    number_key: D11283MH
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KASHIYAMA
+    brand_canonical: KASHIYAMA
+    number_raw: D11376MH
+    number_key: D11376MH
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-1WA05
+    number_key: 581011WA05
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-1WA35
+    number_key: 581011WA35
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-4LA00
+    number_key: 581014LA00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-A4A17
+    number_key: 58101A4A17
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-A6A01
+    number_key: 58101A6A01
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-A6A02
+    number_key: 58101A6A02
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-A7A00
+    number_key: 58101A7A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-H8A05
+    number_key: 58101H8A05
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101-K8A00
+    number_key: 58101K8A00
+    kind: oem
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: NIBK
+    brand_canonical: NIBK
+    number_raw: PN0537
+    number_key: PN0537
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: NIBK
+    brand_canonical: NIBK
+    number_raw: PN0537S
+    number_key: PN0537S
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: NISSHINBO
+    brand_canonical: NISSHINBO
+    number_raw: NP6015
+    number_key: NP6015
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: NISSHINBO
+    brand_canonical: NISSHINBO
+    number_raw: NP6041
+    number_key: NP6041
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: NISSHINBO
+    brand_canonical: NISSHINBO
+    number_raw: NP6137
+    number_key: NP6137
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: SANGSIN
+    brand_canonical: SANGSIN
+    number_raw: SP1399
+    number_key: SP1399
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: SANGSIN
+    brand_canonical: SANGSIN
+    number_raw: SP1399A
+    number_key: SP1399A
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: SANGSIN
+    brand_canonical: SANGSIN
+    number_raw: SP1400
+    number_key: SP1400
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  - brand_raw: SANGSIN
+    brand_canonical: SANGSIN
+    number_raw: SP1545
+    number_key: SP1545
+    kind: aftermarket
+    source_product: BP11537
+    evidence_locator: captured official response
+  forbidden_pairs: []

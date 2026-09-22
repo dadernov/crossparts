@@ -474,11 +474,13 @@ execution:
       evidence:
         - "tests/fixtures/catalogues/metaco/<group>/manifest.yaml задаёт точные пары, forbidden pairs, scope и sha256 фикстур."
         - "tests/catalogues/test_quality.py проверяет хеши и полное равенство пар для заявленного fixture scope."
-        - "Golden manifests добавлены для 7 из 13 текущих адаптеров: jnbk, luzar, nissens, hel, kyb, hola, brannor."
+        - "Golden manifests добавлены для всех 13 текущих адаптеров: sbparts, brembo, trialli, brixo, nibkru, luzar, nissens, kyb, hola, brannor, hel, jnbk, mintex."
         - "tests/catalogues/test_contract.py проверяет обязательные поля, нормализованные ключи, уникальность и sha256 всех manifests."
+        - "Малые live-пробы 2026-09-22: sbparts ok/82 crosses/3250 ms; brembo ok/107/416 ms; trialli ok/14/5972 ms."
       actual_changes:
-        - "Создан общий формат golden manifest и первые reviewed fixtures; точное компактное покрытие есть для 7 существующих адаптеров и pilot METACO."
-        - "Для sbparts, brembo, trialli, brixo/nibkru и mintex полный набор independent golden ещё не завершён."
+        - "Создан общий формат golden manifest; точный компактный fixture scope есть для 13 существующих адаптеров и pilot METACO."
+        - "SB/Brembo/TRIALLI/Brixo ответы пересняты и очищены от cookies/token; для Brembo JSON parsing вынесен в чистые функции."
+        - "Требуемые 12 positive + 4 negative + 4 ambiguous на каждую source-group пару ещё не набраны, поэтому P03 остаётся in_progress."
     - id: P04
       title: "Развернуть тестовые матрицы и измерить baseline W0"
       depends_on: [P03]

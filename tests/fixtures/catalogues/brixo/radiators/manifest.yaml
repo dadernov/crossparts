@@ -1,0 +1,69 @@
+schema_version: 1
+source: brixo
+group: radiators
+captured_at: '2026-09-22'
+source_url: https://brixogroup.com/catalog
+completeness_scope: Полный текущий публичный search-result и references карточки SAKURA 3631-1002.
+reviewed_by: codex
+review_evidence: Снято с официального API 2026-09-22.
+fixtures:
+  search_8200735038.json: 1920c47a6625733e04f2ff8cb881030f0916c22bfa12df9d1484252e780e1aca
+  info_3631-1002.json: dbb168c8495d90d81f8a79e8f2457abe7e0e216f536fda1c6bc4c5a3449982d3
+cases:
+- case_id: brixo-radiators-positive-001
+  query_raw: '8200735038'
+  query_key: '8200735038'
+  expected_status: ok
+  expected_products:
+  - 3631-1002
+  expected_pairs:
+  - brand_raw: SAKURA
+    brand_canonical: SAKURA
+    number_raw: 3631-1002
+    number_key: '36311002'
+    kind: aftermarket
+    source_product: 3631-1002
+    evidence_locator: captured official response
+  - brand_raw: DACIA
+    brand_canonical: DACIA
+    number_raw: '8200735038'
+    number_key: '8200735038'
+    kind: oem
+    source_product: 3631-1002
+    evidence_locator: captured official response
+  - brand_raw: RENAULT
+    brand_canonical: RENAULT
+    number_raw: 214104AA0A
+    number_key: 214104AA0A
+    kind: oem
+    source_product: 3631-1002
+    evidence_locator: captured official response
+  - brand_raw: RENAULT
+    brand_canonical: RENAULT
+    number_raw: 214104453R
+    number_key: 214104453R
+    kind: oem
+    source_product: 3631-1002
+    evidence_locator: captured official response
+  - brand_raw: LADA
+    brand_canonical: LADA
+    number_raw: 214104453R
+    number_key: 214104453R
+    kind: oem
+    source_product: 3631-1002
+    evidence_locator: captured official response
+  - brand_raw: LADA
+    brand_canonical: LADA
+    number_raw: '8200735038'
+    number_key: '8200735038'
+    kind: oem
+    source_product: 3631-1002
+    evidence_locator: captured official response
+  - brand_raw: RENAULT
+    brand_canonical: RENAULT
+    number_raw: '8200735038'
+    number_key: '8200735038'
+    kind: oem
+    source_product: 3631-1002
+    evidence_locator: captured official response
+  forbidden_pairs: []

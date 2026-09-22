@@ -1,0 +1,770 @@
+schema_version: 1
+source: brembo
+group: brake_pads
+captured_at: '2026-09-22'
+source_url: https://www.bremboparts.com/europe/ru/catalogue
+completeness_scope: Полные публичные manufacturer и competitor references товара P 30 122.
+reviewed_by: codex
+review_evidence: Снято с официального API 2026-09-22; cookies и antiforgery token не сохранены.
+fixtures:
+  competitor_P30122.json: d768cc3c8a95d6832e3ab6f4ba994523c58d712f12bff9f912e52b0f1cdfe3ab
+  manufacturer_P30122.json: 5587c928ddf3e3dd0127808d6f8b6bb14be10cb8da0f8aa134d91bdcfa94a1cc
+  results.html: 24817fd22a0b6712734835cc96d997503ecbcc276d8bcc2205db802f58014471
+cases:
+- case_id: brembo-brake_pads-positive-001
+  query_raw: 58101H5A25
+  query_key: 58101H5A25
+  expected_status: ok
+  expected_products:
+  - P 30 122
+  expected_pairs:
+  - brand_raw: BREMBO
+    brand_canonical: BREMBO
+    number_raw: P 30 122
+    number_key: P30122
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: GEELY
+    brand_canonical: GEELY
+    number_raw: '1014031279'
+    number_key: '1014031279'
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: GEOMETRY
+    brand_canonical: GEOMETRY
+    number_raw: '1014031279'
+    number_key: '1014031279'
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: GEELY
+    brand_canonical: GEELY
+    number_raw: '4048034500'
+    number_key: '4048034500'
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C7A15
+    number_key: 58101C7A15
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C8A00
+    number_key: 58101C8A00
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C8A10
+    number_key: 58101C8A10
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C8A50
+    number_key: 58101C8A50
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C8A60
+    number_key: 58101C8A60
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H5A25
+    number_key: 58101H5A25
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H6A00
+    number_key: 58101H6A00
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H8A05
+    number_key: 58101H8A05
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H9A10
+    number_key: 58101H9A10
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H9A60
+    number_key: 58101H9A60
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI (BEIJING)
+    brand_canonical: HYUNDAI (BEIJING)
+    number_raw: 58101Q3A10
+    number_key: 58101Q3A10
+    kind: oem
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: '13046055482'
+    number_key: '13046055482'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: '13047055482'
+    number_key: '13047055482'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: '605548'
+    number_key: '605548'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: '605646'
+    number_key: '605646'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: '705548'
+    number_key: '705548'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BECK/ARNLEY
+    brand_canonical: BECK/ARNLEY
+    number_raw: 0851975
+    number_key: 0851975
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BECK/ARNLEY
+    brand_canonical: BECK/ARNLEY
+    number_raw: 0856975
+    number_key: 0856975
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BECK/ARNLEY
+    brand_canonical: BECK/ARNLEY
+    number_raw: 0891975
+    number_key: 0891975
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BENDIX
+    brand_canonical: BENDIX
+    number_raw: '511434'
+    number_key: '511434'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BENDIX
+    brand_canonical: BENDIX
+    number_raw: BPD2572
+    number_key: BPD2572
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BOSCH
+    brand_canonical: BOSCH
+    number_raw: 0986424951
+    number_key: 0986424951
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BOSCH
+    brand_canonical: BOSCH
+    number_raw: F002H26440
+    number_key: F002H26440
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BRECK
+    brand_canonical: BRECK
+    number_raw: '253480070100'
+    number_key: '253480070100'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: BREMSI
+    brand_canonical: BREMSI
+    number_raw: SPB470
+    number_key: SPB470
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: CHAMPION
+    brand_canonical: CHAMPION
+    number_raw: FDB5135
+    number_key: FDB5135
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: CIFAM
+    brand_canonical: CIFAM
+    number_raw: '82213700'
+    number_key: '82213700'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: DELPHI
+    brand_canonical: DELPHI
+    number_raw: LP349714B1
+    number_key: LP349714B1
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: DELPHI
+    brand_canonical: DELPHI
+    number_raw: LP3879
+    number_key: LP3879
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: DON
+    brand_canonical: DON
+    number_raw: PCP2296
+    number_key: PCP2296
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: EUROBRAKE
+    brand_canonical: EUROBRAKE
+    number_raw: '5502223467'
+    number_key: '5502223467'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: EUROREPAR
+    brand_canonical: EUROREPAR
+    number_raw: '6505564880'
+    number_key: '6505564880'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: FERODO
+    brand_canonical: FERODO
+    number_raw: FDB5135
+    number_key: FDB5135
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: FERODO
+    brand_canonical: FERODO
+    number_raw: FDB5508
+    number_key: FDB5508
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: FMSI-VERBAND
+    brand_canonical: FMSI-VERBAND
+    number_raw: D2190 8806
+    number_key: D21908806
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: GALFER
+    brand_canonical: GALFER
+    number_raw: G1201366
+    number_key: G1201366
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: GALFER
+    brand_canonical: GALFER
+    number_raw: G1201367
+    number_key: G1201367
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: GEELY
+    brand_canonical: GEELY
+    number_raw: '1014031279'
+    number_key: '1014031279'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: GEELY
+    brand_canonical: GEELY
+    number_raw: '4048034500'
+    number_key: '4048034500'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: GEOMETRY
+    brand_canonical: GEOMETRY
+    number_raw: '1014031279'
+    number_key: '1014031279'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HELLA PAGID
+    brand_canonical: HELLA PAGID
+    number_raw: '355047771'
+    number_key: '355047771'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HELLA PAGID
+    brand_canonical: HELLA PAGID
+    number_raw: 8DB355047771
+    number_key: 8DB355047771
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HERTH+BUSS JAKOPARTS
+    brand_canonical: HERTH+BUSS JAKOPARTS
+    number_raw: J3600345
+    number_key: J3600345
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HERTH+BUSS JAKOPARTS
+    brand_canonical: HERTH+BUSS JAKOPARTS
+    number_raw: J3600354
+    number_key: J3600354
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HI-Q
+    brand_canonical: HI-Q
+    number_raw: SP1399ASD
+    number_key: SP1399ASD
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HI-Q
+    brand_canonical: HI-Q
+    number_raw: SP1399SD
+    number_key: SP1399SD
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HI-Q
+    brand_canonical: HI-Q
+    number_raw: SP1901SD
+    number_key: SP1901SD
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HI-Q
+    brand_canonical: HI-Q
+    number_raw: SP4477
+    number_key: SP4477
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C7A15
+    number_key: 58101C7A15
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C8A00
+    number_key: 58101C8A00
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C8A10
+    number_key: 58101C8A10
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C8A50
+    number_key: 58101C8A50
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101C8A60
+    number_key: 58101C8A60
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H5A25
+    number_key: 58101H5A25
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H6A00
+    number_key: 58101H6A00
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI
+    brand_canonical: HYUNDAI
+    number_raw: 58101H9A60
+    number_key: 58101H9A60
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: HYUNDAI (BEIJING)
+    brand_canonical: HYUNDAI (BEIJING)
+    number_raw: 58101Q3A10
+    number_key: 58101Q3A10
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ICER
+    brand_canonical: ICER
+    number_raw: '182035233'
+    number_key: '182035233'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ICER
+    brand_canonical: ICER
+    number_raw: '182470'
+    number_key: '182470'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: JURATEK
+    brand_canonical: JURATEK
+    number_raw: JCP8272
+    number_key: JCP8272
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: JURID
+    brand_canonical: JURID
+    number_raw: 573866J
+    number_key: 573866J
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H8A05
+    number_key: 58101H8A05
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: KIA
+    brand_canonical: KIA
+    number_raw: 58101H9A10
+    number_key: 58101H9A10
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: METELLI
+    brand_canonical: METELLI
+    number_raw: '2213700'
+    number_key: '2213700'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: MEYLE
+    brand_canonical: MEYLE
+    number_raw: MBP1575
+    number_key: MBP1575
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: MINTEX
+    brand_canonical: MINTEX
+    number_raw: MDB3276MX
+    number_key: MDB3276MX
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: MINTEX
+    brand_canonical: MINTEX
+    number_raw: MDB4391
+    number_key: MDB4391
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: MINTEX
+    brand_canonical: MINTEX
+    number_raw: MDB83276MX
+    number_key: MDB83276MX
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: NIPPARTS
+    brand_canonical: NIPPARTS
+    number_raw: N3600338
+    number_key: N3600338
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: NISSHINBO
+    brand_canonical: NISSHINBO
+    number_raw: NP6192
+    number_key: NP6192
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: NK
+    brand_canonical: NK
+    number_raw: '223467'
+    number_key: '223467'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: PAGID
+    brand_canonical: PAGID
+    number_raw: T4572
+    number_key: T4572
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: PAGID
+    brand_canonical: PAGID
+    number_raw: T4572N
+    number_key: T4572N
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: R BRAKE
+    brand_canonical: R BRAKE
+    number_raw: RB2035233
+    number_key: RB2035233
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: R BRAKE
+    brand_canonical: R BRAKE
+    number_raw: RB2470
+    number_key: RB2470
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: RAICAM
+    brand_canonical: RAICAM
+    number_raw: '10520'
+    number_key: '10520'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: RAICAM
+    brand_canonical: RAICAM
+    number_raw: '10521'
+    number_key: '10521'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: RAICAM
+    brand_canonical: RAICAM
+    number_raw: RA10521
+    number_key: RA10521
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: REMSA
+    brand_canonical: REMSA
+    number_raw: '130210'
+    number_key: '130210'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: REMSA
+    brand_canonical: REMSA
+    number_raw: 148802UC
+    number_key: 148802UC
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: REMSA
+    brand_canonical: REMSA
+    number_raw: '2148802'
+    number_key: '2148802'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: REMSA
+    brand_canonical: REMSA
+    number_raw: PCA148802
+    number_key: PCA148802
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ROADHOUSE
+    brand_canonical: ROADHOUSE
+    number_raw: '2130210'
+    number_key: '2130210'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ROADHOUSE
+    brand_canonical: ROADHOUSE
+    number_raw: '2148802'
+    number_key: '2148802'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ROADHOUSE
+    brand_canonical: ROADHOUSE
+    number_raw: PSX2148802
+    number_key: PSX2148802
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: SBS
+    brand_canonical: SBS
+    number_raw: '1501223467'
+    number_key: '1501223467'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: STELLOX
+    brand_canonical: STELLOX
+    number_raw: 000352SX
+    number_key: 000352SX
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: STELLOX
+    brand_canonical: STELLOX
+    number_raw: 1644000SX
+    number_key: 1644000SX
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: SWAG
+    brand_canonical: SWAG
+    number_raw: '33106501'
+    number_key: '33106501'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: SWAG
+    brand_canonical: SWAG
+    number_raw: '33107256'
+    number_key: '33107256'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: TEXTAR
+    brand_canonical: TEXTAR
+    number_raw: '2534801'
+    number_key: '2534801'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: TEXTAR
+    brand_canonical: TEXTAR
+    number_raw: '2680001'
+    number_key: '2680001'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: TRISCAN
+    brand_canonical: TRISCAN
+    number_raw: '811043057'
+    number_key: '811043057'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: TRUSTING
+    brand_canonical: TRUSTING
+    number_raw: '13700'
+    number_key: '13700'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: TRW
+    brand_canonical: TRW
+    number_raw: GDB3630
+    number_key: GDB3630
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: TRW
+    brand_canonical: TRW
+    number_raw: GDB7897
+    number_key: GDB7897
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: TRW
+    brand_canonical: TRW
+    number_raw: GDB95003
+    number_key: GDB95003
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: VALEO
+    brand_canonical: VALEO
+    number_raw: '208444'
+    number_key: '208444'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: VALEO
+    brand_canonical: VALEO
+    number_raw: '601891'
+    number_key: '601891'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: WOKING
+    brand_canonical: WOKING
+    number_raw: P1202310
+    number_key: P1202310
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: WOKING
+    brand_canonical: WOKING
+    number_raw: PSA1588302
+    number_key: PSA1588302
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: '253481802'
+    number_key: '253481802'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: '268001752'
+    number_key: '268001752'
+    kind: aftermarket
+    source_product: P 30 122
+    evidence_locator: captured official response
+  forbidden_pairs: []

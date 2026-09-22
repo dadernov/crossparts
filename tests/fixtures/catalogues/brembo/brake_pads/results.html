@@ -1,0 +1,284 @@
+<html><body><app-globalcaritem v-slot="scope" product-type="Pad">
+    <div class="box" :data-selected="scope.slotData.isDetail()">
+        <button @click="scope.slotData.setIsDetail('P 30 122')" class="close-codes-detail"><span class="icon icon-close"></span><span class="label">Закрыть</span></button>
+        <button @click="scope.slotData.setIsDetail('P 30 122')" class="codes-list">
+                <div class="item">
+                    <div class="info">
+                        <div class="type">
+                                <span class="label">Prime</span>
+
+                            
+
+                        </div>
+                        <div class="code">P 30 122</div>
+                    </div>
+                </div>
+        </button>
+        <div class="detail">
+            <div class="data">
+                    <div class="item">
+                        <div class="label">Ширина</div>
+                            <div class="detail">133<span class="unit">мм</span></div>
+                    </div>
+                    <div class="item">
+                        <div class="label">Толщина</div>
+                        <div class="detail">18<span class="unit">мм</span></div>
+                    </div>
+                    <div class="item">
+                        <div class="label">Высота</div>
+                            <div class="detail">58<span class="unit">мм</span></div>
+                    </div>
+                    <div class="item">
+                        <div class="label">Тормозная система</div>
+                        <div class="detail" data-text="">Mando</div>
+                    </div>
+                    <div class="item">
+                        <div class="label">Индикатор износа</div>
+                                <div class="detail" data-text="">Акустический</div>
+
+                    </div>
+                    <div :data-selected="scope.slotData.isDetail()" class="item" data-detail="">
+                        <div class="label">WVA</div>
+                        <div class="detail" data-text="">25350, 25348, 25349</div>
+                    </div>
+                    <div :data-selected="scope.slotData.isDetail()" class="item" data-detail="">
+                        <div class="label">FMSI</div>
+                        <div class="detail" data-text="">D2190 8806</div>
+                    </div>
+                    <div :data-selected="scope.slotData.isDetail()" class="item" data-detail="">
+                        <div class="label">Аксессуары</div>
+                        <div class="detail" data-text="">
+
+                            С аксессуарами<br>С противоскрипной пластиной
+                        </div>
+                    </div>
+            </div>
+            <div class="axle">
+            </div>
+            <div class="vehicle-info" :data-selected="scope.slotData.isDetail()">
+                <div :class="['short', scope.slotData.isDetail() ? 'hden' : '']">
+                    
+                </div>
+                <div :class="['full', !scope.slotData.isDetail() ? 'hden' : '']">
+                    
+                </div>
+            </div>
+        </div>
+        <div :class="['codes-details', !scope.slotData.isDetail() ? 'hden' : '']" :data-selected="scope.slotData.isDetail()">
+            <div class="navigation">
+                <div class="wrapper">
+                    <button class="item" @click="scope.slotData.showTechnicalData('P 30 122', 'P 30 122')" :data-selected="scope.slotData.section() === 'TechnicalData'"><div class="button">Технические данные</div></button>
+                    <button class="item" @click="scope.slotData.showProductApplications('P 30 122')" :data-selected="scope.slotData.section() === 'ProductApplications'"><div class="button">Совместимые автомобили</div></button>
+                    <button class="item" @click="scope.slotData.showProductManufacturerReferences('P 30 122')" :data-selected="scope.slotData.section() === 'ProductManufacturerReferences'"><div class="button">Коды OE</div></button>
+                    <a href="/europe/ru/where-to-buy?market=car&amp;marketType=aftermarket" class="item ga-event" data-gacategory="productlist_tab" data-galabel="wheretobuy"><span class="button">Где купить</span></a>
+                </div>
+            </div>
+            <div class="group-info">
+                <template v-if="scope.slotData.section() === 'TechnicalData'">
+                    <div class="item">
+                        <div class="codes-list">
+                                <div class="code" :data-compact="scope.slotData.isCompactProductList().includes('P 30 122')">
+                                    <app-globalcaritemimages brembo-code="P 30 122" :product-images="scope.slotData.productImages()"></app-globalcaritemimages>
+                                    <div class="detail">
+                                        <div class="section top">
+                                            <div class="name">
+                                                <div class="code">P 30 122</div>
+                                                <div class="type">
+                                                        <span class="label">Prime</span>
+
+                                                    
+
+                                                </div>
+                                            </div>
+                                                <div class="ean">
+                                                    Код EAN <span class="code">8020584118535</span>
+                                                </div>
+                                                <div class="action-menu" v-exp-menu="">
+                                                    <div class="button button-exp" data-icon="">
+                                                        <span class="icon icon-action small"></span>
+                                                    </div>
+                                                    <div class="exp">
+                                                        <div class="list-item">
+                                                            <div class="voice">
+                                                                <div class="link" @click="scope.slotData.setIsCompactProductList('P 30 122')">
+                                                                    <template v-if="scope.slotData.isCompactProductList().includes('P 30 122')">
+                                                                        <span class="icon icon-biggest"></span>
+                                                                        <span class="txt">Развернуть описание</span>
+                                                                    </template>
+                                                                    <template v-else="">
+                                                                        <span class="icon icon-smaller"></span>
+                                                                        <span class="txt">Сжать описание</span>
+                                                                    </template>
+                                                                </div>
+                                                            </div>
+                                                            <div v-if="scope.slotData.isTechnicalDrawingImage()" class="voice" :id="'TechnicalDrawingZoomImageResponsive_P 30 122'" data-mobile="">
+                                                                <a :href="scope.slotData.getProductImageZoom('P 30 122', 'Drawing_1')" data-fancybox="" class="link">
+                                                                    <span class="icon icon-design"></span>
+                                                                    <span class="label">Технический чертеж</span>
+                                                                </a>
+                                                            </div>
+                                                            <app-globalcomparatorcta catalogue="car" brembo-code="P 30 122" product-type="Pad" product-sub-type=""></app-globalcomparatorcta>
+                                                                <div class="voice" data-mobile="">
+                                                                    <a href="/account/ru/login?returnurl=%2Feurope%2Fru%2Fcatalogue%2Fcode%3Fcode%3D58101H5A25" class="link">
+                                                                        <span class="icon icon-bookmark"></span>
+                                                                        <span class="txt">Сохранить в моем списке</span>
+                                                                    </a>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="section middle">
+                                            <div class="content">
+                                                    <div class="desc">Тормозная колодка, обладающая эксплуатационными качествами, комфортом и надежностью Brembo. Идеально сочетается к дисками Prime.</div>
+                                                    <div class="product-plus" data-type="list">
+                                                        <div class="item">
+                                                            <span class="icon icon-check"></span>
+                                                            <span class="label">Эквивалент ОЕ</span>
+                                                        </div>
+                                                        <div class="item">
+                                                            <span class="icon icon-check"></span>
+                                                            <span class="label">Качество Brembo</span>
+                                                        </div>
+                                                        <div class="item">
+                                                            <span class="icon icon-check"></span>
+                                                            <span class="label">Сертификат ECE-R90</span>
+                                                        </div>
+                                                        <div class="item">
+                                                            <span class="icon icon-check"></span>
+                                                            <span class="label">Безопасность</span>
+                                                        </div>
+                                                        <div class="item">
+                                                            <span class="icon icon-check"></span>
+                                                            <span class="label">Производительность</span>
+                                                        </div>
+                                                        <div class="item">
+                                                            <span class="icon icon-check"></span>
+                                                            <span class="label">Комфорт</span>
+                                                        </div>
+                                                            <div class="item">
+                                                                <span class="icon icon-check"></span>
+                                                                <span class="label">С аксессуарами</span>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="section bottom">
+                                            <div class="action-link" ref="action">
+                                                <div v-if="scope.slotData.getProductImageZoom('P 30 122', 'Drawing_1')" class="item">
+                                                    <a :href="scope.slotData.getProductImageZoom('P 30 122', 'Drawing_1')" data-fancybox="" class="link">
+                                                        <span class="icon icon-design"></span>
+                                                        <span class="label">Технический чертеж</span>
+                                                    </a>
+                                                </div>
+                                                <app-globalcomparatorcta catalogue="car" brembo-code="P 30 122" product-type="Pad" product-sub-type=""></app-globalcomparatorcta>
+                                                <div class="item">
+                                                        <a href="/account/ru/login?returnurl=%2Feurope%2Fru%2Fcatalogue%2Fcode%3Fcode%3D58101H5A25" class="link">
+                                                            <span class="icon icon-bookmark"></span>
+                                                            <span class="label">Сохранить в моем списке</span>
+                                                        </a>
+                                                </div>
+                                            </div>
+                                                <div class="cta">
+                                                    <a href="/europe/ru/catalogue/pad/P_30_122" class="button" data-border="" data-black="" data-size="small">Информация о продукте</a>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </template>
+                <template v-if="scope.slotData.section() === 'ProductApplications'">
+                    <div class="item">
+                        <div class="application-box">
+                            <template v-if="!scope.slotData.isProductApplicationBrandsLoader()">
+                                <template v-if="scope.slotData.productApplicationBrands() &amp;&amp; scope.slotData.productApplicationBrands().length !== 0">
+                                    <div class="product-application">
+                                        <div class="tabs" data-type="link">
+                                            <div class="wrapper">
+                                                <template v-for="(productApplicationBrand, index) in scope.slotData.productApplicationBrands()">
+                                                    <div @click="scope.slotData.setSelectedProductApplicationBrand(productApplicationBrand, 'P 30 122')" class="item" :data-selected="scope.slotData.selectedProductApplicationBrand().brandCode === productApplicationBrand.brandCode"><div class="button">{{ productApplicationBrand.brandName }}</div></div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <template v-if="!scope.slotData.isProductApplicationsLoader()">
+                                            <template v-if="scope.slotData.productApplications() &amp;&amp; scope.slotData.productApplications().length !== 0">
+                                                <div class="application-detail scrollbar">
+                                                    <template v-for="(productApplication, index) in scope.slotData.productApplications()">
+                                                        <div class="item" @click="scope.slotData.searchApplication(productApplication.brandCode, productApplication.modelCode, productApplication.typeCodeAndVehicleType, productApplication.modelYear)">
+                                                            <div class="cel" data-type="model">{{ productApplication.modelName }}</div>
+                                                            <div class="cel" data-type="type">{{ productApplication.typeName }}</div>
+                                                            <div class="cel hden" data-type="space"></div>
+                                                            <div v-if="productApplication.kw" class="cel">{{ productApplication.kw }} <span class="unit">kW</span></div>
+                                                            <div v-if="productApplication.cv" class="cel">{{ productApplication.cv }} <span class="unit">CV</span></div>
+                                                            <template v-if="productApplication.typeDateStart.includes('<-') || productApplication.typeDateEnd.includes('->')">
+                                                                <div class="cel" v-html="scope.slotData.getProductApplicationYear(productApplication.typeDateStart, productApplication.typeDateEnd)"></div>
+                                                            </template>
+                                                            <template v-else-if="productApplication.typeDateStart.includes('-') || productApplication.typeDateEnd.includes('-')">
+                                                                <div class="cel" v-html="scope.slotData.getProductApplicationYear(productApplication.typeDateStart, productApplication.typeDateEnd)"></div>
+                                                            </template>
+                                                            <template v-else="">
+                                                                <div class="cel">{{ scope.slotData.getProductApplicationYear(productApplication.typeDateStart, productApplication.typeDateEnd) }}</div>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <div v-if="scope.slotData.pageCount() > 1" class="pagination" data-mrgt="">
+                                                    <button v-for="(pageCount, index) in scope.slotData.pageCount()" @click="scope.slotData.setPage(pageCount)" class="button" :data-selected="scope.slotData.pageIndex()===pageCount">{{ pageCount }}</button>
+                                                </div>
+                                            </template>
+                                            <template v-else="">
+                                                <div class="no-item">Нет совместимых автомобилей</div>
+                                            </template>
+                                        </template>
+                                        <template v-else="">
+                                            <div class="loader-box" data-height="">
+                                                <div class="loader"></div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <template v-else="">
+                                    <div class="no-item">Нет совместимых автомобилей</div>
+                                </template>
+                            </template>
+                            <template v-else="">
+                                <div class="loader-box">
+                                    <div class="loader"></div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+                <template v-if="scope.slotData.section() === 'ProductManufacturerReferences'">
+                    <div class="item">
+                        <div class="manufacturer-reference-box">
+                            <template v-if="scope.slotData.referencesOE() &amp;&amp; scope.slotData.referencesOE().length !== 0">
+                                <div class="manufacturer-reference">
+                                    <div class="item-list">
+                                        <template v-for="(referenceOE, index) in scope.slotData.referencesOE()">
+                                            <div class="item">
+                                                <div @click="scope.slotData.searchCompetitor(referenceOE.code)" class="button">
+                                                    <div class="code">{{ referenceOE.code }}</div>
+                                                    <div class="brand">{{ referenceOE.brandsName }}</div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-else-if="scope.slotData.referencesOE() &amp;&amp; scope.slotData.referencesOE().length === 0">
+                                <div class="no-item">Нет доступных кодов ОЕ</div>
+                            </template>
+                            <template v-else="">
+                                <div class="loader-box">
+                                    <div class="loader"></div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</app-globalcaritem></body></html>

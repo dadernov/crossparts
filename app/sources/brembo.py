@@ -132,13 +132,7 @@ class BremboSource(BaseSource):
         )
         if resp.status_code >= 400:
             return []
-        out = []
-        for row in resp.json() or []:
-            out.extend(
-                self.make_cross(row.get("brandsName", ""), row.get("code", ""),
-                                product=code, url=url, kind=KIND_OEM)
-            )
-        return out
+        return self.parse_manufacturer_refs(resp.json(), code=code, url=url)
 
     async def _competitor_refs(self, client, headers, code, url):
         resp = await client.post(
@@ -147,8 +141,24 @@ class BremboSource(BaseSource):
         )
         if resp.status_code >= 400:
             return []
+        return self.parse_competitor_refs(resp.json(), code=code, url=url)
+
+    def parse_manufacturer_refs(self, payload, *, code: str, url: str):
         out = []
-        for row in resp.json() or []:
+        for row in payload or []:
+            if not isinstance(row, dict):
+                continue
+            out.extend(
+                self.make_cross(row.get("brandsName", ""), row.get("code", ""),
+                                product=code, url=url, kind=KIND_OEM)
+            )
+        return out
+
+    def parse_competitor_refs(self, payload, *, code: str, url: str):
+        out = []
+        for row in payload or []:
+            if not isinstance(row, dict):
+                continue
             out.extend(
                 self.make_cross(row.get("brandName", ""), row.get("code", ""),
                                 product=code, url=url, kind=KIND_AFTERMARKET)
