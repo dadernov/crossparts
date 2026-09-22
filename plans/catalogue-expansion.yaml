@@ -13,7 +13,7 @@ authorization:
   current: "Пользователь поручил выполнять расширение каталогов по этому плану; production-выпуск отдельно не поручен."
   implementation_authorized: true
   production_changes_authorized: false
-  live_catalogue_checks_performed: false
+  live_catalogue_checks_performed: true
   tests_executed_during_implementation: true
   next_instruction: "Продолжать P03–P06 в отдельной ветке; выпуск только после готового отчёта и отдельного поручения по G7."
 
@@ -450,7 +450,7 @@ execution:
       evidence:
         - "python3 scripts/verify_catalogue_matrix.py: ok=true"
         - "workbook sha256: 74a193961fe220717018fa6147d20e05622465e233d442345647ccf161ad8f91"
-        - "inventory sha256: 299da69051b18220ee5d3454d3a61f38d217d31d98de7f6aa024a7d82aef3e2e"
+        - "current inventory sha256 after recording METACO discovery: b8a3246c9ca4a7181debe07b32d862e504fed2227a91bb6bd1637b634b70df68"
       actual_changes:
         - "Добавлен read-only verifier Excel → inventory → BUILTIN adapters."
         - "Подтверждены 47 строк, 33 бренда, 34 источника, 13/21 адаптеров и 64 пары."
@@ -471,8 +471,11 @@ execution:
       depends_on: [P02]
       status: in_progress
       outputs: ["Версионированные manifests, fixtures и классификация ошибок/partial"]
-      evidence: []
-      actual_changes: []
+      evidence:
+        - "tests/fixtures/catalogues/metaco/<group>/manifest.yaml задаёт точные пары, forbidden pairs, scope и sha256 фикстур."
+        - "tests/catalogues/test_quality.py проверяет хеши и полное равенство пар для заявленного fixture scope."
+      actual_changes:
+        - "Создан общий формат golden manifest и первые reviewed fixtures; покрытие существующих 13 адаптеров ещё не завершено."
     - id: P04
       title: "Развернуть тестовые матрицы и измерить baseline W0"
       depends_on: [P03]
@@ -488,6 +491,11 @@ execution:
       depends_on: [P05]
       status: planned
       outputs: ["По каждому источнику discovery → fixtures → tests → staging → review report; production только через G7"]
+      preliminary_evidence:
+        - "METACO discovery: официальный OEM/cross-list CSV, проверено 2026-09-22."
+        - "Выключенный adapter pilot на af34e69: 41,779 W1 связей, SQLite lookup без внешнего HTTP."
+        - "Отчёт: output/catalogue-reports/metaco-w1-2026-09-22/."
+      blocking_before_start: "Сначала завершить P03–P05; pilot не зарегистрирован и не выпускается."
     - id: P07
       title: "W2: амортизаторы"
       depends_on: [P06]
