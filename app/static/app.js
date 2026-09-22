@@ -74,6 +74,10 @@ if (guestOptions && guestLogin) {
     $('#open-inline-login').focus();
   };
 }
+const trialForm = document.querySelector('.trial-form[data-support-url]');
+trialForm?.addEventListener('submit', () => {
+  window.open(trialForm.dataset.supportUrl, '_blank', 'noopener,noreferrer');
+});
 
 const GROUP_EXAMPLES = {
   brake_pads: ['Колодки', '58101H5A25'], brake_discs: ['Диски', '1K0615301AA'],

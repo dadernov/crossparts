@@ -46,7 +46,9 @@ def test_login_form_and_native_redirect(monkeypatch):
             assert response.status_code == 200
             assert 'id="lookup-form"' in response.text
             assert 'Не авторизован' in response.text
-            assert 'Пробный доступ · 10 поисков' in response.text
+            assert 'Запросить полный доступ' in response.text
+            assert 'action="/trial" method="post"' in response.text
+            assert 'data-support-url="https://t.me/mrbdigital"' in response.text
             assert 'id="header-password"' in response.text
 
             response = await client.post('/api/v1/lookup', json={'oe': '58101H5A25'})
@@ -102,7 +104,17 @@ def test_guest_account_menu_opens_native_login_and_trial():
         page.locator('#oe').fill('58101H5A25')
         page.get_by_role('button', name='Найти').click()
         assert page.locator('#profile-dropdown').is_visible()
-        assert page.get_by_role('button', name='Пробный доступ · 10 поисков').evaluate(
+        access_button = page.get_by_role('button', name='Запросить полный доступ')
+        assert access_button.evaluate(
             '(element) => element === document.activeElement'
         )
+        page.evaluate("""() => {
+            window.__supportOpen = null;
+            window.open = (...args) => { window.__supportOpen = args; };
+            document.querySelector('.trial-form').addEventListener('submit', event => event.preventDefault());
+        }""")
+        access_button.click()
+        assert page.evaluate('window.__supportOpen') == [
+            'https://t.me/mrbdigital', '_blank', 'noopener,noreferrer'
+        ]
         browser.close()
