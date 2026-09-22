@@ -1,0 +1,34 @@
+schema_version: 1
+source: brannor
+group: brake_pads
+captured_at: '2026-09-07'
+source_url: https://brannor.ru/search-oem/?search=8K0698451D
+completeness_scope: "Дедуплицированная карточка BRP1386A и полный список её OEM-номеров."
+reviewed_by: codex
+review_evidence: tests/fixtures/SOURCE.md
+fixtures:
+  ../../../brannor_search_8K0698451D.html: 6f37f3a7b0f2d91cf3f7b28c2f96b73cfe1fc87786ffdbb06dfdbb45b0d0e41d
+  ../../../brannor_product_BRP1386A.html: 0e9ebd802ad1b71e109acbba9de065c21ab5727079bc6ed09829de83644e72f1
+cases:
+  - case_id: brannor-pads-positive-001
+    query_raw: 8K0698451D
+    query_key: 8K0698451D
+    expected_status: ok
+    expected_products: [BRP1386A]
+    expected_pairs:
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 098 601E, number_key: 8K0098601E, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 098 601F, number_key: 8K0098601F, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 098 601H, number_key: 8K0098601H, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 698 451, number_key: 8K0698451, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 698 451A, number_key: 8K0698451A, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 698 451B, number_key: 8K0698451B, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 698 451C, number_key: 8K0698451C, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 698 451D, number_key: 8K0698451D, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 698 451E, number_key: 8K0698451E, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 698 451F, number_key: 8K0698451F, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8K0 698 451G, number_key: 8K0698451G, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8KD 698 451, number_key: 8KD698451, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8KD 698 451A, number_key: 8KD698451A, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 8KD 698 451B, number_key: 8KD698451B, kind: oem, source_product: BRP1386A, evidence_locator: ol.oems}
+    forbidden_pairs: []
+

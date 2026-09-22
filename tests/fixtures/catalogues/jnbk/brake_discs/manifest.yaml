@@ -1,0 +1,23 @@
+schema_version: 1
+source: jnbk
+group: brake_discs
+captured_at: '2026-05-13'
+source_url: https://www.jnbk-brakes.com/catalogue/cars/brake/101572196/RN2713
+completeness_scope: "Полный блок Cross Reference сохранённой карточки RN2713."
+reviewed_by: codex
+review_evidence: tests/fixtures/SOURCE.md
+fixtures:
+  ../../../jnbk_product_RN2713.html: 1b102391966663b5c1b8b8a61bace7fb78e4b3854de363593b0e99d4c28a763f
+cases:
+  - case_id: jnbk-discs-positive-001
+    query_raw: '4243106050'
+    query_key: '4243106050'
+    expected_status: ok
+    expected_products: [RN2713]
+    expected_pairs:
+      - {brand_raw: HI-Q, brand_canonical: HI-Q, number_raw: SD4051, number_key: SD4051, kind: aftermarket, source_product: RN2713, evidence_locator: 'Cross Reference row 1'}
+      - {brand_raw: TOYOTA, brand_canonical: TOYOTA, number_raw: 42431-06050, number_key: '4243106050', kind: oem, source_product: RN2713, evidence_locator: 'Cross Reference row 2'}
+      - {brand_raw: TOYOTA, brand_canonical: TOYOTA, number_raw: 42431-06051, number_key: '4243106051', kind: oem, source_product: RN2713, evidence_locator: 'Cross Reference row 3'}
+      - {brand_raw: TOYOTA, brand_canonical: TOYOTA, number_raw: 42431-33100, number_key: '4243133100', kind: oem, source_product: RN2713, evidence_locator: 'Cross Reference row 4'}
+    forbidden_pairs: []
+

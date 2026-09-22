@@ -1,0 +1,34 @@
+schema_version: 1
+source: hola
+group: brake_pads
+captured_at: '2026-09-07'
+source_url: https://www.hola-auto.ru/production/brake-pads-and-shoes/BD836/
+completeness_scope: "Единственная карточка прямой выдачи и полный OEM-блок BD836."
+reviewed_by: codex
+review_evidence: tests/fixtures/SOURCE.md
+fixtures:
+  ../../../hola_search_58101H5A25.html: 62a900934919e625e1c48dac2bc44cb0a0d1a6ad36ae1512e5ae7d5a0d2a6bdb
+  ../../../hola_product_BD836.html: d257ced0bfc20f6778c896bab9d941ba4f052ed876613f95096bf75eeac2bfb5
+cases:
+  - case_id: hola-pads-positive-001
+    query_raw: 58101H5A25
+    query_key: 58101H5A25
+    expected_status: ok
+    expected_products: [BD836]
+    expected_pairs:
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 581011RA00, number_key: 581011RA00, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 581011RA05, number_key: 581011RA05, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 581011RA10, number_key: 581011RA10, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 581014LA00, number_key: 581014LA00, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 58101C8A00, number_key: 58101C8A00, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 58101C8A10, number_key: 58101C8A10, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 58101C8A50, number_key: 58101C8A50, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 58101C8A60, number_key: 58101C8A60, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: HYUNDAI, brand_canonical: HYUNDAI, number_raw: 58101H5A25, number_key: 58101H5A25, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: KIA, brand_canonical: KIA, number_raw: 581011RA01, number_key: 581011RA01, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: KIA, brand_canonical: KIA, number_raw: 581011WA05, number_key: 581011WA05, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: KIA, brand_canonical: KIA, number_raw: 581011WA35, number_key: 581011WA35, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: KIA, brand_canonical: KIA, number_raw: 581014LA00, number_key: 581014LA00, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+      - {brand_raw: KIA, brand_canonical: KIA, number_raw: 58101H8A05, number_key: 58101H8A05, kind: oem, source_product: BD836, evidence_locator: 'OEM table'}
+    forbidden_pairs: []
+

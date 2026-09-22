@@ -1,0 +1,22 @@
+schema_version: 1
+source: luzar
+group: radiators
+captured_at: '2026-09-07'
+source_url: https://luzar.ru/catalogue/radiatory/radiatory-okhlazhdeniya/radiator-okhlazhdeniya-logan-08-mt-lrc-0938/
+completeness_scope: "Полный OEM-блок сохранённой карточки LRc 0938."
+reviewed_by: codex
+review_evidence: tests/fixtures/SOURCE.md
+fixtures:
+  ../../../luzar_product_LRc0938.html: 8d0a361ada6ad831b3cd481330b8474e69375b2599414f33436729220c1c2b15
+cases:
+  - case_id: luzar-radiators-positive-001
+    query_raw: '8200735038'
+    query_key: '8200735038'
+    expected_status: ok
+    expected_products: [LRc 0938]
+    expected_pairs:
+      - {brand_raw: OEM, brand_canonical: OEM, number_raw: '8200735038', number_key: '8200735038', kind: oem, source_product: LRc 0938, evidence_locator: 'div.list-oems item 1'}
+      - {brand_raw: OEM, brand_canonical: OEM, number_raw: 214104453R, number_key: 214104453R, kind: oem, source_product: LRc 0938, evidence_locator: 'div.list-oems item 2'}
+      - {brand_raw: OEM, brand_canonical: OEM, number_raw: 214104AA0A, number_key: 214104AA0A, kind: oem, source_product: LRc 0938, evidence_locator: 'div.list-oems item 3'}
+    forbidden_pairs: []
+

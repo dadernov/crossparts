@@ -1,0 +1,23 @@
+schema_version: 1
+source: nissens
+group: radiators
+captured_at: '2026-09-07'
+source_url: https://catalogue.nissens.com/Product
+completeness_scope: "Прямое попадание 637609 и полный OEM-блок сохранённой карточки."
+reviewed_by: codex
+review_evidence: tests/fixtures/SOURCE.md
+fixtures:
+  ../../../nissens_search_8200735038.html: 55b7cafdc82d65e2fa25abb15d3f14e0a8e53cb0f8cb8ab68f28117051456199
+  ../../../nissens_details_637609.html: b95de8c87e38a61db79f9b64e62b9fe3b110ff0db54149431ad5eb2e06bbe17b
+cases:
+  - case_id: nissens-radiators-positive-001
+    query_raw: '8200735038'
+    query_key: '8200735038'
+    expected_status: ok
+    expected_products: ['637609']
+    expected_pairs:
+      - {brand_raw: OEM, brand_canonical: OEM, number_raw: '8200735038', number_key: '8200735038', kind: oem, source_product: '637609', evidence_locator: 'OE table row 1'}
+      - {brand_raw: OEM, brand_canonical: OEM, number_raw: '8660003459', number_key: '8660003459', kind: oem, source_product: '637609', evidence_locator: 'OE table row 2'}
+    forbidden_pairs:
+      - {brand_raw: NISSENS, brand_canonical: NISSENS, number_raw: '637612', number_key: '637612', kind: aftermarket, source_product: '637612', evidence_locator: 'non-direct vehicle result'}
+

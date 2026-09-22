@@ -1,0 +1,23 @@
+schema_version: 1
+source: kyb
+group: shock_absorbers
+captured_at: '2026-09-07'
+source_url: https://kyb.ru/support/cross
+completeness_scope: "Полный сохранённый JSON-ответ KYB cross для 4851080378."
+reviewed_by: codex
+review_evidence: tests/fixtures/SOURCE.md
+fixtures:
+  ../../../kyb_cross_4851080378.json: 93d3cff9777e59f4fc1e95a6eadc3fe2301a695b765a4e4970e737ac2ec9571d
+cases:
+  - case_id: kyb-shocks-positive-001
+    query_raw: 48510-80378
+    query_key: '4851080378'
+    expected_status: ok
+    expected_products: ['339267', NST5395R]
+    expected_pairs:
+      - {brand_raw: KYB, brand_canonical: KYB, number_raw: '339267', number_key: '339267', kind: aftermarket, source_product: '339267', evidence_locator: 'data.cross[0].kyb_pn'}
+      - {brand_raw: TOYOTA, brand_canonical: TOYOTA, number_raw: '4851080378', number_key: '4851080378', kind: oem, source_product: '339267', evidence_locator: 'data.cross[0].oe_pn'}
+      - {brand_raw: KYB, brand_canonical: KYB, number_raw: NST5395R, number_key: NST5395R, kind: aftermarket, source_product: NST5395R, evidence_locator: 'data.cross[1].kyb_pn'}
+      - {brand_raw: TOYOTA, brand_canonical: TOYOTA, number_raw: '4851080378', number_key: '4851080378', kind: oem, source_product: NST5395R, evidence_locator: 'data.cross[1].oe_pn'}
+    forbidden_pairs: []
+

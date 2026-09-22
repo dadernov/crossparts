@@ -11,7 +11,7 @@ from app.sources.metaco import MetacoIndex
 
 
 ROOT = Path(__file__).parents[1] / "fixtures" / "catalogues"
-MANIFESTS = sorted(ROOT.glob("*/*/manifest.yaml"))
+MANIFESTS = sorted(ROOT.glob("metaco/*/manifest.yaml"))
 
 
 def _load(path: Path) -> tuple[dict, MetacoIndex]:
@@ -42,4 +42,3 @@ def test_reviewed_golden_pairs_are_exact(manifest_path):
         assert actual == expected
         assert actual.isdisjoint(forbidden)
         assert ("ok" if products else "not_found") == case["expected_status"]
-

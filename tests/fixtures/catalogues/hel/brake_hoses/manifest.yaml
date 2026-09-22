@@ -1,0 +1,22 @@
+schema_version: 1
+source: hel
+group: brake_hoses
+captured_at: '2026-09-07'
+source_url: https://helrussia.ru/index.php?route=product/search&search=1K0611701
+completeness_scope: "Полная сохранённая карточка выдачи VW-4-409."
+reviewed_by: codex
+review_evidence: tests/fixtures/SOURCE.md
+fixtures:
+  ../../../hel_search_1K0611701.html: 1e4edfbf47f2e71f0370a5944babacf00a432b0d22ab90d80e4ee14bfa585428
+cases:
+  - case_id: hel-hoses-positive-001
+    query_raw: 1K0611701
+    query_key: 1K0611701
+    expected_status: ok
+    expected_products: [VW-4-409]
+    expected_pairs:
+      - {brand_raw: HEL, brand_canonical: HEL, number_raw: VW-4-409, number_key: VW4409, kind: aftermarket, source_product: VW-4-409, evidence_locator: 'product card article'}
+      - {brand_raw: OEM, brand_canonical: OEM, number_raw: 1K0611701K, number_key: 1K0611701K, kind: oem, source_product: VW-4-409, evidence_locator: 'product card OEM list'}
+      - {brand_raw: OEM, brand_canonical: OEM, number_raw: 1K0611775C, number_key: 1K0611775C, kind: oem, source_product: VW-4-409, evidence_locator: 'product card OEM list'}
+    forbidden_pairs: []
+
