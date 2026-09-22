@@ -17,13 +17,17 @@ from .jnbk import JnbkSource
 from .kyb import KybSource
 from .luzar import LuzarSource
 from .lynxauto import LynxautoSource
+from .masterkit import MasterkitSource
 from .mintex import MintexSource
 from .metaco import MetacoSource
 from .marshall import MarshallSource
+from .fap import FapSource
+from .ganz import GanzSource
 from .nissens import NissensSource
 from .nibkru import NibkRuSource
 from .sbparts import SbPartsSource
 from .trialli import TrialliSource
+from .zimmermann import ZimmermannSource
 
 PROFILES_PATH = Path(__file__).with_name("profiles.json")
 CATALOG_PATH = Path(__file__).with_name("catalog.json")
@@ -31,7 +35,8 @@ CATALOG_PATH = Path(__file__).with_name("catalog.json")
 BUILTIN = (SbPartsSource, BremboSource, TrialliSource, BrixoSource, NibkRuSource,
            LuzarSource, NissensSource, KybSource, HolaSource, BrannorSource, HelSource,
            JnbkSource, MintexSource)
-CANDIDATES = (MetacoSource, MarshallSource, LynxautoSource)
+CANDIDATES = (MetacoSource, MarshallSource, LynxautoSource, MasterkitSource, FapSource,
+              GanzSource, ZimmermannSource)
 
 
 class SourceRegistry:

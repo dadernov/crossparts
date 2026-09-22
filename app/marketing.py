@@ -12,6 +12,13 @@ BRAND_ASSETS = {
     'hola': ('HOLA', 'hola.svg'),
     'brannor': ('BRANNOR', 'brannor.svg'),
     'hel': ('HEL Performance', 'hel.png'),
+    'metaco': ('METACO', 'metaco.svg'),
+    'marshall': ('MARSHALL', 'marshall.svg'),
+    'lynxauto': ('LYNXauto', 'lynxauto.svg'),
+    'masterkit': ('MasterKit', 'masterkit.svg'),
+    'fap': ('FAP', 'fap.svg'),
+    'ganz': ('GANZ', 'ganz.svg'),
+    'zimmermann': ('ZIMMERMANN', 'zimmermann.png'),
 }
 CATEGORY_COPY = {
     'brake_pads': ('Тормозные колодки', 'Аналоги дисковых тормозных колодок по оригинальному номеру. Для проверки позиции клиента и пополнения ассортимента.', '58101H5A25', 'pads'),

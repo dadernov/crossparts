@@ -88,9 +88,9 @@
         "brake_pads",
         "brake_discs"
       ],
-      "url": "https://www.otto-zimmermann.de/ru/novosti/onlain-katalog/",
-      "status": "planned",
-      "note": "Поиск по сайту игнорирует номер: выдача одинаковая на любой запрос."
+      "url": "https://web.tecalliance.net/otto-zimmermann/ru/",
+      "status": "implemented",
+      "note": "Открытый фирменный TecDoc-каталог: точный поиск по OE, колодки и диски."
     },
     {
       "brand": "BRANNOR",
@@ -111,7 +111,29 @@
         "brake_discs"
       ],
       "url": "https://fapbrakes.ru/ru/catalogue",
-      "status": "planned"
+      "status": "implemented",
+      "note": "Публичный API: OE → FAP-артикул и таблица оригинальных номеров."
+    },
+    {
+      "brand": "MasterKit",
+      "key": "masterkit",
+      "groups": [
+        "brake_pads"
+      ],
+      "url": "https://masterkit.it/production",
+      "status": "implemented",
+      "note": "Публичный OE-поиск; карточка товара подтверждает группу тормозных колодок."
+    },
+    {
+      "brand": "GANZ",
+      "key": "ganz",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "url": "https://ganz-parts.ru/catalog/",
+      "status": "implemented",
+      "note": "Точный поиск и карточка GANZ подтверждают связь OE с артикулом."
     },
     {
       "brand": "MONAER",
