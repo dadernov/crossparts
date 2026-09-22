@@ -134,7 +134,10 @@ class MetacoIndex:
             for brand, number, kind in candidates:
                 brand = clean_brand(brand)
                 number = clean_number(number)
-                key = brand, number_key(number)
+                # Preserve the same brand+number when two METACO products
+                # independently claim it. Aggregator.merge will deduplicate the
+                # visible pair while retaining both source_products.
+                key = brand, number_key(number), first.own_article
                 if key in seen:
                     continue
                 seen.add(key)

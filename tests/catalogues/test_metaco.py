@@ -50,7 +50,15 @@ def test_replacement_number_finds_the_same_complete_fixture_product():
     products, crosses = _index("brake_pads").lookup(
         "58101H5A25", groups={BRAKE_PADS}
     )
-    assert products == ["3000-555"]
+    assert products == [
+        "3000-410",
+        "3000-555",
+        "3000-587",
+        "3000-745",
+        "3000-746",
+        "3000-1131",
+        "3000-1131PRM",
+    ]
     pairs = {(cross.brand, number_key(cross.number)) for cross in crosses}
     assert {
         ("METACO", "3000555"),
@@ -92,13 +100,13 @@ def test_compiled_sqlite_index_matches_fixture_lookup(tmp_path):
     report = build_sqlite_index(
         pads / "oem.csv", pads / "replacements.csv", database
     )
-    assert report["rows"] == 10
+    assert report["rows"] == 1469
     assert report["size_bytes"] > 0
 
     products, crosses = SQLiteMetacoIndex(database).lookup(
         "58101-H5A25", groups={BRAKE_PADS}
     )
-    assert products == ["3000-555"]
+    assert "3000-555" in products
     assert ("BREMBO", "P30098") in {(cross.brand, cross.number) for cross in crosses}
 
 

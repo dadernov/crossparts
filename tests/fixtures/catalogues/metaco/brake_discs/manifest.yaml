@@ -3,42 +3,2230 @@ source: metaco
 group: brake_discs
 captured_at: '2026-09-22'
 source_url: https://metaco.parts/content/downloads
-completeness_scope: "Точный полный результат внутри двух приложенных CSV-срезов для товара 3050-016; это pilot fixture, не полный каталог."
+completeness_scope: Полные product-closure срезы официальных OEM/replacement CSV для 12 independent positives, 4 confirmed negatives и 4 ambiguous references этой группы.
 reviewed_by: codex
-review_evidence: "Официальные CSV производителя; строки товара и ссылки на загрузку сверены независимо от адаптера."
+review_evidence: 'Официальные CSV sha256: OEM ec8f4d5c0fbabdce0b03afaf6b6844217701e4a6c0acf958c085010ad8b4e526; replacements bfb63a14a1dc8b12a1311dc551b02da8316b093f78960f8b37b29a38a6ba1ee2.'
 fixtures:
-  oem.csv: 21bd1981863e40d9b72a89e7ff50547ee1adf6bf68be17ab06de348ac35085d2
-  replacements.csv: cc8793aa9267fd606075b2ddaac27623cff1dd118df8afa870991b41280fd4c8
+  oem.csv: 0a4418d00f1d1cf6f21c4b6da5c5cfef456c8cc70482b4d69aa085b23dc1823b
+  replacements.csv: 9cfa98589ed84d70ffb3c2f611283cc1bf1aad0124fbe706ca646bd8cb742e0c
 cases:
-  - case_id: metaco-discs-positive-001
-    query_raw: 1K0 615 301-AA
-    query_key: 1K0615301AA
-    expected_status: ok
-    expected_products: [3050-016]
-    expected_pairs:
-      - {brand_raw: METACO, brand_canonical: METACO, number_raw: 3050-016, number_key: '3050016', kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 1K0615301AA, number_key: 1K0615301AA, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:2}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: JZW615301H, number_key: JZW615301H, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:3}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: '561615301', number_key: '561615301', kind: oem, source_product: 3050-016, evidence_locator: oem.csv:4}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 561615301A, number_key: 561615301A, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:5}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 5C0615301B, number_key: 5C0615301B, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:6}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 5Q0615301F, number_key: 5Q0615301F, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:7}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 5QM615301A, number_key: 5QM615301A, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:8}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 3CD615301, number_key: 3CD615301, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:9}
-      - {brand_raw: VAG, brand_canonical: VAG, number_raw: L1KD615301D, number_key: L1KD615301D, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:10}
-      - {brand_raw: AMD, brand_canonical: AMD, number_raw: AMD.SPORT.BD5321, number_key: AMDSPORTBD5321, kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:1}
-      - {brand_raw: ATE, brand_canonical: ATE, number_raw: 24.0325-0158.1, number_key: '24032501581', kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:2}
-      - {brand_raw: BREMBO, brand_canonical: BREMBO, number_raw: 09.9772.1X, number_key: 0997721X, kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:3}
-      - {brand_raw: BREMBO, brand_canonical: BREMBO, number_raw: 09.9772.75, number_key: '09977275', kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:4}
-      - {brand_raw: NIBK, brand_canonical: NIBK, number_raw: RN1377DSET, number_key: RN1377DSET, kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:5}
-      - {brand_raw: TRW, brand_canonical: TRW, number_raw: DF4464, number_key: DF4464, kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:6}
-      - {brand_raw: ZIMMERMANN, brand_canonical: ZIMMERMANN, number_raw: 100.3300.52, number_key: '100330052', kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:7}
-    forbidden_pairs: []
-  - case_id: metaco-discs-negative-001
-    query_raw: ZZ-NOT-A-REAL-DISC-987
-    query_key: ZZNOTAREALDISC987
-    expected_status: not_found
-    expected_products: []
-    expected_pairs: []
-    forbidden_pairs: []
-
+- case_id: metaco-brake_discs-positive-001
+  case_class: positive
+  query_raw: 1K0615301AA
+  query_key: 1K0615301AA
+  expected_status: ok
+  expected_products:
+  - 3050-016
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-016
+    number_key: '3050016'
+    kind: aftermarket
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5321
+    number_key: AMDSPORTBD5321
+    kind: aftermarket
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: 24.0325-0158.1
+    number_key: '24032501581'
+    kind: aftermarket
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: BREMBO
+    brand_canonical: BREMBO
+    number_raw: 09.9772.1X
+    number_key: 0997721X
+    kind: aftermarket
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: BREMBO
+    brand_canonical: BREMBO
+    number_raw: 09.9772.75
+    number_key: 09977275
+    kind: aftermarket
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: NIBK
+    brand_canonical: NIBK
+    number_raw: RN1377DSET
+    number_key: RN1377DSET
+    kind: aftermarket
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: TRW
+    brand_canonical: TRW
+    number_raw: DF4464
+    number_key: DF4464
+    kind: aftermarket
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: 1K0615301AA
+    number_key: 1K0615301AA
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: 3CD615301
+    number_key: 3CD615301
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: '561615301'
+    number_key: '561615301'
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: 561615301A
+    number_key: 561615301A
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: 5C0615301B
+    number_key: 5C0615301B
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: 5Q0615301F
+    number_key: 5Q0615301F
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: 5QM615301A
+    number_key: 5QM615301A
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: JZW615301H
+    number_key: JZW615301H
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: VAG
+    brand_canonical: VAG
+    number_raw: L1KD615301D
+    number_key: L1KD615301D
+    kind: oem
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: 100.3300.52
+    number_key: '100330052'
+    kind: aftermarket
+    source_product: 3050-016
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-002
+  case_class: positive
+  query_raw: 0000424994
+  query_key: 0000424994
+  expected_status: ok
+  expected_products:
+  - 3050-085
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-085
+    number_key: '3050085'
+    kind: aftermarket
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: BYD
+    brand_canonical: BYD
+    number_raw: LK3501124
+    number_key: LK3501124
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: 0000424994
+    number_key: 0000424994
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: '1613819880'
+    number_key: '1613819880'
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: '1630633180'
+    number_key: '1630633180'
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: 4246F0
+    number_key: 4246F0
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: 4246J0
+    number_key: 4246J0
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: '424994'
+    number_key: '424994'
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: TOYOTA
+    brand_canonical: TOYOTA
+    number_raw: 43512-0H010
+    number_key: 435120H010
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: TOYOTA
+    brand_canonical: TOYOTA
+    number_raw: 43512-0H020
+    number_key: 435120H020
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  - brand_raw: TOYOTA
+    brand_canonical: TOYOTA
+    number_raw: 43512-0H040
+    number_key: 435120H040
+    kind: oem
+    source_product: 3050-085
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-003
+  case_class: positive
+  query_raw: 00004249A6
+  query_key: 00004249A6
+  expected_status: ok
+  expected_products:
+  - 3050-458
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-458
+    number_key: '3050458'
+    kind: aftermarket
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 68195026AA
+    number_key: 68195026AA
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: 00004249A6
+    number_key: 00004249A6
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: '1607872380'
+    number_key: '1607872380'
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: '424937'
+    number_key: '424937'
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: '424938'
+    number_key: '424938'
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: CITROEN-PEUGEOT
+    brand_canonical: CITROEN-PEUGEOT
+    number_raw: 4249A6
+    number_key: 4249A6
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: '51705758'
+    number_key: '51705758'
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: '51740249'
+    number_key: '51740249'
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  - brand_raw: FIAT
+    brand_canonical: FIAT
+    number_raw: '51957509'
+    number_key: '51957509'
+    kind: oem
+    source_product: 3050-458
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-004
+  case_class: positive
+  query_raw: '0004211112'
+  query_key: '0004211112'
+  expected_status: ok
+  expected_products:
+  - 3050-187
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-187
+    number_key: '3050187'
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: APEC BRAKING
+    brand_canonical: APEC BRAKING
+    number_raw: DSK2616
+    number_key: DSK2616
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: BLITZ
+    brand_canonical: BLITZ
+    number_raw: BS0268
+    number_key: BS0268
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: BORG & BECK
+    brand_canonical: BORG & BECK
+    number_raw: BBD5811S
+    number_key: BBD5811S
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: KORTEX
+    brand_canonical: KORTEX
+    number_raw: KD0267
+    number_key: KD0267
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004211112'
+    number_key: '0004211112'
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '000421111207'
+    number_key: '000421111207'
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004213012'
+    number_key: '0004213012'
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '000421301207'
+    number_key: '000421301207'
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '2044211012'
+    number_key: '2044211012'
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004211112
+    number_key: A0004211112
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004213012
+    number_key: A0004213012
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A000421301207
+    number_key: A000421301207
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A2044211012
+    number_key: A2044211012
+    kind: oem
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: MILES
+    brand_canonical: MILES
+    number_raw: K000175
+    number_key: K000175
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: NF PARTS (NORDIC FORUM)
+    brand_canonical: NF PARTS (NORDIC FORUM)
+    number_raw: NF2033102
+    number_key: NF2033102
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: PATRON
+    brand_canonical: PATRON
+    number_raw: PBD4862
+    number_key: PBD4862
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: SAT
+    brand_canonical: SAT
+    number_raw: ST-A2044211012
+    number_key: STA2044211012
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: SEGMATIC
+    brand_canonical: SEGMATIC
+    number_raw: SBD30093351
+    number_key: SBD30093351
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  - brand_raw: STELLOX
+    brand_canonical: STELLOX
+    number_raw: 6020-1642-SX
+    number_key: 60201642SX
+    kind: aftermarket
+    source_product: 3050-187
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-005
+  case_class: positive
+  query_raw: '0004211212'
+  query_key: '0004211212'
+  expected_status: ok
+  expected_products:
+  - 3050-296
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-296
+    number_key: '3050296'
+    kind: aftermarket
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: 24.0332-0101.1
+    number_key: '24033201011'
+    kind: aftermarket
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004211212'
+    number_key: '0004211212'
+    kind: oem
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '000421121207'
+    number_key: '000421121207'
+    kind: oem
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '2044210812'
+    number_key: '2044210812'
+    kind: oem
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004211212
+    number_key: A0004211212
+    kind: oem
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A000421121207
+    number_key: A000421121207
+    kind: oem
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A2044210812
+    number_key: A2044210812
+    kind: oem
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: 400.3664.52
+    number_key: '400366452'
+    kind: aftermarket
+    source_product: 3050-296
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-006
+  case_class: positive
+  query_raw: '0004212112'
+  query_key: '0004212112'
+  expected_status: ok
+  expected_products:
+  - 3050-426
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-426
+    number_key: '3050426'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: 24.0130-0300.2
+    number_key: '24013003002'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: BOSCH
+    brand_canonical: BOSCH
+    number_raw: 0986479G42
+    number_key: 0986479G42
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: BLUE PRINT
+    brand_canonical: BLUE PRINT
+    number_raw: ADBP430085
+    number_key: ADBP430085
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: BREMBO
+    brand_canonical: BREMBO
+    number_raw: 09.D527.13
+    number_key: 09D52713
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: CARBERRY
+    brand_canonical: CARBERRY
+    number_raw: BS0805
+    number_key: BS0805
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: FEBI
+    brand_canonical: FEBI
+    number_raw: '175135'
+    number_key: '175135'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: FERODO
+    brand_canonical: FERODO
+    number_raw: DDF2834VC-1
+    number_key: DDF2834VC1
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: FREY
+    brand_canonical: FREY
+    number_raw: '745234301'
+    number_key: '745234301'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: HANS PRIES
+    brand_canonical: HANS PRIES
+    number_raw: '631166'
+    number_key: '631166'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: HANS PRIES
+    brand_canonical: HANS PRIES
+    number_raw: '631166016'
+    number_key: '631166016'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212112'
+    number_key: '0004212112'
+    kind: oem
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212612'
+    number_key: '0004212612'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212112
+    number_key: A0004212112
+    kind: oem
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212612
+    number_key: A0004212612
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: METELLI
+    brand_canonical: METELLI
+    number_raw: 23-1924C
+    number_key: 231924C
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: NGN PARTS
+    brand_canonical: NGN PARTS
+    number_raw: 37-1060
+    number_key: '371060'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: QUATTRO FRENI
+    brand_canonical: QUATTRO FRENI
+    number_raw: QF00F00005
+    number_key: QF00F00005
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: REMY
+    brand_canonical: REMY
+    number_raw: RAD2148C
+    number_key: RAD2148C
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: SWAG
+    brand_canonical: SWAG
+    number_raw: '33102713'
+    number_key: '33102713'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: VIKA
+    brand_canonical: VIKA
+    number_raw: '61449301'
+    number_key: '61449301'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: 400.5519.30
+    number_key: '400551930'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-007
+  case_class: positive
+  query_raw: '0004212212'
+  query_key: '0004212212'
+  expected_status: ok
+  expected_products:
+  - 3050-485
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-485
+    number_key: '3050485'
+    kind: aftermarket
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: LYNXAUTO
+    brand_canonical: LYNXAUTO
+    number_raw: BN-2102
+    number_key: BN2102
+    kind: aftermarket
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212212'
+    number_key: '0004212212'
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '000421221203'
+    number_key: '000421221203'
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '000421221264'
+    number_key: '000421221264'
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: 0004218700
+    number_key: 0004218700
+    kind: aftermarket
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212212
+    number_key: A0004212212
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A000421221203
+    number_key: A000421221203
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A000421221264
+    number_key: A000421221264
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004218700
+    number_key: A0004218700
+    kind: aftermarket
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-008
+  case_class: positive
+  query_raw: 005105513AA
+  query_key: 005105513AA
+  expected_status: ok
+  expected_products:
+  - 3050-028
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-028
+    number_key: '3050028'
+    kind: aftermarket
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5276
+    number_key: AMDSPORTBD5276
+    kind: aftermarket
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 005105513AA
+    number_key: 005105513AA
+    kind: oem
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: '12163068'
+    number_key: '12163068'
+    kind: oem
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 5105513AA
+    number_key: 5105513AA
+    kind: oem
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: MITSUBISHI
+    brand_canonical: MITSUBISHI
+    number_raw: 4615A115
+    number_key: 4615A115
+    kind: oem
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: MITSUBISHI
+    brand_canonical: MITSUBISHI
+    number_raw: 4615A190
+    number_key: 4615A190
+    kind: oem
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: MITSUBISHI
+    brand_canonical: MITSUBISHI
+    number_raw: MN116329
+    number_key: MN116329
+    kind: oem
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: MITSUBISHI
+    brand_canonical: MITSUBISHI
+    number_raw: MN116330
+    number_key: MN116330
+    kind: oem
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  - brand_raw: O.E.M.
+    brand_canonical: O.E.M.
+    number_raw: OEM0029DT
+    number_key: OEM0029DT
+    kind: aftermarket
+    source_product: 3050-028
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-009
+  case_class: positive
+  query_raw: 022689994
+  query_key: 022689994
+  expected_status: ok
+  expected_products:
+  - 3050-132
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-132
+    number_key: '3050132'
+    kind: aftermarket
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: 24.0328-0176.1
+    number_key: '24032801761'
+    kind: aftermarket
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: DEVERS
+    brand_canonical: DEVERS
+    number_raw: 022689994
+    number_key: 022689994
+    kind: aftermarket
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '2114210712'
+    number_key: '2114210712'
+    kind: oem
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '2114210812'
+    number_key: '2114210812'
+    kind: oem
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '211421081264'
+    number_key: '211421081264'
+    kind: oem
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A2114210712
+    number_key: A2114210712
+    kind: oem
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A2114210812
+    number_key: A2114210812
+    kind: oem
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A211421081264
+    number_key: A211421081264
+    kind: oem
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: 400.3618.52
+    number_key: '400361852'
+    kind: aftermarket
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: 400.3619.52
+    number_key: '400361952'
+    kind: aftermarket
+    source_product: 3050-132
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-010
+  case_class: positive
+  query_raw: 03.088.34.02.0
+  query_key: 0308834020
+  expected_status: ok
+  expected_products:
+  - 3080-001
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3080-001
+    number_key: '3080001'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: AUGER
+    brand_canonical: AUGER
+    number_raw: '31004'
+    number_key: '31004'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: BPW
+    brand_canonical: BPW
+    number_raw: 03.088.34.02.0
+    number_key: 0308834020
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: BPW
+    brand_canonical: BPW
+    number_raw: 03.088.34.06.0
+    number_key: 0308834060
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: BPW
+    brand_canonical: BPW
+    number_raw: 0308834067
+    number_key: 0308834067
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: BERAL
+    brand_canonical: BERAL
+    number_raw: BCR193A
+    number_key: BCR193A
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: CEI
+    brand_canonical: CEI
+    number_raw: '215.034'
+    number_key: '215034'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: DOKA
+    brand_canonical: DOKA
+    number_raw: 301.01.025
+    number_key: '30101025'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: DT SPARE PARTS
+    brand_canonical: DT SPARE PARTS
+    number_raw: '10.14101'
+    number_key: '1014101'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: EKER
+    brand_canonical: EKER
+    number_raw: ED07002
+    number_key: ED07002
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: ERREVI
+    brand_canonical: ERREVI
+    number_raw: '713497'
+    number_key: '713497'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: EMMERRE
+    brand_canonical: EMMERRE
+    number_raw: '960357'
+    number_key: '960357'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: EXOVO
+    brand_canonical: EXOVO
+    number_raw: 28022E
+    number_key: 28022E
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: EXOVO
+    brand_canonical: EXOVO
+    number_raw: 933735E
+    number_key: 933735E
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: FEBI TRUCK
+    brand_canonical: FEBI TRUCK
+    number_raw: '14629'
+    number_key: '14629'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: FOMAR FRICTION TRUCK
+    brand_canonical: FOMAR FRICTION TRUCK
+    number_raw: 540157PRO
+    number_key: 540157PRO
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: KROMBERG
+    brand_canonical: KROMBERG
+    number_raw: KR0010
+    number_key: KR0010
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: MARSHALL
+    brand_canonical: MARSHALL
+    number_raw: M2000086
+    number_key: M2000086
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERITOR
+    brand_canonical: MERITOR
+    number_raw: MBR5180
+    number_key: MBR5180
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: N.M.CO
+    brand_canonical: N.M.CO
+    number_raw: NM77
+    number_key: NM77
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: PETERS (PE)
+    brand_canonical: PETERS (PE)
+    number_raw: 046.370-00A
+    number_key: 04637000A
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: SORL
+    brand_canonical: SORL
+    number_raw: '35030880130'
+    number_key: '35030880130'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: SAMPA
+    brand_canonical: SAMPA
+    number_raw: '070.266'
+    number_key: '070266'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: SIMPECO
+    brand_canonical: SIMPECO
+    number_raw: SP0101.0160
+    number_key: SP01010160
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: SIMPECO
+    brand_canonical: SIMPECO
+    number_raw: SP0101.0160-Y
+    number_key: SP01010160Y
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: SONDER
+    brand_canonical: SONDER
+    number_raw: 16.005.0003
+    number_key: '160050003'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: STELLOX TRUCK
+    brand_canonical: STELLOX TRUCK
+    number_raw: 85-00805-SX
+    number_key: 8500805SX
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: TOPCOVER
+    brand_canonical: TOPCOVER
+    number_raw: T0192-8002
+    number_key: T01928002
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: TRW
+    brand_canonical: TRW
+    number_raw: DF5020S
+    number_key: DF5020S
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: TEMPLIN
+    brand_canonical: TEMPLIN
+    number_raw: 03.110.0251.000
+    number_key: '031100251000'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: TRP
+    brand_canonical: TRP
+    number_raw: '1962281'
+    number_key: '1962281'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: TRUCKEXPERT
+    brand_canonical: TRUCKEXPERT
+    number_raw: '33781052'
+    number_key: '33781052'
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  - brand_raw: TRUCKTECHNIC
+    brand_canonical: TRUCKTECHNIC
+    number_raw: TTBR1320
+    number_key: TTBR1320
+    kind: aftermarket
+    source_product: 3080-001
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-011
+  case_class: positive
+  query_raw: 04509994AA
+  query_key: 04509994AA
+  expected_status: ok
+  expected_products:
+  - 3050-223
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-223
+    number_key: '3050223'
+    kind: aftermarket
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 04509994AA
+    number_key: 04509994AA
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 04509994AB
+    number_key: 04509994AB
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 04509994AD
+    number_key: 04509994AD
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 05273141AA
+    number_key: 05273141AA
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 05273141AB
+    number_key: 05273141AB
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 4509994AA
+    number_key: 4509994AA
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 4509994AB
+    number_key: 4509994AB
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 4509994AD
+    number_key: 4509994AD
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 5273141AA
+    number_key: 5273141AA
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 5273141AB
+    number_key: 5273141AB
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  - brand_raw: ISUZU
+    brand_canonical: ISUZU
+    number_raw: 4509994AA
+    number_key: 4509994AA
+    kind: oem
+    source_product: 3050-223
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-positive-012
+  case_class: positive
+  query_raw: 04695957
+  query_key: 04695957
+  expected_status: ok
+  expected_products:
+  - 3050-213
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-213
+    number_key: '3050213'
+    kind: aftermarket
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 04695957
+    number_key: 04695957
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: '04764073'
+    number_key: '04764073'
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 04879138AA
+    number_key: 04879138AA
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 04879138AC
+    number_key: 04879138AC
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 04879138AE
+    number_key: 04879138AE
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: '4695957'
+    number_key: '4695957'
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: '4764073'
+    number_key: '4764073'
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 4879138AA
+    number_key: 4879138AA
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 4879138AC
+    number_key: 4879138AC
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: 4879138AE
+    number_key: 4879138AE
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: CHRYSLER
+    brand_canonical: CHRYSLER
+    number_raw: V5019138
+    number_key: V5019138
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: GAZ
+    brand_canonical: GAZ
+    number_raw: 04879138AE
+    number_key: 04879138AE
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  - brand_raw: ISUZU
+    brand_canonical: ISUZU
+    number_raw: 04879138AA
+    number_key: 04879138AA
+    kind: oem
+    source_product: 3050-213
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-negative-001
+  case_class: negative
+  query_raw: 58101H5A25
+  query_key: 58101H5A25
+  expected_status: not_found
+  expected_products: []
+  expected_pairs: []
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-negative-002
+  case_class: negative
+  query_raw: '8200735038'
+  query_key: '8200735038'
+  expected_status: not_found
+  expected_products: []
+  expected_pairs: []
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-negative-003
+  case_class: negative
+  query_raw: '4851080378'
+  query_key: '4851080378'
+  expected_status: not_found
+  expected_products: []
+  expected_pairs: []
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-negative-004
+  case_class: negative
+  query_raw: ZZDISC0000001
+  query_key: ZZDISC0000001
+  expected_status: not_found
+  expected_products: []
+  expected_pairs: []
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-ambiguous-001
+  case_class: ambiguous
+  query_raw: '0004212312'
+  query_key: '0004212312'
+  expected_status: ok
+  expected_products:
+  - 3050-483
+  - 3050-619
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-483
+    number_key: '3050483'
+    kind: aftermarket
+    source_product: 3050-483
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212312'
+    number_key: '0004212312'
+    kind: oem
+    source_product: 3050-483
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212312
+    number_key: A0004212312
+    kind: oem
+    source_product: 3050-483
+    evidence_locator: official snapshot product closure
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-619
+    number_key: '3050619'
+    kind: aftermarket
+    source_product: 3050-619
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212312'
+    number_key: '0004212312'
+    kind: oem
+    source_product: 3050-619
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212312
+    number_key: A0004212312
+    kind: oem
+    source_product: 3050-619
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-ambiguous-002
+  case_class: ambiguous
+  query_raw: '0004212612'
+  query_key: '0004212612'
+  expected_status: ok
+  expected_products:
+  - 3050-426
+  - 3050-591
+  - 3050-591PRM
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-426
+    number_key: '3050426'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: 24.0130-0300.2
+    number_key: '24013003002'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: BOSCH
+    brand_canonical: BOSCH
+    number_raw: 0986479G42
+    number_key: 0986479G42
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: BLUE PRINT
+    brand_canonical: BLUE PRINT
+    number_raw: ADBP430085
+    number_key: ADBP430085
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: BREMBO
+    brand_canonical: BREMBO
+    number_raw: 09.D527.13
+    number_key: 09D52713
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: CARBERRY
+    brand_canonical: CARBERRY
+    number_raw: BS0805
+    number_key: BS0805
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: FEBI
+    brand_canonical: FEBI
+    number_raw: '175135'
+    number_key: '175135'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: FERODO
+    brand_canonical: FERODO
+    number_raw: DDF2834VC-1
+    number_key: DDF2834VC1
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: FREY
+    brand_canonical: FREY
+    number_raw: '745234301'
+    number_key: '745234301'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: HANS PRIES
+    brand_canonical: HANS PRIES
+    number_raw: '631166'
+    number_key: '631166'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: HANS PRIES
+    brand_canonical: HANS PRIES
+    number_raw: '631166016'
+    number_key: '631166016'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212112'
+    number_key: '0004212112'
+    kind: oem
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212612'
+    number_key: '0004212612'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212112
+    number_key: A0004212112
+    kind: oem
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212612
+    number_key: A0004212612
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: METELLI
+    brand_canonical: METELLI
+    number_raw: 23-1924C
+    number_key: 231924C
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: NGN PARTS
+    brand_canonical: NGN PARTS
+    number_raw: 37-1060
+    number_key: '371060'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: QUATTRO FRENI
+    brand_canonical: QUATTRO FRENI
+    number_raw: QF00F00005
+    number_key: QF00F00005
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: REMY
+    brand_canonical: REMY
+    number_raw: RAD2148C
+    number_key: RAD2148C
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: SWAG
+    brand_canonical: SWAG
+    number_raw: '33102713'
+    number_key: '33102713'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: VIKA
+    brand_canonical: VIKA
+    number_raw: '61449301'
+    number_key: '61449301'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: 400.5519.30
+    number_key: '400551930'
+    kind: aftermarket
+    source_product: 3050-426
+    evidence_locator: official snapshot product closure
+  - brand_raw: METACO PREMIUM
+    brand_canonical: METACO PREMIUM
+    number_raw: 3050-591
+    number_key: '3050591'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: 24.0130-0300.2
+    number_key: '24013003002'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: BOSCH
+    brand_canonical: BOSCH
+    number_raw: 0986479G42
+    number_key: 0986479G42
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: BLUE PRINT
+    brand_canonical: BLUE PRINT
+    number_raw: ADBP430085
+    number_key: ADBP430085
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: BREMBO
+    brand_canonical: BREMBO
+    number_raw: 09.D527.13
+    number_key: 09D52713
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: FEBI
+    brand_canonical: FEBI
+    number_raw: '175135'
+    number_key: '175135'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: FERODO
+    brand_canonical: FERODO
+    number_raw: DDF2834VC-1
+    number_key: DDF2834VC1
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: FREY
+    brand_canonical: FREY
+    number_raw: '745234301'
+    number_key: '745234301'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: HANS PRIES
+    brand_canonical: HANS PRIES
+    number_raw: '631166'
+    number_key: '631166'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: HANS PRIES
+    brand_canonical: HANS PRIES
+    number_raw: '631166016'
+    number_key: '631166016'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212612'
+    number_key: '0004212612'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212612
+    number_key: A0004212612
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: METELLI
+    brand_canonical: METELLI
+    number_raw: 23-1924C
+    number_key: 231924C
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: NGN PARTS
+    brand_canonical: NGN PARTS
+    number_raw: 37-1060
+    number_key: '371060'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: QUATTRO FRENI
+    brand_canonical: QUATTRO FRENI
+    number_raw: QF00F00005
+    number_key: QF00F00005
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: REMY
+    brand_canonical: REMY
+    number_raw: RAD2148C
+    number_key: RAD2148C
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: SWAG
+    brand_canonical: SWAG
+    number_raw: '33102713'
+    number_key: '33102713'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: VIKA
+    brand_canonical: VIKA
+    number_raw: '61449301'
+    number_key: '61449301'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: 400.5519.30
+    number_key: '400551930'
+    kind: aftermarket
+    source_product: 3050-591
+    evidence_locator: official snapshot product closure
+  - brand_raw: METACO PREMIUM
+    brand_canonical: METACO PREMIUM
+    number_raw: 3050-591PRM
+    number_key: 3050591PRM
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: ATE
+    brand_canonical: ATE
+    number_raw: 24.0130-0300.2
+    number_key: '24013003002'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: BOSCH
+    brand_canonical: BOSCH
+    number_raw: 0986479G42
+    number_key: 0986479G42
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: BLUE PRINT
+    brand_canonical: BLUE PRINT
+    number_raw: ADBP430085
+    number_key: ADBP430085
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: BREMBO
+    brand_canonical: BREMBO
+    number_raw: 09.D527.13
+    number_key: 09D52713
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: FEBI
+    brand_canonical: FEBI
+    number_raw: '175135'
+    number_key: '175135'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: FERODO
+    brand_canonical: FERODO
+    number_raw: DDF2834VC-1
+    number_key: DDF2834VC1
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: FREY
+    brand_canonical: FREY
+    number_raw: '745234301'
+    number_key: '745234301'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: HANS PRIES
+    brand_canonical: HANS PRIES
+    number_raw: '631166'
+    number_key: '631166'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: HANS PRIES
+    brand_canonical: HANS PRIES
+    number_raw: '631166016'
+    number_key: '631166016'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212612'
+    number_key: '0004212612'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212612
+    number_key: A0004212612
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: METELLI
+    brand_canonical: METELLI
+    number_raw: 23-1924C
+    number_key: 231924C
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: NGN PARTS
+    brand_canonical: NGN PARTS
+    number_raw: 37-1060
+    number_key: '371060'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: QUATTRO FRENI
+    brand_canonical: QUATTRO FRENI
+    number_raw: QF00F00005
+    number_key: QF00F00005
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: REMY
+    brand_canonical: REMY
+    number_raw: RAD2148C
+    number_key: RAD2148C
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: SWAG
+    brand_canonical: SWAG
+    number_raw: '33102713'
+    number_key: '33102713'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: VIKA
+    brand_canonical: VIKA
+    number_raw: '61449301'
+    number_key: '61449301'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: ZIMMERMANN
+    brand_canonical: ZIMMERMANN
+    number_raw: 400.5519.30
+    number_key: '400551930'
+    kind: aftermarket
+    source_product: 3050-591PRM
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-ambiguous-003
+  case_class: ambiguous
+  query_raw: 0004218700
+  query_key: 0004218700
+  expected_status: ok
+  expected_products:
+  - 3050-485
+  - 3050-601
+  - 3050-601PRM
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-485
+    number_key: '3050485'
+    kind: aftermarket
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: LYNXAUTO
+    brand_canonical: LYNXAUTO
+    number_raw: BN-2102
+    number_key: BN2102
+    kind: aftermarket
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '0004212212'
+    number_key: '0004212212'
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '000421221203'
+    number_key: '000421221203'
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: '000421221264'
+    number_key: '000421221264'
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: 0004218700
+    number_key: 0004218700
+    kind: aftermarket
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004212212
+    number_key: A0004212212
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A000421221203
+    number_key: A000421221203
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A000421221264
+    number_key: A000421221264
+    kind: oem
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004218700
+    number_key: A0004218700
+    kind: aftermarket
+    source_product: 3050-485
+    evidence_locator: official snapshot product closure
+  - brand_raw: METACO PREMIUM
+    brand_canonical: METACO PREMIUM
+    number_raw: 3050-601
+    number_key: '3050601'
+    kind: aftermarket
+    source_product: 3050-601
+    evidence_locator: official snapshot product closure
+  - brand_raw: LYNXAUTO
+    brand_canonical: LYNXAUTO
+    number_raw: BN-2102
+    number_key: BN2102
+    kind: aftermarket
+    source_product: 3050-601
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: 0004218700
+    number_key: 0004218700
+    kind: aftermarket
+    source_product: 3050-601
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004218700
+    number_key: A0004218700
+    kind: aftermarket
+    source_product: 3050-601
+    evidence_locator: official snapshot product closure
+  - brand_raw: METACO PREMIUM
+    brand_canonical: METACO PREMIUM
+    number_raw: 3050-601PRM
+    number_key: 3050601PRM
+    kind: aftermarket
+    source_product: 3050-601PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: LYNXAUTO
+    brand_canonical: LYNXAUTO
+    number_raw: BN-2102
+    number_key: BN2102
+    kind: aftermarket
+    source_product: 3050-601PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: 0004218700
+    number_key: 0004218700
+    kind: aftermarket
+    source_product: 3050-601PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: MERCEDES BENZ
+    brand_canonical: MERCEDES BENZ
+    number_raw: A0004218700
+    number_key: A0004218700
+    kind: aftermarket
+    source_product: 3050-601PRM
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []
+- case_id: metaco-brake_discs-ambiguous-004
+  case_class: ambiguous
+  query_raw: 082589999
+  query_key: 082589999
+  expected_status: ok
+  expected_products:
+  - 3050-015
+  - 3050-537
+  - 3050-537PRM
+  expected_pairs:
+  - brand_raw: METACO
+    brand_canonical: METACO
+    number_raw: 3050-015
+    number_key: '3050015'
+    kind: aftermarket
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.BD435
+    number_key: AMDBD435
+    kind: aftermarket
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.BD496
+    number_key: AMDBD496
+    kind: aftermarket
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5134
+    number_key: AMDSPORTBD5134
+    kind: aftermarket
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5267
+    number_key: AMDSPORTBD5267
+    kind: aftermarket
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5335
+    number_key: AMDSPORTBD5335
+    kind: aftermarket
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: ASP
+    brand_canonical: ASP
+    number_raw: 290217S
+    number_key: 290217S
+    kind: aftermarket
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: DEVERS
+    brand_canonical: DEVERS
+    number_raw: 082589999
+    number_key: 082589999
+    kind: aftermarket
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: HYUNDAI-KIA
+    brand_canonical: HYUNDAI-KIA
+    number_raw: 51712-0U000
+    number_key: 517120U000
+    kind: oem
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: HYUNDAI-KIA
+    brand_canonical: HYUNDAI-KIA
+    number_raw: 51712-0U100
+    number_key: 517120U100
+    kind: oem
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: HYUNDAI-KIA
+    brand_canonical: HYUNDAI-KIA
+    number_raw: 51712-C8000
+    number_key: 51712C8000
+    kind: oem
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: HYUNDAI-KIA
+    brand_canonical: HYUNDAI-KIA
+    number_raw: S51712-0U000
+    number_key: S517120U000
+    kind: oem
+    source_product: 3050-015
+    evidence_locator: official snapshot product closure
+  - brand_raw: METACO PREMIUM
+    brand_canonical: METACO PREMIUM
+    number_raw: 3050-537
+    number_key: '3050537'
+    kind: aftermarket
+    source_product: 3050-537
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.BD435
+    number_key: AMDBD435
+    kind: aftermarket
+    source_product: 3050-537
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.BD496
+    number_key: AMDBD496
+    kind: aftermarket
+    source_product: 3050-537
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5134
+    number_key: AMDSPORTBD5134
+    kind: aftermarket
+    source_product: 3050-537
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5267
+    number_key: AMDSPORTBD5267
+    kind: aftermarket
+    source_product: 3050-537
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5335
+    number_key: AMDSPORTBD5335
+    kind: aftermarket
+    source_product: 3050-537
+    evidence_locator: official snapshot product closure
+  - brand_raw: ASP
+    brand_canonical: ASP
+    number_raw: 290217S
+    number_key: 290217S
+    kind: aftermarket
+    source_product: 3050-537
+    evidence_locator: official snapshot product closure
+  - brand_raw: DEVERS
+    brand_canonical: DEVERS
+    number_raw: 082589999
+    number_key: 082589999
+    kind: aftermarket
+    source_product: 3050-537
+    evidence_locator: official snapshot product closure
+  - brand_raw: METACO PREMIUM
+    brand_canonical: METACO PREMIUM
+    number_raw: 3050-537PRM
+    number_key: 3050537PRM
+    kind: aftermarket
+    source_product: 3050-537PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.BD435
+    number_key: AMDBD435
+    kind: aftermarket
+    source_product: 3050-537PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.BD496
+    number_key: AMDBD496
+    kind: aftermarket
+    source_product: 3050-537PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5134
+    number_key: AMDSPORTBD5134
+    kind: aftermarket
+    source_product: 3050-537PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5267
+    number_key: AMDSPORTBD5267
+    kind: aftermarket
+    source_product: 3050-537PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: AMD
+    brand_canonical: AMD
+    number_raw: AMD.SPORT.BD5335
+    number_key: AMDSPORTBD5335
+    kind: aftermarket
+    source_product: 3050-537PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: ASP
+    brand_canonical: ASP
+    number_raw: 290217S
+    number_key: 290217S
+    kind: aftermarket
+    source_product: 3050-537PRM
+    evidence_locator: official snapshot product closure
+  - brand_raw: DEVERS
+    brand_canonical: DEVERS
+    number_raw: 082589999
+    number_key: 082589999
+    kind: aftermarket
+    source_product: 3050-537PRM
+    evidence_locator: official snapshot product closure
+  forbidden_pairs: []

@@ -29,13 +29,26 @@ def test_reviewed_golden_pairs_are_exact(manifest_path):
     manifest, index = _load(manifest_path)
     for case in manifest["cases"]:
         products, crosses = index.lookup(case["query_raw"], groups={manifest["group"]})
-        actual = {(cross.brand, number_key(cross.number), cross.kind) for cross in crosses}
+        actual = {
+            (cross.brand, number_key(cross.number), cross.kind, cross.source_product)
+            for cross in crosses
+        }
         expected = {
-            (pair["brand_canonical"], str(pair["number_key"]), pair["kind"])
+            (
+                pair["brand_canonical"],
+                str(pair["number_key"]),
+                pair["kind"],
+                pair["source_product"],
+            )
             for pair in case["expected_pairs"]
         }
         forbidden = {
-            (pair["brand_canonical"], str(pair["number_key"]), pair["kind"])
+            (
+                pair["brand_canonical"],
+                str(pair["number_key"]),
+                pair["kind"],
+                pair["source_product"],
+            )
             for pair in case["forbidden_pairs"]
         }
         assert products == [str(value) for value in case["expected_products"]]
