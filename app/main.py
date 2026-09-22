@@ -210,7 +210,7 @@ async def lookup_export(payload: LookupExportRequest, tenant: str = Depends(requ
         "group": product_groups.resolve(payload.group) if payload.group else None,
         "group_raw": payload.group_raw,
         "crosses": [cross.model_dump() for cross in payload.crosses],
-    }])
+    }], include_our_sku=False)
     filename = number_key(payload.oe_number)[:40] or "lookup"
     return Response(
         content=blob,

@@ -103,40 +103,62 @@ def _style_header(ws, width_map: dict[int, int]) -> None:
     ws.freeze_panes = "A2"
 
 
-def build_workbook(items: list[dict]) -> bytes:
-    """Build the two layouts from the client's reference workbook."""
+def build_workbook(items: list[dict], *, include_our_sku: bool = True) -> bytes:
+    """Build the two layouts from the client's reference workbook.
+
+    A single-number lookup has no customer SKU, so its download omits that
+    otherwise empty column. Batch exports keep the original layouts.
+    """
     wb = Workbook()
 
     ws1 = wb.active
     ws1.title = "Вариант 1"
-    ws1.append(["Наш номер", "Номер ОЕ (запрос)", "Бренд аналога", "Номер аналога",
-                "Раздел", "Источники"])
-    _style_header(ws1, {1: 18, 2: 20, 3: 24, 4: 26, 5: 18, 6: 24})
+    headers1 = ["Номер ОЕ (запрос)", "Бренд аналога", "Номер аналога", "Раздел", "Источники"]
+    if include_our_sku:
+        headers1.insert(0, "Наш номер")
+    ws1.append(headers1)
+    _style_header(
+        ws1,
+        {1: 18, 2: 20, 3: 24, 4: 26, 5: 18, 6: 24}
+        if include_our_sku else {1: 20, 2: 24, 3: 26, 4: 18, 5: 24},
+    )
     kind_ru = {KIND_OEM: "OEM", KIND_AFTERMARKET: "Афтермаркет", "standard": "Стандарт"}
     for item in items:
         for cross in _export_crosses(item.get("crosses", [])):
-            ws1.append([
-                item.get("our_sku", ""),
+            row = [
                 item.get("oe_number", ""),
                 cross["brand"],
                 number_key(cross["number"]),
                 kind_ru.get(cross.get("kind"), cross.get("kind", "")),
                 ", ".join(cross.get("sources", [])),
-            ])
+            ]
+            if include_our_sku:
+                row.insert(0, item.get("our_sku", ""))
+            ws1.append(row)
 
     ws2 = wb.create_sheet("Вариант 2")
-    ws2.append(["Наш артикул", "Товарная группа", "Номер ОЕ (запрос)", "Кол-во", "ОЕМ/Афтермаркет", "Все кроссы"])
-    _style_header(ws2, {1: 18, 2: 24, 3: 20, 4: 10, 5: 20, 6: 100})
+    headers2 = ["Товарная группа", "Номер ОЕ (запрос)", "Кол-во", "ОЕМ/Афтермаркет", "Все кроссы"]
+    if include_our_sku:
+        headers2.insert(0, "Наш артикул")
+    ws2.append(headers2)
+    _style_header(
+        ws2,
+        {1: 18, 2: 24, 3: 20, 4: 10, 5: 20, 6: 100}
+        if include_our_sku else {1: 24, 2: 20, 3: 10, 4: 20, 5: 100},
+    )
     for item in items:
         for kind, label in ((KIND_OEM, "ОЕМ"), (KIND_AFTERMARKET, "АФТЕРМАРКЕТ"), ("standard", "СТАНДАРТ")):
             numbers = _unique([c for c in _export_crosses(item.get("crosses", []))
                                if c.get("kind") == kind])
             if not numbers:
                 continue
-            ws2.append([
-                item.get("our_sku", ""), _group_title(item), item.get("oe_number", ""),
-                len(numbers), label, ", ".join(numbers),
-            ])
+            row = [
+                _group_title(item), item.get("oe_number", ""), len(numbers), label,
+                ", ".join(numbers),
+            ]
+            if include_our_sku:
+                row.insert(0, item.get("our_sku", ""))
+            ws2.append(row)
 
     buf = io.BytesIO()
     wb.save(buf)
