@@ -1,0 +1,498 @@
+schema_version: 1
+kind: implementation_plan
+id: catalogue-expansion
+title: "Поэтапное расширение каталогов с проверкой точности и производительности"
+status: planning_only
+prepared_at: '2026-09-22'
+baseline_commit: ecf02f1007b3c97c8b3087a701eeb6c48573dba0
+language: ru
+inventory: plans/catalogue-resource-inventory.yaml
+explanation: PARSING.md
+
+authorization:
+  current: "Только исследование локального Excel и кода, подготовка плана и объяснения."
+  implementation_authorized: false
+  production_changes_authorized: false
+  live_catalogue_checks_performed: false
+  tests_executed_during_planning: false
+  next_instruction: "Реализовать подготовку изолированных тестов и указанную волну; выпуск отдельно по готовому отчёту."
+
+scope:
+  input: Ресурсы для парсинга.xlsx
+  resource_rows: 47
+  workbook_sections: 4
+  product_groups: [brake_pads, brake_discs, shock_absorbers, radiators, brake_hoses]
+  brands: 33
+  logical_sources: 34
+  registered_adapters: 13
+  adapters_missing: 21
+  requested_source_group_pairs: 64
+  rule: "34 источника — единицы исследования, а не обещание 34 работающих подключений."
+  exclusions:
+    - "Не менять дизайн, SEO, тарифы, аккаунты и их лимиты."
+    - "Не переписывать весь поиск одновременно с подключением каталогов."
+    - "Не считать упоминание бренда в чужой выдаче отдельным подключением его каталога."
+    - "Не собирать все каталоги целиком; сначала поиск по конкретному номеру."
+    - "Не включать круговой поиск и новые источники всем пользователям по умолчанию."
+
+production_invariants:
+  - "Текущие заказы, квоты, история, экспорт и учётные записи сохраняются."
+  - "Работа только в отдельном checkout/окружении; не редактировать файлы обслуживающего prod процесса."
+  - "Тестовая БД, кэш, сессии, очереди, файлы, порт и ключи полностью отдельные."
+  - "Не загружать .env.production в тесты; Settings создавать с явными тестовыми значениями и _env_file=None."
+  - "До импорта app.db/app.main задать тестовое окружение; некоторые зависимости создаются при импорте."
+  - "CI падает, если адрес БД не находится в разрешённом временном каталоге или DSN совпадает с prod."
+  - "Офлайн-тестам запрещён исходящий HTTP; тестовые браузеры обращаются только к локальному mock-серверу."
+  - "Нагрузочные тесты не используют production и внешние каталоги."
+  - "Нельзя запускать второй JobRunner с рабочей БД: startup повторно ставит pending/running задания в очередь."
+  - "Новые источники и группы выключены до прохождения независимого release gate."
+  - "Внешняя блокировка не означает отсутствие номера; отсутствие эталона не означает успешный тест."
+  - "Откат не восстанавливает старую клиентскую БД поверх новых запросов."
+
+audit_findings:
+  - id: inventory_drift
+    evidence: [app/sources/catalog.json, app/sources/registry.py]
+    finding: "В catalog.json нет Marshall, Metaco, Masterkit, LYNX Auto, GANZ, Monroe, Febest, TORR."
+    action: "Сверить все 47 строк; исправить справочник отдельно от включения источников."
+  - id: wrong_metadata
+    evidence: [app/sources/catalog.json]
+    finding: "SAKURA записана как SALURA/salura; у TRW нет дисков/колодок и амортизаторов, у ATE нет шлангов."
+    action: "Исправить отображаемые данные и группы после верификации; сохранить совместимость исторических source keys."
+  - id: metadata_is_not_parser
+    evidence: [app/sources/registry.py, app/sources/profiles.json]
+    finding: "В BUILTIN 13 адаптеров, в defaults 11; jnbk/mintex не включены по умолчанию, profiles.json пуст."
+    action: "Разделять registered, enabled, verified_now; запись implemented сама по себе ничего не подключает."
+  - id: no_group_release_gate
+    evidence: [app/sources/registry.py, app/sources/generic.py]
+    finding: "Пустые groups означают все группы; BrowserProfile не объявляет groups; явные keys обходят defaults."
+    action: "До выпуска спроектировать безопасное включение по source+group+cohort и проверять также явные source_keys."
+  - id: cache_scope
+    evidence: [app/aggregator.py, app/models.py]
+    finding: "Кэш общий по source+нормализованному номеру, без версии адаптера, группы и режима доступа."
+    action: "Определить нейтральность к группе либо версионированный ключ; tenant-specific данные не помещать в общий кэш."
+  - id: concurrent_cache_miss
+    evidence: [app/aggregator.py]
+    finding: "Промах проверяется до semaphore; одинаковые запросы могут повторить HTTP и конкурировать при INSERT кэша."
+    action: "Воспроизвести гонку на временной SQLite, выбрать coalescing/upsert/recheck с доказанными границами."
+  - id: shared_upstream
+    evidence: [app/sources/nibkru.py, app/sources/brixo.py, app/aggregator.py]
+    finding: "NiBK и SAKURA используют Brixo; при неизвестной группе вызываются оба адаптера, лимиты по key не по домену."
+    action: "Измерить дублирование и общий upstream budget; кэш транспорта не смешивает фильтр NiBK с прочими брендами."
+  - id: deadline
+    evidence: [app/aggregator.py, app/jobs.py]
+    finding: "Ожидание source semaphore не входит в основной source_timeout+15; номера Excel обрабатываются последовательно."
+    action: "Измерять queue_wait отдельно от network/parse; задать общий deadline и справедливость одиночных/пакетных запросов."
+  - id: incomplete_success
+    evidence: [app/sources/brixo.py, app/sources/brembo.py, app/sources/sbparts.py]
+    finding: "Часть карточек/таблиц может не загрузиться, а итог остаться ok; max_products_per_oe обрезает карточки."
+    action: "Тестировать полноту отдельно от статуса; фиксировать partial/truncated в отчёте и контракте будущего результата."
+  - id: brand_kind
+    evidence: [app/normalize.py, app/sources/trialli.py, app/sources/luzar.py]
+    finding: "OEM — техническая метка при отсутствии марки; неизвестные бренды классифицируются как OEM эвристикой."
+    action: "Не придумывать производителя; подтверждать kind и alias отдельно, не сливать только по совпавшему номеру."
+  - id: status_semantics
+    evidence: [app/aggregator.py, app/jobs.py, app/sources/antibot.py]
+    finding: "Общий not_found может сосуществовать с ошибкой источника; done задания значит окончание обработки, не полноту."
+    action: "Матрица смешанных статусов, явные partial/errors; 503 не объявлять challenge без соответствующих признаков."
+  - id: profile_silent_failure
+    evidence: [app/sources/generic.py]
+    finding: "Ошибка заполнения/ожидания формы может быть подавлена, после чего пустой DOM превращается в not_found."
+    action: "Если используются профили, добавить подтверждение выполнения поиска, group routing и явные ошибки контракта."
+  - id: historical_availability
+    evidence: [app/sources/catalog.json]
+    finding: "В метаданных есть старые пометки WAF/Cloudflare, B2B-login, 404/503 и поиска только по своему артикулу."
+    action: "Повторно проверить в отдельном разрешённом окружении; не выдавать старую пометку за текущий сетевой факт."
+
+onboarding_protocol:
+  unit: "Один source_key в одной product_group, затем отдельное расширение групп."
+  states: [discovery_required, access_blocked, contract_defined, fixtures_reviewed, offline_passed, live_passed, staging_passed, pilot, enabled, suspended]
+  required_source_report:
+    - input_workbook_rows
+    - verified_entry_url_and_search_endpoint
+    - checked_at_and_egress_label
+    - access_mode_and_allowed_rate
+    - supported_groups_with_evidence
+    - search_input_semantics_OE_or_own_article_or_vehicle
+    - upstream_family_and_shared_limits
+    - fixture_and_golden_manifest_hash
+    - full_expected_pairs_and_forbidden_pairs
+    - unsupported_cases_and_partial_results
+    - request_budget_and_measured_latency
+    - readiness_and_blocking_reason
+  discovery_steps:
+    - "Проверить URL из Excel: поиск, витрина, карточка, редирект или B2B. Не считать любую страницу каталогом кроссов."
+    - "Вручную воспроизвести 2 известных положительных и 2 различных заведомо отрицательных запроса."
+    - "Убедиться, что ответ зависит от номера: одинаковая выдача на всё не является поиском."
+    - "Найти подтверждённую связь OE → карточка → таблица кроссов; зафиксировать бренд, группу и ограничения."
+    - "Предпочесть доступный JSON/HTTP/form; браузер только при необходимом JS, с лимитом ресурсов."
+    - "Если нужен аккаунт/API/выгрузка производителя — записать зависимость; не обходить доступ и не подменять результат."
+    - "Если обратного поиска нет, отдельно оценить предоставленную производителем выгрузку и индекс; не начинать массовый обход."
+    - "Зафиксировать ссылки, скрин/фрагмент подтверждения и дату; удалить cookies, токены, контакты клиентов из фикстур."
+  access_blocked_policy: "Источник остаётся выключенным. Причина и требуемые данные записываются; следующий независимый источник можно исследовать."
+
+waves:
+  - id: W0
+    title: "Изоляция и контроль существующих 13 адаптеров"
+    groups: [brake_pads, brake_discs, shock_absorbers, radiators, brake_hoses]
+    sources: [sbparts, brembo, trialli, nibkru, brixo, luzar, nissens, kyb, hola, brannor, hel, jnbk, mintex]
+    depends_on: []
+    production_enable: false
+    exit: "Эталон текущего поведения, изолированная проверка всей цепочки; известные дефекты перечислены, критические устранены отдельными изменениями при реализации."
+  - id: W1
+    title: "Тормозная система: сначала колодки, затем диски отдельным выпуском"
+    groups: [brake_pads, brake_discs]
+    workbook_rows: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+    sources: [sbparts, jnbk, nibkru, brembo, mintex, trialli, ate, zimmermann, brannor, fap, monaer, marshall, trw, metaco, masterkit, lynxauto, ganz]
+    depends_on: [W0]
+    candidate_discovery_order: [ate, marshall, metaco, lynxauto, masterkit, fap, ganz, zimmermann, monaer, trw, jnbk, mintex]
+    selection_rule: "Первым реализовать один источник с доказанным OE-поиском и доступными эталонами; порядок не утверждает доступность."
+    exit: "Каждый допущенный источник прошёл gate отдельно для колодок и дисков; не допущенные помечены blocked/deferred."
+  - id: W2
+    title: Амортизаторы
+    groups: [shock_absorbers]
+    workbook_rows: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38]
+    sources: [kyb, bilstein, trialli, sachs, boge, koni, hola, trw, monroe, metaco, lynxauto, febest, torr, ganz]
+    depends_on: [W1]
+    selection_rule: "Сначала подтверждённые общие адаптеры прошлой волны, затем по одному новому; страницы ZF не считать готовым API."
+    exit: "Проверены стороны/оси, варианты деталей и поиск по OE отдельно от собственного артикула."
+  - id: W3
+    title: Радиаторы охлаждения
+    groups: [radiators]
+    workbook_rows: [45, 46, 47, 48, 49, 50, 51]
+    sources: [nissens, luzar, brixo, nrf, ava, metaco, ganz]
+    depends_on: [W2]
+    selection_rule: "NRF/AVA сначала повторная проверка доступа; их блокировка не тормозит независимые Metaco/GANZ."
+    exit: "Не смешаны радиаторы, конденсоры и прочие детали автомобиля; Brixo/NiBK не загрязняют результаты друг друга."
+  - id: W4
+    title: Тормозные шланги
+    groups: [brake_hoses]
+    workbook_rows: [56, 57, 58, 59, 60, 61, 62, 63, 64]
+    sources: [patron, trialli, hel, trw, stellox, metaco, ate, brembo, lynxauto]
+    depends_on: [W3]
+    selection_rule: "Сначала доказанные расширения групп, затем PATRON/STELLOX после исследования обратного поиска."
+    exit: "Не смешаны шланги, фитинги, комплекты и другие позиции; регрессия SB/HOLA сохранена, хотя их нет в этом разделе Excel."
+  - id: W5
+    title: "Общая проверка всех допущенных источников и закрытие инвентаризации"
+    groups: [brake_pads, brake_discs, shock_absorbers, radiators, brake_hoses]
+    sources_from_inventory: true
+    depends_on: [W4]
+    exit: "Для всех 47 строк есть результат: enabled с доказательствами либо конкретная причина отложенного подключения."
+
+golden_data:
+  path_planned: tests/fixtures/catalogues/<source>/<group>/manifest.yaml
+  count_per_requested_source_group:
+    positive_different_numbers_min: 12
+    confirmed_negative_min: 4
+    ambiguous_or_partial_min: 4
+  interpretation: "20 независимых запросов на пару источник–группа; 64 пары дают 1280 сценариев после верификации всех источников. Это план, не готовое покрытие."
+  extra_regression: "Также покрыть текущие группы SB/HOLA, отсутствующие в соответствующих разделах Excel."
+  applicability: "Недоступный источник не получает выдуманные positive fixtures; нет эталонов — нет допуска к выпуску."
+  seed_queries_not_oracles:
+    brake_pads: [58101H5A25, 8K0698451D]
+    brake_discs: [1K0615301AA, '4243106050']
+    shock_absorbers: ['4851080378', '4853080605']
+    radiators: ['8200735038', 214104453R]
+    brake_hoses: [1K0611701K, 587312E000]
+  required_fields: [case_id, source, group, query_raw, query_key, captured_at, source_url, fixture_sha256, expected_status, expected_products, expected_pairs, forbidden_pairs, completeness_scope, reviewed_by, review_evidence]
+  expected_pair_fields: [brand_raw, brand_canonical, number_raw, number_key, kind, source_product, evidence_locator]
+  rules:
+    - "Ожидаемые пары размечать по первичному каталогу, независимо от тестируемого парсера."
+    - "Текущий кэш и вывод старого алгоритма — материал для сравнения, не источник истины."
+    - "Эталон выдачи №1.xlsx — контракт оформления и кандидатные примеры; содержание тоже перепроверить."
+    - "Хранить полные множества ожидаемых и запрещённых пар, а не assert на один найденный номер."
+    - "Для неоднозначных случаев сохранять ось/сторону/вариант и причину допустимости, если они есть у источника."
+    - "Отдельно хранить прямые кроссы, косвенные связи, замены артикула, собственный товар и стандарт WVA/FMSI."
+    - "Предел карточек/страниц не должен превращать усечённую выдачу в якобы полную."
+    - "Обновление golden — отдельный diff с объяснением; нельзя перезаписывать эталон ради зелёного теста."
+
+test_plan:
+  existing:
+    inventory_method: "Статическое чтение tests/test_*.py; тесты в этой задаче не запускались."
+    live_file: tests/test_sources_live.py
+    live_guard_warning: "Сейчас проверяется непустой CP_LIVE; даже CP_LIVE=0 включает live-тесты. В офлайне удалять переменную и запрещать сеть."
+    coverage_gaps:
+      - "Live-проверки есть не для каждого адаптера/группы и часто проверяют только часть ответа."
+      - "У SB/Brembo/TRIALLI нет полного набора сохранённых HTTP-последовательностей на все состояния."
+      - "Нет общего измеряемого gate точности, полноты и скорости по всем 64 парам."
+  layers:
+    - {id: unit, network: forbidden, subject: "Чистый HTML/JSON parse, нормализация, фильтры, дедупликация"}
+    - {id: replay, network: local_mock_only, subject: "Весь lookup адаптера с cookies/token/redirect/pagination и счётчиком запросов"}
+    - {id: integration, network: local_mock_only, subject: "Registry → aggregator → отдельная DB/cache → jobs → API/export"}
+    - {id: browser, network: local_mock_only, subject: "Playwright, формы, delayed DOM, контексты и сценарии пользователя"}
+    - {id: performance, network: local_mock_only, subject: "Нагрузка, latency, память, очередь, cold/warm cache"}
+    - {id: live, network: explicitly_allowlisted, subject: "Небольшая выборка реальных каталогов из staging, не benchmark"}
+  case_spec: "Каждый ID разворачивается в parametrized tests; applicable=false допускается только с объяснением и заменяющим сценарием."
+  adapter_contract:
+    - {id: A01, check: "Точное множество бренд+номер+kind на положительном ответе; нет лишних пар"}
+    - {id: A02, check: "Несколько подходящих товаров, уникальность артикулов и привязка к исходной карточке"}
+    - {id: A03, check: "Подтверждённый пустой поиск → not_found, без карточек рекомендаций"}
+    - {id: A04, check: "Два разных случайных номера не возвращают неизменную общую выдачу"}
+    - {id: A05, check: "404 карточки, 500/502/503, повреждённый JSON → корректная ошибка/неполнота"}
+    - {id: A06, check: "401/login, 403/challenge и 429/rate limit различаются с not_found"}
+    - {id: A07, check: "Challenge/login HTML с HTTP 200 распознаётся, включая русский язык"}
+    - {id: A08, check: "Connect/read timeout, DNS/TLS/proxy failure завершаются в budget, не раскрывают секреты"}
+    - {id: A09, check: "Переименованный селектор/ключ JSON не маскируется под подтверждённый пустой поиск"}
+    - {id: A10, check: "Cookie+CSRF/ViewState/SearchID передаются последовательно внутри одной сессии"}
+    - {id: A11, check: "Истёкшая сессия, повторная авторизация и редирект не вызывают бесконечного цикла"}
+    - {id: A12, check: "Ссылка на категорию, автомобиль, похожую деталь не становится аналогом"}
+    - {id: A13, check: "Пагинация 0/1/2+ страниц; последняя страница; циклическая next-ссылка; дубликаты"}
+    - {id: A14, check: "Достижение max_products/page budget заметно как truncation; счетчик не врёт о полноте"}
+    - {id: A15, check: "Отказ одной карточки при успехе другой сохраняет подтверждённые пары и partial-диагностику"}
+    - {id: A16, check: "Стандарты, размеры, телефоны, годы и цены не принимаются за артикулы"}
+    - {id: A17, check: "Вложенные таблицы, дубли DOM, скрытые шаблоны и NBSP не дублируют/портят пары"}
+    - {id: A18, check: "Пустые brand/number, null, неожиданные типы, слишком длинные значения обрабатываются явно"}
+    - {id: A19, check: "Ссылка доказательства и source_product относятся именно к выбранному товару"}
+    - {id: A20, check: "Связь по другой товарной группе не включается лишь из-за совпавшего номера"}
+    - {id: A21, check: "Асинхронный поиск действительно отправлен; ошибка формы/ожидания не подавляется"}
+    - {id: A22, check: "Все HTTP-клиенты и browser contexts закрываются при успехе, ошибке и отмене"}
+    - {id: A23, check: "Число HTTP-запросов, повторов и браузерных запусков не превышает бюджет адаптера"}
+    - {id: A24, check: "Redirect/product URL остаётся в allowlist; localhost/private IP/чужой host не запрашиваются"}
+    - {id: A25, check: "Реальное совпадение OE подтверждено таблицей, а не похожим текстом в названии товара"}
+    - {id: A26, check: "Одинаковое число у двух брендов остаётся двумя парами; фильтр собственного бренда точный"}
+    - {id: A27, check: "Произвольный номер передаётся как параметр, безопасно URL-encoded, не меняет маршрут запроса"}
+    - {id: A28, check: "Объём ответа/число узлов ограничены; огромный или оборванный ответ не зависает"}
+    - {id: A29, check: "Результат не зависит от порядка карточек/refs; случайная перестановка сохраняет пары"}
+    - {id: A30, check: "Регион/язык не смешивают разные каталоги без явного контекста"}
+  normalization:
+    - {id: N01, check: "Регистр, пробел, NBSP, дефис/тире/точки: ожидаемая эквивалентность number_key"}
+    - {id: N02, check: "Ведущие нули, длинный номер, числовые ячейки Excel; не восстанавливать уже потерянные Excel цифры выдумкой"}
+    - {id: N03, check: "О/0, I/1, кириллица/латиница не приравниваются без подтверждённого правила"}
+    - {id: N04, check: "VW/VOLKSWAGEN и прочие aliases — только проверенный словарь; объединение сохраняет сырой бренд"}
+    - {id: N05, check: "HYUNDAI / KIA разбивается по действующему контракту; составное название не ломается произвольно"}
+    - {id: N06, check: "OEM не производитель; неизвестный бренд не объявлять доказанным автопроизводителем"}
+    - {id: N07, check: "Нормализация идемпотентна; property-based наборы не теряют значимые символы незаметно"}
+    - {id: N08, check: "Искомый номер сохраняется/сортируется по контракту; собственный артикул имеет корректный kind"}
+  routing_cache_merge:
+    - {id: C01, check: "Матрица всех source×group; неизвестная группа, None, пустой/явный source list"}
+    - {id: C02, check: "Выключенный pilot источник нельзя вызвать явным ключом вне разрешённой cohort"}
+    - {id: C03, check: "Пустые groups нового профиля не дают неограниченного доступа ко всем группам"}
+    - {id: C04, check: "Бренд+number_key dedup сохраняет все sources/source_products; номера разных брендов не сливаются"}
+    - {id: C05, check: "Детерминированный merge при произвольном порядке завершения источников"}
+    - {id: C06, check: "OK/NOT_FOUND/BLOCKED/ERROR во всех смешанных комбинациях; partial не объявляется полной проверкой"}
+    - {id: C07, check: "Cache miss/hit/TTL boundary/expiry/bypass; cache hit вызывает 0 сетевых запросов"}
+    - {id: C08, check: "Ошибки и блокировки не превращаются в отрицательный кэш; негативный TTL и восстановление"}
+    - {id: C09, check: "20 одновременных одинаковых запросов: нет IntegrityError, потери ответа, утечки locks"}
+    - {id: C10, check: "Версия парсера/группа/источник/доступ корректно разделяют несовместимые записи кэша"}
+    - {id: C11, check: "NiBK/Brixo и ZF-family учитывают общий доменный лимит, даже при разных source keys"}
+    - {id: C12, check: "Изменение одной группы не расширяет другие автоматически; старые источники сохраняются"}
+    - {id: C13, check: "Cache read/write failure не приводит к повторному списанию квоты или ложному пустому результату"}
+    - {id: C14, check: "Круговой режим выключен: дополнительных обращений ровно 0"}
+    - {id: C15, check: "Круговой режим включён только в test: бюджет, deadline, no recursion, direct/indirect provenance"}
+    - {id: C16, check: "Косвенный ответ не записывается как прямой кросс исходного OE и не загрязняет его кэш"}
+  pipeline:
+    - {id: E01, check: "Один номер и тот же номер в Excel дают одинаковые подтверждённые пары при равной группе"}
+    - {id: E02, check: "Заголовки/их порядок, 1/2/3/4 колонки, отсутствующий SKU, группа/наименование, первые 30 строк"}
+    - {id: E03, check: "Пустые строки в шаблоне и обычном листе; второй лист не загружается случайно"}
+    - {id: E04, check: "Дубликаты запросов и разные SKU сохраняют строки заказчика при повторном использовании кэша"}
+    - {id: E05, check: "Неверная группа не вызывает тихую массовую рассылку; поведение явно согласовано и показано"}
+    - {id: E06, check: "Повреждённый/пустой/зашифрованный XLSX, лимит размера/строк и zip bomb отклоняются до reserve"}
+    - {id: E07, check: "Формулы, XML/HTML и опасные формульные префиксы безопасны в импорте, UI и каждом экспорте"}
+    - {id: E08, check: "Excel long/wide, текущие UI-форматы и API: номера, бренды, sources, группы и порядок проверены содержательно"}
+    - {id: E09, check: "Одна история на запрос; polling/reload/export не создают дополнительные задания"}
+    - {id: E10, check: "История/результаты/экспорт доступны только владельцу; cache не раскрывает чужие файлы и SKU"}
+    - {id: E11, check: "Без входа/явного trial поиск закрыт; 10 guest-поисков по IP остаются стабильными"}
+    - {id: E12, check: "Аккаунтная квота и пограничная конкурентная выдача: списание не умножается на число каталогов"}
+    - {id: E13, check: "Ошибка источника, частичный batch, disconnect клиента: история/статусы и списания по действующему контракту"}
+    - {id: E14, check: "Отмена/перезапуск worker на staging: нет пропуска/дублирования items, повторного reserve, потери прогресса"}
+    - {id: E15, check: "Два worker процесса на одной тестовой DB воспроизводят риск двойной обработки; план выпуска его исключает"}
+    - {id: E16, check: "Поиск/пагинация/скачивание результатов при 0/1/50/1000 строках в desktop/mobile браузерах"}
+    - {id: E17, check: "Список подключённых каталогов показывает доступные источники, не все исследованные бренды"}
+    - {id: E18, check: "Одиночный запрос не голодает из-за большого Excel; bounded queue/backpressure возвращают понятный статус"}
+    - {id: E19, check: "Исторические задания и старые source keys экспортируются после обновления метаданных/aliases"}
+    - {id: E20, check: "HTML-поля каталога экранируются; секреты/cookies/API keys не попадают в сообщения и логи"}
+
+source_specific_cases:
+  sbparts: ["AJAX products — HTML внутри JSON", "Только карточки /catalog, без дублей", "BP/BH и три текущие группы"]
+  jnbk: ["POST по номеру и прямой редирект в карточку", "Только блок Cross Reference", "WAF отдельно от пустого каталога"]
+  nibkru: ["Смешанная выдача Brixo оставляет только товары NiBK", "Ссылки manufacturer/number из references", "Общий upstream с brixo без смешивания кэша"]
+  brembo: ["Связка aft cookie и antiforgery token", "400 invalid code против 400 повреждённого запроса", "manufacturer refs и competitor refs с разными kind", "Vue-заготовки не номера"]
+  mintex: ["JSF ViewState на POST", "Вложенная таблица OE без дублей", "Локализованный challenge и cooldown", "Браузер закрывается при отмене"]
+  trialli: ["Только товарные ссылки Bitrix", "Артикул из title без рекламного хвоста", "detail_main_oem и неизвестный бренд OEM", "Все четыре группы отдельно"]
+  ate: ["Официальная страница или внешний каталог: установить реальную цепочку", "Один OE отдельно для диска/колодки/шланга", "Официальный номер и номер конкурента не перепутаны"]
+  zimmermann: ["Выдача обязана меняться для разных запросов", "Новостная страница не результат подбора", "Тип детали подтверждён карточкой"]
+  brannor: ["Код страницы автомобиля AA00 не артикул", "Пробелы в OE и вкладка оригинальных номеров", "BRP/BRD и legacy export guard"]
+  fap: ["Подтверждение настоящего обратного OE-поиска", "Ссылка карточки не номер из картинки", "Колодки и диски разделены"]
+  monaer: ["URL в Excel — единственная карточка M61784, не endpoint поиска", "Собственный артикул против OE-связи", "Нельзя раздавать один товар на любой запрос"]
+  marshall: ["Магазин: наличие товара не доказательство аналога", "Проверка доступного точного OE-поиска", "Пагинация/карточка/рекомендации отдельно"]
+  trw: ["ZF landing требует отдельного подтверждённого пути к каталогу", "Колодки/диски/амортизаторы/шланги с независимыми эталонами", "Не смешивать бренды TRW/SACHS/BOGE и общий rate budget"]
+  metaco: ["Четыре раздела Excel, пять product groups", "Одна основа адаптера, строгая фильтрация результатов", "Широкий ассортимент не разрешает смешивать группы"]
+  masterkit: ["Production page может быть витриной, установить поиск", "Комплект и отдельная деталь не автоматически взаимозаменяемы", "Связь OE подтверждена данными производителя"]
+  lynxauto: ["Диски/колодки/амортизаторы/шланги отдельно", "OEM и брендовый артикул не переставлены", "Суффиксы/стороны сохраняются"]
+  ganz: ["Пять групп через один source key", "Группа доказана карточкой, не только маршрутом registry", "Пагинация и исключение нерелевантных товаров"]
+  kyb: ["Номер в partNumber отправляется слитно", "err/errmsg не трактуются как отсутствие", "maker/oe_pn/kyb_pn и вариант без maker"]
+  bilstein: ["Дилерский поиск против каталога производителя", "BILSTEIN не alias FEBI BILSTEIN", "Свой артикул не выдаётся как найденный OE без доказательства"]
+  sachs: ["Переход ZF → реальный каталог", "Применимость по машине не равна кроссу", "Раздельная атрибуция бренда в общем ZF backend"]
+  boge: ["Магазин по своему артикулу против обратного поиска", "BOGE/SACHS не сливаются автоматически", "HTTP URL и проверенный redirect без чужих host"]
+  koni: ["Поиск по собственному артикулу не выдавать за OE-поиск", "Ось/сторона/вариант подвески", "Отсутствие обратного каталога фиксируется явно"]
+  hola: ["Заголовок вкладки не таблица кроссов", "Ссылки разделов не карточки", "Четыре группы и несколько марок автомобиля"]
+  monroe: ["Find my part: исследовать JS/API и режим поиска", "Автомобильная применимость отдельно от точного OE", "Регион и продуктовая линейка подтверждены"]
+  febest: ["Полный артикул и суффиксы не укорачиваются", "Деталь подвески не автоматически амортизатор", "Таблица OE и заменителей разбирается отдельно"]
+  torr: ["Проверить OE-поиск каталога controltorr", "Широкая модельная выдача не точный кросс", "Амортизатор/опора/комплект разделены"]
+  nissens: ["Hidden form fields и SearchID", "Только direct hit, не другая деталь для той же машины", "JS-аргументы с запятыми и значащим пробелом", "Радиатор не конденсор"]
+  luzar: ["Только карточки нужного вида радиаторов", "data-find/marka без повторения бренда в номере", "OEM без известной марки не выдумывает LADA/RENAULT"]
+  brixo: ["SAKURA через Brixo, а SALURA — ошибка метаданных", "references дают пары с реальными брендами", "Смешанная выдача NiBK не просачивается в радиаторы", "Ошибка info-card не маскируется собственной SKU как полный ответ"]
+  nrf: ["Анонимный ответ и B2B-login различаются", "Данные разных учётных записей не общий кэш", "Без разрешённого доступа нет positive release gate"]
+  ava: ["Повторно установить актуальный каталог и адрес", "404 сайта не not_found артикула", "Подтверждённая цепочка радиатор → OE"]
+  patron: ["503 сервиса отдельно от антибота и пустой выдачи", "Шланг не трубка/фитинг", "Доступный OE-поиск с лимитом повторов"]
+  hel: ["URL /about_us/ не search endpoint", "Собственный комплект VW-4-409 против OE", "Применимость комплекта не расширяется на любой шланг"]
+  stellox: ["Если есть лишь карточки без обратного OE-поиска — отдельная зависимость на выгрузку", "Без массового обхода для одного запроса", "Формат собственного артикула и категория шлангов"]
+
+performance:
+  thresholds_status: "Проектные критерии, не измеренные характеристики сервиса. Уточнить на staging baseline до реализации волны, зафиксировать до сравнения кандидата."
+  measurement:
+    - "Отдельно source wall time, queue_wait, HTTP time, parse time, cache read/write, merge, XLSX import/export."
+    - "p50/p95/p99, timeout/error/partial доли, число внешних запросов, байты, RSS, event-loop lag, очередь."
+    - "Один и тот же стенд, ресурсы, fixtures, concurrency и seed; baseline/candidate чередовать минимум 3 раза."
+    - "Не считать быстрые ошибочные/пустые ответы улучшением скорости; качество сравнивать одновременно."
+    - "Чистый кэш, прогретый кэш, истёкший кэш, смесь 80/20 и одновременный одинаковый номер отдельно."
+  simulated_matrix:
+    batch_rows: [1, 10, 100, 1000]
+    concurrent_clients: [1, 4, 10, 20]
+    fixture_sizes: [small, typical, largest_observed, synthetic_over_limit]
+    delays: [fast, typical, one_slow_source, all_timeouts]
+    minimum_samples_for_p95: 100
+    minimum_samples_for_p99: 1000
+    stress_scope: "1000 строк × 20 клиентов только на mock-источниках с ограничением ресурсов; никогда не live."
+  initial_gates:
+    existing_source_p95_regression_percent_max: 10
+    cached_lookup_p95_ms_target: 500
+    pure_parse_p95_ms_target: 100
+    typical_fixture_size_kib_for_parse_target_max: 1024
+    candidate_rss_growth_vs_baseline_percent_max: 20
+    offline_event_loop_lag_p95_ms_target: 100
+    live_http_source_p95_seconds_target: 15
+    live_browser_source_p95_seconds_target: 30
+    slow_source_rule: "Источник вне бюджета не включать в синхронный общий путь; отдельный разбор компромисса, не увеличение таймаута всем."
+    memory_rule: "После повторных прогонов RSS не растёт монотонно; для браузера отдельно холодный старт/закрытые контексты."
+  request_budget_examples:
+    brixo_nibkru: "1 search + не более max_products_per_oe info; общий домен учитывать суммарно."
+    brembo: "home + search + list + до 2 * max_products_per_oe refs; каждый redirect/retry считать отдельно."
+    kyb: "1 POST cross без необоснованных повторов."
+    other_sources: "Бюджет устанавливается после discovery; обязательное конечное ограничение страниц, карточек и retry."
+  live_probe_policy:
+    concurrency_per_upstream: 1
+    minimum_interval_seconds_between_requests: 3
+    max_http_requests_per_upstream_per_session: 100
+    obey_stricter_source_limits: true
+    on_429_or_challenge: stop_and_record
+    rule: "Начать с 2 positive+2 negative; расширять набор несколькими сессиями. Малую выборку не выдавать за достоверный p99."
+
+release_gates:
+  G0: "Изоляция доказана: ни одного prod DSN/секрета/записи/внешнего вызова в offline прогоне."
+  G1: "Каждой строке Excel соответствует источник/группа и решение; доступ и контракт подтверждены."
+  G2: "На reviewed golden: precision=1.0, recall=1.0 для заявленной полной области, forbidden pairs=0; нет неподтверждённых кроссов."
+  G3: "Все обязательные unit/replay/integration/browser/regression tests проходят; skip live в offline не означает готовность источника."
+  G4: "Скорость, request budget, очередь и память в согласованных границах; сравнение baseline/candidate приложено."
+  G5: "Свежая малая live-выборка из staging подтверждает endpoint/контракт; blocked источник в release не включён."
+  G6: "Восстановление backup и rollback проверены на staging, новые источники выключены по умолчанию, pilot cohort реализована."
+  G7: "Пользователь получил конкретный release report и отдельно поручил выпуск; без этого production не меняется."
+  G8: "Pilot проверен по качеству и техническим метрикам, затем только согласованное расширение."
+  scoring:
+    precision: "Количество верных пар / всех возвращённых пар; пустой ответ на positive не получает perfect precision как обход gate."
+    recall: "Количество найденных ожидаемых пар / всех ожидаемых пар в явно заданном полном scope."
+    partial: "Допустим только явный неполный результат; нельзя убирать неудобные expected pairs, чтобы пройти gate."
+
+release_procedure:
+  delivery_unit: "Один источник + одна группа; shared transport changes — отдельный release с регрессией всех потребителей."
+  steps:
+    - "Зафиксировать commit, тестовый отчёт, diff настроек, список групп, новые обращения/сек и rollback artifact."
+    - "Проверить CI и staging на release commit, отсутствие секретов и посторонних изменений."
+    - "Подготовить совместимые по API/DB изменения. Миграции только additive; без массовой очистки кэша/истории."
+    - "Перед согласованным выпуском сделать consistent backup SQLite штатным online backup API, не копированием только .db при WAL. Проверить restore на staging."
+    - "Обеспечить одного владельца job queue: проверенный graceful drain/возобновление, ограниченная очередь и отсутствие повторного reserve."
+    - "Не обещать zero downtime при текущем in-process JobRunner. Если безопасный handoff не готов — выпуск отложить, а не перезапускать под клиентским Excel."
+    - "Развернуть выключенный источник; проверить прежние сценарии без изменения квот реальных клиентов."
+    - "Включить source+group только выделенной тестовой cohort; не дублировать все клиентские запросы в shadow без бюджета."
+    - "Наблюдать минимум рабочий день и собрать не менее 30 завершённых pilot поисков; при низком трафике продлить, не расширять по таймеру."
+    - "Расширять детерминированной cohort, затем всем по этой группе, после каждого шага оценить gate. Не включать остальные группы автоматически."
+  rollback_triggers:
+    - "Любой подтверждённый ложный кросс, межклиентская утечка, потеря/дублирование задания или лишнее списание."
+    - "Рост p95 существующего поиска более 10% на сопоставимой выборке минимум 100 запросов."
+    - "Рост технических ошибок более 2 процентных пунктов в двух последовательных 15-минутных окнах с достаточной выборкой; малую выборку оценивать вручную."
+    - "429/challenge всплеск, превышение upstream budget, неограниченный рост очереди/памяти."
+  rollback:
+    - "Отключить конкретный source+group; не выключать весь сервис."
+    - "Оградить/инвалидировать только кэш новой версии источника; не стирать рабочую историю."
+    - "При необходимости вернуть предыдущий совместимый release после безопасного drain."
+    - "Клиентские данные после выкатки сохранить; старый backup не применять поверх текущих jobs/quota."
+    - "Описать инцидент, reproducer и новый regression case до повторного включения."
+
+planned_artifacts:
+  note: "Ни один из следующих файлов/инструментов пока не создан этим планом."
+  files:
+    - tests/conftest.py
+    - tests/catalogues/test_contract.py
+    - tests/catalogues/test_transport.py
+    - tests/catalogues/test_routing.py
+    - tests/catalogues/test_quality.py
+    - tests/catalogues/test_cache_concurrency.py
+    - tests/integration/test_catalogue_pipeline.py
+    - tests/performance/test_catalogue_budgets.py
+    - tests/fixtures/catalogues/<source>/<group>/manifest.yaml
+    - scripts/verify_catalogue_matrix.py
+    - scripts/catalogue_release_report.py
+    - output/catalogue-reports/<release>/summary.json
+    - output/catalogue-reports/<release>/junit.xml
+    - output/catalogue-reports/<release>/quality-diff.json
+    - output/catalogue-reports/<release>/benchmark.json
+    - output/catalogue-reports/<release>/release.md
+  report_required_fields: [commit, inventory_hash, source, groups, environment, fixture_hashes, test_counts, skipped_reasons, precision, recall, forbidden_pairs, partial_cases, latency_samples, p50, p95, p99_if_enough_samples, external_request_count, rss, queue_wait, regression_diff, gates, rollback, unresolved_issues]
+
+execution:
+  resumption: "Сначала проверить актуальный commit, AGENTS.md, изменения пользователя и исходный Excel; этот план не разрешает prod действия."
+  task_rules: "Каждой задаче писать status/evidence/actual_changes. Не превращать blocked внешний источник в done без объяснения."
+  tasks:
+    - id: P01
+      title: "Пересверить инвентарь и текущую архитектуру"
+      depends_on: []
+      status: planned
+      outputs: ["Актуальные 47 строк, 34 источника, 64 пары; diff изменений после baseline"]
+    - id: P02
+      title: "Создать изолированный test harness и запрет сети"
+      depends_on: [P01]
+      status: planned
+      outputs: ["tmp DB/settings, import guard, HTTP/Playwright mocks, markers, воспроизводимое test окружение"]
+    - id: P03
+      title: "Описать контракт качества и собрать независимые golden для существующих источников"
+      depends_on: [P02]
+      status: planned
+      outputs: ["Версионированные manifests, fixtures и классификация ошибок/partial"]
+    - id: P04
+      title: "Развернуть тестовые матрицы и измерить baseline W0"
+      depends_on: [P03]
+      status: planned
+      outputs: ["Обязательные suites и benchmark, воспроизведения найденных дефектов"]
+    - id: P05
+      title: "Реализовать необходимые защитные механизмы отдельными небольшими изменениями"
+      depends_on: [P04]
+      status: planned
+      outputs: ["source/group/cohort gating, cache policy, domain budgets, deadline, graceful rollout — только доказанные необходимые изменения"]
+    - id: P06
+      title: "W1: исследовать и подключать диски/колодки по одному источнику"
+      depends_on: [P05]
+      status: planned
+      outputs: ["По каждому источнику discovery → fixtures → tests → staging → review report; production только через G7"]
+    - id: P07
+      title: "W2: амортизаторы"
+      depends_on: [P06]
+      status: planned
+      outputs: ["Отдельный gate новых групп и новых источников"]
+    - id: P08
+      title: "W3: радиаторы"
+      depends_on: [P07]
+      status: planned
+      outputs: ["Радиаторы, доступ NRF/AVA или явные блокеры"]
+    - id: P09
+      title: "W4: шланги"
+      depends_on: [P08]
+      status: planned
+      outputs: ["Шланги и регрессия всех общих адаптеров"]
+    - id: P10
+      title: "W5: общая сверка, эксплуатационный мониторинг и итоговый отчёт"
+      depends_on: [P09]
+      status: planned
+      outputs: ["Ни одна строка Excel не потеряна; enabled/blocked/deferred подтверждены; мониторинг контрактов и доступности"]
+  recurring:
+    - "Офлайн-регрессия на каждый PR; вся матрица при изменении BaseSource/normalize/registry/aggregator/excel."
+    - "Малые live-пробы отдельным разрешённым расписанием, не на каждом PR и не нагрузка на поставщика."
+    - "При изменении разметки блокировать ложные выдачи, сохранять sanitized fixture и добавлять regression case."

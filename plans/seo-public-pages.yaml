@@ -1,0 +1,708 @@
+schema_version: '1.0'
+plan_id: crossparts-public-seo-pilot
+title: 'Публичные страницы категорий и кросс-номеров CrossParts'
+language: ru
+created_at: '2026-09-22'
+status: planned
+owner: codex
+workspace: /root/crossparts
+baseline_commit: ecf02f1007b3c97c8b3087a701eeb6c48573dba0
+current_authorization:
+  scope: 'Создать план; реализацию пользователь пока не поручал.'
+  implemented_by_this_plan: false
+  deployment_performed: false
+  resume_trigger: 'Явное поручение пользователя реализовать этот план или конкретные этапы.'
+  future_execution: 'После поручения выполнять зависимые задачи последовательно, фиксируя evidence и actual_changes.'
+  prohibit_now: [application_edits, production_config_edits, database_writes, service_restart, external_account_setup, seo_publication]
+
+objective:
+  outcome: 'Привлекать релевантных посетителей через публичные полезные страницы и переводить их в поиск CrossParts.'
+  visitor_journey: [organic_entry, read_public_data, workspace_prefill, login_or_trial_if_required, explicit_search, results, contact_or_repeat_usage]
+  pilot:
+    hub_pages: 1
+    category_pages: 5
+    number_pages_min: 5
+    number_pages_max: 10
+    total_pages_min: 11
+    total_pages_max: 16
+    insufficient_data_policy: 'Не добирать объём пустыми или недостоверными карточками. Выпустить готовые категории; недостающие карточки оставить pending_data.'
+    primary_market: 'Русскоязычная аудитория; регион исследования уточнить по данным продаж.'
+    audience: [parts_stores, purchasing_teams, parts_distributors]
+  non_goals:
+    - 'Возвращение лендинга вместо рабочего интерфейса на /.'
+    - 'Изменение тарифов, числа бесплатных запросов или существующих аккаунтов.'
+    - 'Генерация тысяч однотипных страниц, городских дублей или страницы на каждый поисковый синоним.'
+    - 'Публикация всех номеров из кэша без проверки.'
+    - 'Публичная история пользователей, исходные Excel, внутренние SKU или API-ключи.'
+    - 'Запуск каталожных запросов при чтении SEO-страницы.'
+    - 'Автоматическая покупка трафика, ссылок или подключение платных сервисов.'
+    - 'Обещания позиций, индексации, гарантированной применимости или упоминаний в AI-ответах.'
+    - 'FAQ-раздел, отдельные страницы каталогов, Excel-лендинг и массовые карточки в первом пилоте.'
+
+repository_observations:
+  checked_at: '2026-09-22'
+  clean_worktree_at_inspection: true
+  facts:
+    - id: OBS01
+      file: app/main.py
+      finding: '/ отдаёт index.html; /categories уже обслуживается marketing_page вместе с /features, /pricing, /integrations, /demo, /contacts.'
+      implication: 'Перенести только /categories в отдельный обработчик; не зарегистрировать второй маршрут с тем же путём.'
+    - id: OBS02
+      files: [app/groups.py, app/sources/registry.py, app/marketing.py]
+      finding: 'Пять групп. registry.resolve(None, group=key) выбирает включённые источники группы. CATEGORY_COPY содержит примеры, но не подтверждение их актуальных кроссов.'
+      implication: 'Ссылаться на единый реестр; не хранить второй независимый список поддерживаемых категорий или обещать постоянное число источников.'
+    - id: OBS03
+      files: [app/models.py, app/sources/base.py]
+      finding: 'CacheEntry хранит source, oe_key, payload и created_at; отдельной надёжной идентификации группы/бренда исходного номера нет. Cross может содержать url и source_product.'
+      implication: 'Кэш — материал для отбора, не готовая публичная база. При неоднозначности не публиковать.'
+    - id: OBS04
+      files: [app/normalize.py, app/static/app.js]
+      finding: 'number_key удаляет разделители; неизвестные бренды classify_brand относит к oem. Браузерные алиасы брендов не равны проверенному серверному справочнику.'
+      implication: 'Не доказывать OEM-происхождение или взаимозаменяемость только по классификации/совпадению строк.'
+    - id: OBS05
+      files: [app/main.py, app/security.py, app/session.py, app/quota.py]
+      finding: 'Поиск защищён require_search_access; trial_active хранится в подписанной сессии, квота гостя привязана к IP. POST /login и /trial возвращают на / без контекста номера. Успешный login очищает сессию.'
+      implication: 'Сохранить проверенный контекст до очистки сессии и восстановить его в redirect; не обходить серверную проверку доступа.'
+    - id: OBS06
+      files: [app/static/app.js, app/templates/index.html]
+      finding: 'Результаты и история скрыты до первого запроса. loadGroups асинхронно пересоздаёт select. Параметры oe/group/mode сейчас не обрабатываются.'
+      implication: 'Prefill применить до/после загрузки групп без потери выбора; переход по ссылке не должен раскрывать пустые результаты или списывать квоту.'
+    - id: OBS07
+      files: [app/main.py, app/templates/marketing-base.html, deploy/nginx-crossparts.conf]
+      finding: 'При статическом осмотре не найдены маршруты sitemap/robots, canonical или интеграция аналитики.'
+      implication: 'Перед реализацией сверить актуальные ответы домена и nginx: отсутствие в репозитории не доказывает отсутствие на сервере.'
+    - id: OBS08
+      files: [deploy/crossparts.service, app/db.py, app/config.py]
+      finding: 'FastAPI/Jinja, SQLAlchemy async, SQLite по умолчанию. systemd читает .env.production; локальный Settings также читает .env.'
+      implication: 'Не предполагать равенство локальной и рабочей конфигураций. Не менять инфраструктуру и БД ради статического пилота.'
+
+decisions:
+  - id: DEC01
+    decision: 'SSR-страницы на существующем домене https://mrb-crossparts.ru.'
+    reason: 'Данные и ссылки доступны в исходном HTML; единая навигация и вход в сервис.'
+  - id: DEC02
+    decision: 'Для пилота использовать версионируемый JSON-манифест с проверенными снимками, без новой таблицы в БД.'
+    reason: '11–16 страниц можно проверять и откатывать через Git; не связывать HTTP-рендер с парсерами.'
+    scale_review: 'При существенном расширении отдельно оценить БД, очередь обновления и редактор публикаций.'
+  - id: DEC03
+    decision: 'Один канонический URL на проверенную сущность; похожие запросы объединять по смыслу.'
+    reason: 'Количество запросов Wordstat не равно количеству необходимых страниц.'
+  - id: DEC04
+    decision: 'Публичная таблица показывает весь отобранный снимок; свежий поиск и Excel используют обычный доступ.'
+    reason: 'Страница должна дать самостоятельный ответ. Не скрывать обещанный ответ за входом.'
+  - id: DEC05
+    decision: 'AI готовит структуру и текст по утверждённым данным. Номера, применимость, цены и соответствия не придумываются.'
+    reason: 'Качество данных важнее количества текста.'
+  - id: DEC06
+    decision: 'Предзаполнение не запускает поиск автоматически, в том числе после авторизации и активации trial.'
+    reason: 'Сохранить существующее явное списание лимита по кнопке Найти/Обработать файл.'
+  - id: DEC07
+    decision: 'Каталоги остаются справочным блоком основного интерфейса. SEO-навигация добавляется компактно.'
+    reason: 'Сохранить принятую композицию и основное внимание на Excel.'
+
+inputs:
+  - id: IN01
+    name: query_research
+    status: missing
+    required_for: [T02, G02]
+    description: 'Выгрузка или доступ к Wordstat с фразой, частотностью, регионом, периодом и режимом подсчёта.'
+    fallback: 'Разработку вести на пяти известных группах; объёмы спроса считать неизвестными и не публиковать как факты.'
+    caution: 'Сообщённые селзом около 2000 запросов/месяц не подтверждены. Не суммировать пересекающиеся широкие запросы.'
+  - id: IN02
+    name: reviewed_public_data
+    status: missing
+    required_for: [T03, T04, G02]
+    description: 'Проверенные снимки для выбранных номеров; источники, прямые связи, даты, группа, бренд и отсутствие неоднозначности.'
+    fallback: 'Страницы без данных остаются draft; функциональная категория может публиковаться без выдуманной таблицы.'
+  - id: IN03
+    name: analytics_and_search_console_access
+    status: missing
+    required_for: [T09, T13]
+    description: 'ID Метрики и доступ/verification token Яндекс Вебмастера и Google Search Console для домена.'
+    fallback: 'Сделать отключаемый адаптер событий и проверку через локальный mock; внешнюю регистрацию отмечать blocked_external.'
+  - id: IN04
+    name: publication_data_scope
+    status: to_verify
+    required_for: [T03, G02]
+    description: 'Для каждого источника проверить допустимый объём публичного показа данных и изображений. Логотип не означает партнёрство.'
+    fallback: 'Использовать собственное описание сервиса и ссылки на каталог; спорные данные исключить из снимка.'
+  - id: IN05
+    name: pilot_business_targets
+    status: proposed_defaults
+    required_for: [T14]
+    description: 'Приоритет B2B; оценивать качество лидов и использование Excel, а не только трафик по артикулам.'
+    fallback: 'Применить observation_protocol; численные пороги считать внутренними условиями эксперимента, не обещанием SEO-результата.'
+
+information_architecture:
+  origin: 'https://mrb-crossparts.ru'
+  language: ru-RU
+  trailing_slash: false
+  routes:
+    - {id: RT01, path: '/', type: workspace, action: preserve, seo: 'Сохранить индексируемую главную с canonical на /; персональные ответы не кешировать публично.'}
+    - {id: RT02, path: '/categories', type: category_hub, action: replace_existing_handler, seo: index_if_published}
+    - {id: RT03, path: '/categories/{category_slug}', type: category, action: add, seo: index_if_published}
+    - {id: RT04, path: '/cross/{number_slug}', type: number, action: add_allowlisted, seo: index_if_published_and_fresh}
+    - {id: RT05, path: '/sitemap.xml', type: sitemap, action: add_after_audit, seo: published_canonical_urls_only}
+    - {id: RT06, path: '/robots.txt', type: crawler_policy, action: add_after_audit, seo: single_authoritative_owner}
+  category_mapping:
+    - {group: brake_pads, slug: brake-pads, title: 'Тормозные колодки', candidate_number: 58101H5A25, asset: '/static/images/categories/pads.jpg'}
+    - {group: brake_discs, slug: brake-discs, title: 'Тормозные диски', candidate_number: 1K0615301AA, asset: '/static/images/categories/discs.png'}
+    - {group: brake_hoses, slug: brake-hoses, title: 'Тормозные шланги', candidate_number: 1K0611701K, asset: '/static/images/categories/hoses.png'}
+    - {group: shock_absorbers, slug: shock-absorbers, title: 'Амортизаторы', candidate_number: '4851080378', asset: '/static/images/categories/shocks.png'}
+    - {group: radiators, slug: radiators, title: 'Радиаторы охлаждения', candidate_number: '8200735038', asset: '/static/images/categories/radiators.png'}
+  candidate_policy: 'Это кандидаты из интерфейса, не утверждённые SEO-карточки. Проверять перед публикацией.'
+  number_identity:
+    internal_key: [group, input_brand_key, number_key]
+    url_policy: 'Хранить стабильный одобренный slug явно. Например 58101-h5a25 допустим только после проверки сущности.'
+    collision_policy: 'Одинаковый number_key у разных брендов/категорий не объединять. В пилоте исключить неоднозначные номера; дальнейшее расширение — с брендовой схемой URL и миграцией.'
+    aliases: 'Регистр, пробелы и дефисы перенаправлять 301 только на существующую однозначную запись. Не генерировать карточку из произвольного URL.'
+    unknown_number: '404 с понятной ссылкой в поиск, без индексируемой страницы-заглушки.'
+  navigation:
+    workspace_header: 'Добавить один пункт Категории; Поиск и Поддержка сохранить.'
+    workspace_footer: 'Одна ссылка Категории запчастей на /categories; не создавать несуществующий /cross-хаб.'
+    public_header: 'CrossParts → /; Поиск → /; Категории → /categories; Войти → /login.'
+    public_footer: 'Контакты/интеграции по существующим адресам; Telegram https://t.me/mrbdigital.'
+    breadcrumbs_category: ['Поиск /', 'Категории /categories', 'Текущая категория']
+    breadcrumbs_number: ['Поиск /', 'Категории /categories', 'Своя категория', 'Текущий номер']
+    related_links: 'Только опубликованные страницы; категории → проверенные номера; номера → своя категория и 2–4 релевантные страницы.'
+    root_behavior: 'Никакого редиректа / на SEO-хаб или восстановления старого лендинга.'
+
+content_contracts:
+  shared:
+    required: [id, page_type, canonical_path, title, description, h1, lead, status, reviewed_at, updated_at]
+    statuses: [draft, ready, published, archived]
+    copy_rules:
+      - 'Один H1, понятный русский текст, информация о реально поддерживаемой операции.'
+      - 'Оригинальная польза важнее объёма: нет заданного минимального числа слов и плотности ключей.'
+      - 'Не обещать VIN-подбор, наличие, цены, покрытие всех автомобилей, партнёрство или абсолютную точность.'
+      - 'Писать данные каталогов/найденные соответствия, а не гарантированно подходит на автомобиль.'
+      - 'Рекомендация проверить применимость по VIN/каталогу не означает наличие VIN-функции у CrossParts.'
+      - 'OEM — тип номера, не бренд. WVA/FMSI не представлять как производителей.'
+      - 'Ранее предложенные в переписке строки, включая Brembo P 30 123, не использовать без независимого подтверждения.'
+    dates: 'ISO 8601 UTC в данных, человекочитаемая дата проверки на странице; дата рендера не подменяет дату каталожного ответа.'
+    image_policy: 'Существующие локальные фото групп и логотипы источников, корректный alt, width/height, без скачивания новых наборов по умолчанию.'
+    accessibility: 'Семантические заголовки и таблицы, labels, клавиатура, заметный фокус по границе поля, корректный контраст.'
+  hub:
+    canonical_path: /categories
+    sections:
+      - {id: hub_intro, required: true, content: 'Подбор аналогов по категориям запчастей: одно короткое описание возможностей.'}
+      - {id: hub_categories, required: true, content: 'Пять карточек: изображение, название, краткая специфика, ссылка на страницу группы.'}
+      - {id: hub_excel, required: true, content: 'Проверка списка OE/OEM из Excel; CTA /?mode=excel.'}
+      - {id: hub_catalogues, required: true, content: 'Только реально включённые каталоги из реестра, ссылки на них.'}
+  category:
+    title_template: '{category_name}: кроссы и аналоги по OE/OEM — CrossParts'
+    h1_template: 'Кросс-номера: {category_name}'
+    sections:
+      - {id: category_intro, required: true, content: 'Какая группа проверяется и какую задачу решает, 1–2 предложения.'}
+      - {id: category_search, required: true, content: 'Форма GET на / с oe и скрытым валидным group; кнопка Перейти к поиску.'}
+      - {id: category_examples, required: true, content: 'Отобранные примеры: кнопка подставляет номер, ссылка ведёт на опубликованную карточку при её наличии.'}
+      - {id: category_snapshot, required: false, content: 'Несколько реальных соответствий из одобренных снимков, с датой/источником; убрать блок, если данных нет.'}
+      - {id: category_sources, required: true, content: 'Источники этой группы через registry.resolve; включение не равно доступности в данный момент.'}
+      - {id: category_workflow, required: true, content: 'Ввод номера → проверка каталогов → объединение ответов с источниками → выгрузка.'}
+      - {id: category_specifics, required: true, content: 'Что проверять именно для этой группы, верифицированное содержание вместо замены слова в общем шаблоне.'}
+      - {id: category_batch, required: true, content: 'Пакетный поиск для магазинов и закупок, переход /?mode=excel; не обещать применение одной группы ко всему файлу.'}
+      - {id: category_caveat, required: true, content: 'Перед заказом проверьте применимость в каталоге производителя.'}
+      - {id: category_related, required: true, content: 'Другие группы, отобранные карточки номеров, ссылка на поиск.'}
+    specifics_research:
+      brake_pads: [axle_and_brake_system, dimensions_and_wear_sensor]
+      brake_discs: [diameter_and_thickness, mounting_and_ventilation]
+      brake_hoses: [length_and_fittings, installation_position]
+      shock_absorbers: [axle_and_side, mounting_and_suspension_type]
+      radiators: [core_dimensions, connections_and_vehicle_equipment]
+    specifics_note: 'Темы для редакционной проверки; не заявлять наличие этих характеристик в нашем поиске без соответствующих данных.'
+  number:
+    title_template: 'Кроссы и аналоги {display_number} — {category_name} | CrossParts'
+    h1_template: 'Кроссы и аналоги {display_number}'
+    sections:
+      - {id: number_identity, required: true, content: 'Проверенный исходный номер, группа, бренд если подтверждён; не домысливать автомобиль и годы.'}
+      - {id: number_rows, required: true, content: 'Публичная таблица: бренд, номер аналога, источник со ссылкой; весь отобранный снимок доступен в HTML.'}
+      - {id: number_provenance, required: true, content: 'Дата проверки и пояснение, что это сохранённые данные каталогов; частичное покрытие явно обозначить.'}
+      - {id: number_search, required: true, content: 'CTA Проверить актуальные кроссы → /?oe={encoded_number}&group={group}; списание только после обычного запуска поиска.'}
+      - {id: number_batch, required: false, content: 'Компактный переход к загрузке Excel.'}
+      - {id: number_caveat, required: true, content: 'Проверка применимости перед заказом; кросс-ссылка не доказывает заменяемость во всех комплектациях.'}
+      - {id: number_related, required: true, content: 'Своя категория и релевантные опубликованные страницы, без рекурсивного порождения новых URL.'}
+
+data_pipeline:
+  storage:
+    proposed_files: [app/seo/content.json, app/seo/snapshots.json]
+    format: 'UTF-8 JSON, schema_version, строгая проверка Pydantic; опубликованные данные в Git, сырые выгрузки вне Git.'
+    reader: 'Один локальный валидированный manifest в памяти процесса; смена версии с обычным деплоем.'
+    database_migration_required: false
+  snapshot_record:
+    required_fields: [id, group, input_brand_key, input_number, number_key, canonical_slug, aliases, rows, evidence, checked_at, review, status]
+    rows_required_fields: [brand, brand_key, number, number_key, source_keys, evidence_ids]
+    evidence_required_fields: [id, source_key, source_url, fetched_at, queried_number_key, relation_type, verified_group]
+    review_required_fields: [reviewed_by, reviewed_at, identity_confirmed, publication_scope_verified, notes]
+    relation_type_allowed_for_pilot: [direct_catalogue_match]
+    exclusions: [indirect_circular_match, inferred_fitment, standard_only, unknown_brand, ambiguous_number_identity]
+    date_rules: 'checked_at = самая ранняя fetched_at среди показанных доказательств; reviewed_at отдельна от fetched_at.'
+  steps:
+    - {id: DP01, action: 'Read-only выбрать кандидатов из CacheEntry и известных публичных примеров.', input: cache_entries, output: private_candidates}
+    - {id: DP02, action: 'Проверить группу, бренд исходного номера, прямую связь с ответом каталога, даты и неоднозначность.', input: private_candidates, output: reviewed_candidates}
+    - {id: DP03, action: 'Выбрать только разрешённые публичные поля; нормализовать и объединить доказательства одинаковых строк.', input: reviewed_candidates, output: public_snapshots}
+    - {id: DP04, action: 'Проверить схемы, ссылки, свежесть и тексты; сформировать allowlist опубликованных страниц.', input: public_snapshots, output: content_manifest}
+    - {id: DP05, action: 'Рендерить только локальные готовые данные; GET не обращается к агрегатору/источникам.', input: content_manifest, output: public_html}
+  normalization:
+    number: 'Использовать app.normalize.number_key; сохранять ведущие нули, исходное display-представление и brand+group идентичность.'
+    brand: 'Проверенная явная таблица алиасов для отобранных записей; не переносить все эвристики браузера в публичные утверждения.'
+    row_deduplication_key: [brand_key, number_key]
+    source_merging: 'При объединении сохранять все source_keys и evidence_ids.'
+    number_example: '58101-H5A25 и 58101H5A25 могут быть вариантами записи, но одно равенство number_key не доказывает применимость.'
+  privacy:
+    never_read_for_publication: [accounts, jobs, job_items]
+    never_export: [tenant, username, password_hash, ip, guest_identifier, uploaded_filename, customer_sku, customer_query_history, credentials, proxy_url, internal_errors]
+    candidate_workspace: '/tmp/crossparts-seo-review-* либо отдельный игнорируемый рабочий каталог с ограниченными правами.'
+    sources_urls: 'Только HTTP(S) ссылки каталога, без авторизационных параметров, userinfo и токенов.'
+  safety:
+    dynamic_get_lookup: false
+    automatically_publish_cache: false
+    automatically_trigger_circular_search: false
+    update_policy: 'В пилоте ручной review и атомарная публикация новой версии снимка; фоновое обновление отдельной задачей после пилота.'
+    network_verification: 'Если необходима свежая проверка, использовать отдельно запущенный ограниченный сборщик с существующими лимитами источников. Не проводить через клиентский API и не списывать квоты пользователей.'
+    failure_policy: 'Ошибка/блокировка источника не обнуляет хороший снимок и не обновляет fetched_at. Показать сохранённую дату/частичность.'
+  freshness:
+    status: proposed_operational_defaults
+    fresh_days: 7
+    stale_days: 30
+    fresh: 'Карточка индексируема при остальных выполненных критериях; показывать дату.'
+    aging: 'После 7 дней показать Сохранённые данные и предложение перепроверить; запланировать review.'
+    stale: 'После 30 дней HTTP 200 с noindex,follow, старой датой и CTA; исключить из sitemap до обновления.'
+    never_published_or_no_verified_rows: '404; draft доступен только в локальном/защищённом preview.'
+    confirmed_wrong_data: 'Убрать ошибочные строки; если карточка потеряла ценность — снять публикацию. 410 только для явно и окончательно удалённого ранее опубликованного URL.'
+    category_table: 'Устаревшие или отозванные строки не отображать в примерах категорий.'
+
+workspace_integration:
+  input_contract:
+    method: GET
+    destination: '/'
+    parameters:
+      oe: {type: string, max_length: 128, purpose: 'Предзаполнить номер; проверить допустимость по общей валидации ввода.'}
+      group: {type: enum, allowed: [brake_pads, brake_discs, brake_hoses, shock_absorbers, radiators], purpose: 'Предзаполнить категорию.'}
+      mode: {type: enum, allowed: [single, excel], default: single}
+      seo_page: {type: string, purpose: 'ID опубликованной страницы для атрибуции; только allowlist, не произвольный URL.'}
+    unrecognized_parameters: 'Игнорировать, не отражать как HTML и не превращать в редирект.'
+    invalid_values: 'Не запускать поиск; очистить неверный group, сохранить безопасный номер либо показать ошибку валидации.'
+  state_machine:
+    - {from: public_page, event: cta, to: workspace_prefilled, effects: [validate_intent, fill_oe_and_group], consumes_quota: false}
+    - {from: workspace_prefilled, event: find_without_access, to: access_menu, effects: [preserve_intent], consumes_quota: false}
+    - {from: access_menu, event: trial_post, to: workspace_prefilled_with_access, effects: [activate_trial, preserve_intent_on_redirect], consumes_quota: false}
+    - {from: access_menu, event: successful_login, to: workspace_prefilled_with_access, effects: [replace_auth_session, preserve_validated_intent_on_redirect], consumes_quota: false}
+    - {from: access_menu, event: failed_login, to: login_form_with_error, effects: [keep_oe_and_group, never_echo_password], consumes_quota: false}
+    - {from: workspace_prefilled_with_access, event: explicit_find, to: search_running, effects: [existing_quota_reservation, existing_lookup, reveal_results_history], consumes_quota: true}
+    - {from: workspace_prefilled, event: excel_mode, to: upload_focused, effects: [focus_upload_block], consumes_quota: false}
+  intent_transport:
+    strategy: 'Сервер валидирует oe/group/mode/seo_page из GET, передаёт escaped поля в шаблон. Native login/trial формы несут те же разрешённые hidden inputs.'
+    successful_auth: 'Повторно проверить hidden inputs на сервере; сохранить локально до session.clear; собрать redirect только на / через urlencode.'
+    failed_auth: 'Вернуть index.html с login_open и тем же безопасным intent.'
+    user_edits: 'JS синхронизирует hidden inputs с текущими значениями формы при открытии меню и перед submit, чтобы изменение номера не терялось.'
+    async_group_loading: 'Сохранить group до пересоздания options и восстановить после loadGroups; retry не должен затереть выбор пользователя.'
+    redirect_policy: 'Не принимать внешний next/return_url; не доверять произвольному referrer.'
+    excel: 'Не обещать сохранить File через перезагрузку/login. Предложить выбрать файл после входа; mode сохраняется.'
+    repeated_navigation: 'Back/reload/prefill никогда не повторяют API-запрос поиска.'
+  ui_constraints:
+    - 'Сохранить основную страницу и её начальное состояние: поиск + каталоги.'
+    - 'Переход со страницы категории не добавляет второй механизм поиска или второй выпадающий список.'
+    - 'Сохранить нативные name=username/password, autocomplete=username/current-password.'
+    - 'Поле категории сейчас скрыто; при prefill показать компактную подпись выбранной группы и действие Все группы, чтобы ограничение было понятно.'
+    - 'На смартфоне пункт Категории не ломает хедер и не возвращает горизонтальную прокрутку.'
+
+technical_seo:
+  rendering: 'FastAPI APIRouter + Jinja2; контент, таблицы и обычные <a href> доступны без JS.'
+  canonical_origin: 'Фиксированный CP_PUBLIC_ORIGIN=https://mrb-crossparts.ru, не Host из непроверенного запроса.'
+  canonical_rules:
+    - 'Ровно один абсолютный self-canonical для опубликованной чистой SEO-страницы.'
+    - 'UTM и другие tracking-параметры SEO-страниц не меняют контент/canonical.'
+    - 'У workspace с oe/group/mode canonical на / и noindex,follow для параметризованного рабочего состояния.'
+    - 'Дубли написания известных номеров и конечный / перенаправлять одним 301 на утверждённый URL.'
+    - 'Не canonical-ить все содержательные карточки на главную или категорию.'
+  metadata:
+    required: [title, description, h1, canonical, robots, lang]
+    optional: [og_title, og_description, og_url, og_image]
+    rule: 'Уникальное содержательное описание; не превращать длину title/description в жёсткий SEO-гарант.'
+  indexing_matrix:
+    published_hub_and_category: {status: 200, robots: 'index,follow', sitemap: true}
+    published_fresh_number: {status: 200, robots: 'index,follow', sitemap: true}
+    stale_number: {status: 200, robots: 'noindex,follow', sitemap: false}
+    unknown_or_draft_public_url: {status: 404, robots: noindex, sitemap: false}
+    removed_number: {status: 410, robots: noindex, sitemap: false}
+    known_alias: {status: 301, robots: null, sitemap: false}
+    login_and_private_responses: {status: 'existing semantics', robots: 'noindex via meta or X-Robots-Tag', sitemap: false}
+    public_api_and_exports: {status: 'existing semantics', robots: 'noindex via X-Robots-Tag', sitemap: false}
+    legacy_marketing_pages: {status: 200, robots: 'audit individually; preserve working links', sitemap: 'include only reviewed useful canonical pages'}
+  robots:
+    public_content: 'Не запрещать /categories, /cross и необходимые CSS/JS/изображения.'
+    noindex_interaction: 'Не блокировать robots.txt страницы, для которых нужно, чтобы робот увидел noindex; robots не является защитой приватных данных.'
+    api_policy: 'Не ссылаться на API/выгрузки из sitemap; сохранить авторизацию. X-Robots-Tag noindex на ответах; запрет crawl оценить отдельно после аудита индексации.'
+    sitemap_directive: 'Sitemap: https://mrb-crossparts.ru/sitemap.xml'
+    staging: 'Защитить preview от публичного доступа; noindex как дополнительная мера.'
+  sitemap:
+    source: 'Та же функция определения публикации/свежести, что используется маршрутом, чтобы не расходиться.'
+    excluded: [drafts, stale_cards, redirects, unknown_urls, query_variants, login, api, job_exports]
+    lastmod: 'Только дата реального изменения содержимого/данных; не текущее время каждого GET.'
+    format: 'XML UTF-8, корректное escaping, абсолютные HTTPS URLs.'
+    caching: 'Ограниченный TTL не более 5 минут; публикация или отзыв версии инвалидирует кеш.'
+  structured_data:
+    types: [BreadcrumbList, CollectionPage, WebPage]
+    rules:
+      - 'JSON-LD отражает видимое содержание; безопасно сериализовать, защищать закрывающий script.'
+      - 'Не добавлять фиктивные Product offers, цены, рейтинги или отзывы.'
+      - 'Не добавлять FAQPage ради сниппетов; FAQ пользователь ранее убрал.'
+      - 'Разметка сама по себе не гарантирует расширенный сниппет.'
+  load_and_cache:
+    public_pages: 'Одинаковая содержательная выдача роботу и пользователю, без персональных данных в общем кеше.'
+    cache_control: 'Кешировать только независимые от сессии ответы, не смешивать персональный хедер с shared cache.'
+    catalogue_calls_per_get: 0
+    mobile_widths: [320, 390, 768, 1440, 1920]
+    suggested_lab_budgets: {html_ttfb_ms: 500, lcp_ms: 2500, cls: 0.1}
+    budget_note: 'Цели измерения в оговорённых условиях, не гарантия реальных полевых показателей.'
+
+analytics:
+  provider: yandex_metrica_optional_adapter
+  counters_initially_enabled: false
+  event_fields_allowlist: [page_id, page_type, category_key, entry_channel, action, mode, outcome]
+  prohibited_fields: [username, password, ip, file_name, file_contents, customer_sku, raw_search_number, api_key, job_id]
+  events:
+    - {name: seo_page_view, trigger: 'Первый просмотр опубликованной страницы в навигации.'}
+    - {name: seo_example_select, trigger: 'Клик по примеру, один раз на действие.'}
+    - {name: seo_workspace_click, trigger: 'Переход по форме/CTA к поиску.'}
+    - {name: trial_activated, trigger: 'Только успешный ответ активации trial, не просто клик.'}
+    - {name: login_success, trigger: 'Подтверждённая авторизация, без данных аккаунта.'}
+    - {name: search_submitted, trigger: 'Допущенный запрос поиска; не событие просмотра и не открытие меню доступа.'}
+    - {name: search_completed, trigger: 'Успешный API-ответ с outcome=found/empty/partial, ошибки отдельно.'}
+    - {name: excel_job_created, trigger: 'Сервер подтвердил создание задания.'}
+    - {name: support_click, trigger: 'Клик на утверждённый Telegram/почту/телефон.'}
+  attribution:
+    storage: 'Сессионный first-touch page_id и last-touch page_id на собственном домене; только опубликованные ID, без сырого номера.'
+    redirect_preservation: 'Сохранять атрибуцию через /login и /trial вместе с разрешённым intent.'
+    deduplication: 'Не отправлять успешный вход/trial повторно при reload; использовать одноразовое событие после redirect.'
+    url_sanitization: 'Не отправлять в аналитику query string рабочего интерфейса с oe или токены; передавать очищенный page URL. Вебвизор для форм входа/файлов/результатов отключить или исключить чувствительные поля.'
+    adblock_failure: 'Отсутствие счётчика, отказ согласия или блокировка скрипта не влияет на поиск, формы и страницы.'
+  search_visibility: [yandex_webmaster, google_search_console]
+  ai_referrals: 'Отдельно наблюдать реальные переходы при доступной атрибуции; не считать упоминания ChatGPT или весь direct доказанным каналом.'
+  external_dependency: IN03
+
+implementation_map:
+  proposed_new_files:
+    - {path: app/seo/__init__.py, role: package}
+    - {path: app/seo/models.py, role: 'Строгие Pydantic-модели manifest/snapshot/review.'}
+    - {path: app/seo/content.py, role: 'Чтение, валидация, allowlist публикации, свежесть, построение контекста.'}
+    - {path: app/seo/routes.py, role: 'SSR, aliases, sitemap/robots после аудита владельца маршрутов.'}
+    - {path: app/seo/intent.py, role: 'Общая серверная валидация prefill и безопасный redirect.'}
+    - {path: app/seo/content.json, role: 'Тексты/метаданные и статусы публикации, только проверенные данные.'}
+    - {path: app/seo/snapshots.json, role: 'Отобранные публичные снимки и доказательства.'}
+    - {path: app/templates/seo-base.html, role: 'Общая публичная оболочка, metadata, breadcrumbs.'}
+    - {path: app/templates/seo-categories.html, role: hub}
+    - {path: app/templates/seo-category.html, role: category}
+    - {path: app/templates/seo-number.html, role: number}
+    - {path: app/static/seo.css, role: 'Изолированные стили на основе Onest и текущего красного/серого.'}
+    - {path: app/static/seo.js, role: 'Примеры и optional analytics; важный контент не зависит от JS.'}
+    - {path: scripts/seo_candidates.py, role: 'Read-only выгрузка кандидатов с allowlist полей, без публичного endpoint.'}
+    - {path: scripts/validate_seo.py, role: 'Валидация связей, дат, схем, готовности к публикации; ненулевой exit при нарушении.'}
+    - {path: tests/test_seo_content.py, role: 'Модели, происхождение, свежесть и исключение приватных данных.'}
+    - {path: tests/test_seo_routes.py, role: 'SSR, canonical, redirects, robots, sitemap, no network/quota.'}
+    - {path: tests/test_seo_journey.py, role: 'Переход и сохранение контекста через login/trial, Chromium/WebKit.'}
+    - {path: docs/seo-operations.md, role: 'Добавление/обновление/отзыв страниц, индексация и откат.'}
+  modify_existing:
+    - {path: app/main.py, change: 'Подключить router, выделить /categories, прокинуть валидный intent в index/login/trial.'}
+    - {path: app/config.py, change: 'CP_SEO_ENABLED=false, CP_SEO_NUMBER_PAGES_ENABLED=false, CP_PUBLIC_ORIGIN и необязательный ID аналитики.'}
+    - {path: .env.example, change: 'Документировать новые отключённые по умолчанию настройки, без секретов.'}
+    - {path: app/templates/index.html, change: 'Компактная навигация, безопасный prefill, hidden inputs для native login/trial, метаданные.'}
+    - {path: app/static/app.js, change: 'Сохранение group при loadGroups, синхронизация intent, optional events; без автозапуска поиска.'}
+    - {path: app/static/main.css, change: 'Только адаптация навигации/подписи prefill, без редизайна рабочего экрана.'}
+    - {path: app/templates/marketing-base.html, change: 'При необходимости согласовать ссылки на существующий /categories.'}
+    - {path: tests/test_marketing.py, change: 'Обновить ожидания /categories и списка внутренних ссылок при новой реализации.'}
+    - {path: tests/test_frontend.py, change: 'Регрессии рабочего интерфейса и prefill.'}
+    - {path: tests/test_login.py, change: 'Сохранение intent при success/error и сохранение password-manager семантики.'}
+  conditional_only:
+    - {path: deploy/nginx-crossparts.conf, condition: 'Только если robots/sitemap/redirects перекрываются nginx; сначала сверить фактически загруженную конфигурацию.'}
+  leave_unchanged: [app/aggregator.py, app/quota.py, app/jobs.py, app/models.py, app/db.py, deploy/nginx-crossparts.conf.bak.20260910173055]
+
+execution:
+  task_status_enum: [pending, in_progress, completed, blocked_external, deferred]
+  resume_protocol:
+    - 'Прочитать план и актуальные AGENTS.md, git status/log; сравнить baseline, не перезаписать новые пользовательские изменения.'
+    - 'Проверить current_authorization и границы нового поручения. Этот YAML сам по себе не команда на деплой.'
+    - 'Выполнять первый pending task с completed dependencies. Часть без внешних входных данных можно завершить локально.'
+    - 'После задачи записать evidence с командами/результатами, actual_changes и commit при наличии; обновить status.'
+    - 'Не помечать live deployment и external setup completed по локальным тестам.'
+    - 'При внешней блокировке записать missing input, продолжить независимые задачи, не выдумывать данные.'
+    - 'После завершения реализации отдельным поручением сохранить согласованный scope и последовательность отката.'
+  tasks:
+    - id: T01
+      title: 'Уточнить актуальное состояние и изолировать разработку'
+      status: pending
+      depends_on: []
+      actions:
+        - 'Сверить маршруты, начальное состояние, guards, deploy unit и git status с repository_observations.'
+        - 'Работать в отдельном worktree/ветке, если основной каталог обслуживает production; исключить случайный hot reload шаблонов и CSS на домене.'
+        - 'Read-only проверить /, /categories, /robots.txt, /sitemap.xml, заголовки и текущую индексационную конфигурацию; не выполнять поиски.'
+      outputs: [baseline_audit, isolated_worktree]
+      acceptance: ['Ни один рабочий файл сайта не изменён на production во время подготовки.', 'Известен владелец robots/sitemap и актуальные незакоммиченные изменения.']
+      evidence: []
+      actual_changes: []
+    - id: T02
+      title: 'Кластеры запросов и реестр пилотных страниц'
+      status: pending
+      depends_on: [T01]
+      actions:
+        - 'Собрать спрос по пяти категориям, сервису пакетного поиска и кандидатам OE; зафиксировать источник, дату, регион, тип частотности.'
+        - 'Отделить намерение купить одну деталь от B2B-задачи проверить список; каждому кластеру назначить одну страницу.'
+        - 'Без IN01 отметить demand=unknown и подготовить только provisional mapping; технические задачи продолжать.'
+      outputs: [query_cluster_registry, provisional_page_registry]
+      acceptance: ['Нет выдуманных чисел спроса и двойного суммирования широких фраз.', 'Для каждого URL заданы цель, аудитория, primary intent, статус данных.']
+      evidence: []
+      actual_changes: []
+    - id: T03
+      title: 'Отбор и проверка публичных снимков'
+      status: pending
+      depends_on: [T01]
+      actions:
+        - 'Реализовать DP01–DP03 и минимальные модели данных.'
+        - 'Отбирать минимум один проверяемый кандидат на группу, затем до 5–10 карточек при достаточной базе.'
+        - 'Проверить identity/source/date/group; исключить косвенные круговые совпадения и клиентские поля.'
+        - 'Зафиксировать review; не включать неизвестные соответствия из текстовых примеров переписки.'
+      outputs: [reviewed_snapshots, excluded_candidates_with_reasons]
+      acceptance: ['Каждая строка имеет прямое доказательство и время.', 'Приватные таблицы не использованы.', 'Неоднозначные номера не опубликованы.']
+      evidence: []
+      actual_changes: []
+    - id: T04
+      title: 'Manifest, валидатор и жизненный цикл публикации'
+      status: pending
+      depends_on: [T01]
+      actions:
+        - 'Создать строгие content models, loader, статусы, freshness policy и allowlist lookup.'
+        - 'Создать validate_seo.py; проверять уникальность URL/ID, существование ссылок/групп/источников и evidence.'
+        - 'Добавить отключённые feature flags; schemas/test fixtures могут создаваться до получения IN02.'
+      outputs: [validated_manifest_loader, validation_cli]
+      acceptance: ['Невалидная публикация останавливается до деплоя.', 'Чтение страницы не записывает БД и не вызывает сеть.', 'SEO flags по умолчанию выключены.']
+      evidence: []
+      actual_changes: []
+    - id: T05
+      title: 'Публичный хаб и пять содержательных категорий'
+      status: pending
+      depends_on: [T02, T04]
+      actions:
+        - 'Реализовать hub/category контракты с настоящими group assets и покрытием registry.resolve.'
+        - 'Передать /categories новому handler при включении флага; при выключенном флаге сохранить прежнюю страницу.'
+        - 'Сделать native GET-формы в поиск, ссылки между страницами и отличающееся содержание групп.'
+      outputs: [hub_and_category_routes, public_templates, isolated_styles]
+      acceptance: ['Один маршрут /categories.', 'Без JS доступны текст, каталоги, ссылки и форма.', 'Без данных примера нет выдуманной таблицы.', 'Нет FAQ и нового лендинга на /.']
+      evidence: []
+      actual_changes: []
+    - id: T06
+      title: 'Карточки номеров и нормализация URL'
+      status: pending
+      depends_on: [T03, T04, T05]
+      actions:
+        - 'Реализовать allowlisted /cross/{slug}, aliases, таблицы снимков и правила свежести.'
+        - 'Добавить только reviewed ready карточки, без генерации из произвольного number_key.'
+        - 'Связать карточки с категориями, показывать происхождение/дату/ограничения.'
+      outputs: [number_routes, approved_number_pages]
+      acceptance: ['Unknown URL=404, alias=301, stale=noindex.', 'Таблица доступна без входа и JS.', 'Никакого вызова aggregator на GET.', 'Не менее пяти карточек только при наличии подходящих данных.']
+      evidence: []
+      actual_changes: []
+    - id: T07
+      title: 'Сохранение номера и категории до и после входа'
+      status: pending
+      depends_on: [T01, T04]
+      actions:
+        - 'Реализовать workspace_integration.input_contract и intent_transport.'
+        - 'Сохранить явный запуск поиска, trial/IP guards, native login и потерю пароля при ошибке без отражения.'
+        - 'Проверить loadGroups retry, изменение номера пользователем, две вкладки, reload/back и Excel mode.'
+      outputs: [prefill_support, auth_trial_roundtrip]
+      acceptance: ['После login success/failure и trial сохраняется последний введённый номер/group.', 'Не возникает внешних редиректов.', 'Посещение/авторизация не расходует запросы.', 'Пустые результаты/история остаются скрыты до запроса.']
+      evidence: []
+      actual_changes: []
+    - id: T08
+      title: 'Индексация и компактная навигация'
+      status: pending
+      depends_on: [T05, T07]
+      actions:
+        - 'Добавить metadata/canonical и единый resolver публикации для sitemap и SSR.'
+        - 'Настроить robots и X-Robots-Tag по matrix; проверить существующие marketing pages отдельно.'
+        - 'Добавить Категории в хедер и подвал основного сайта; протестировать mobile.'
+        - 'Number pages автоматически попадают в sitemap только после T06 и выполнения правил публикации.'
+      outputs: [seo_metadata, sitemap, robots_policy, navigation]
+      acceptance: ['Sitemap не содержит скрытые/неизвестные/параметризованные URL.', 'Никаких недоступных ссылок.', 'Правила robots не мешают чтению noindex.', 'Основной / сохранён.']
+      evidence: []
+      actual_changes: []
+    - id: T09
+      title: 'События и измерение переходов'
+      status: pending
+      depends_on: [T07, T08]
+      actions:
+        - 'Реализовать optional adapter и events allowlist; протестировать с mock provider.'
+        - 'При наличии IN03 подключить счётчик и подтвердить домен; токены не коммитить.'
+        - 'Проверить sanitization URL, отсутствие персональных данных и влияние блокировщика.'
+      outputs: [event_adapter, attribution_contract, external_setup_report]
+      acceptance: ['Двойного подсчёта на reload нет.', 'Исходные артикулы/логины/файлы не отправляются в аналитику.', 'Без ID счётчика сайт работает.', 'Недоступная внешняя настройка явно отмечена.']
+      evidence: []
+      actual_changes: []
+    - id: T10
+      title: 'Контентный review пилота'
+      status: pending
+      depends_on: [T03, T05, T06, T08]
+      actions:
+        - 'Прочитать каждую страницу как посетитель из её кластера; проверить ответ на запрос.'
+        - 'Сверить реальные номера, категории, источники и даты; исключить массовый общий текст и необоснованные обещания.'
+        - 'Проставить ready только страницам, прошедшим проверку; сохранить причины исключения.'
+      outputs: [page_review_report, ready_manifest]
+      acceptance: ['Все опубликованные соответствия подтверждены.', 'Страницы полезны без запуска поиска.', 'Для категорий доступны реальные отличия и рабочий переход в сервис.']
+      evidence: []
+      actual_changes: []
+    - id: T11
+      title: 'Регрессионные и визуальные проверки'
+      status: pending
+      depends_on: [T06, T07, T08, T09, T10]
+      actions:
+        - 'Выполнить test_matrix с mock-каталогами и временной БД.'
+        - 'Снять локальные скриншоты хаба, категории, номера и auth flow в Chromium/WebKit; проверить JS disabled.'
+        - 'Прогнать существующие tests/test_frontend.py, test_login.py, test_marketing.py и полный офлайн-набор.'
+        - 'Проверить diff, что нет рабочего DB dump, учётных данных, лишних снимков и посторонних изменений.'
+      outputs: [test_report, local_preview, release_diff]
+      acceptance: ['Пройдены все применимые проверки.', 'Нельзя списать quota через GET/SEO.', 'Нет критических ошибок JS, переполнения или поломки экспорта.']
+      evidence: []
+      actual_changes: []
+    - id: T12
+      title: 'Контролируемый выпуск пилота'
+      status: pending
+      depends_on: [T11]
+      actions:
+        - 'Проверить release_gates и scope текущего поручения пользователя.'
+        - 'Закоммитить только относящиеся к реализации файлы, сохранить previous release и backup изменяемых конфигов.'
+        - 'Применить release_sequence; флаги включать лишь для готовых страниц.'
+        - 'Провести live smoke без расходования клиентских поисков; обновить release evidence.'
+      outputs: [release_commit, deployed_revision, smoke_report]
+      acceptance: ['Root/login/trial/lookup guards работают.', 'Публичный HTML и sitemap согласованы.', 'Откат проверен/описан; данные аккаунтов не изменены.']
+      evidence: []
+      actual_changes: []
+    - id: T13
+      title: 'Запуск наблюдения за индексацией'
+      status: pending
+      depends_on: [T12]
+      actions:
+        - 'С IN03 отправить sitemap и проверить выбранные URL в панелях поисковиков.'
+        - 'Зафиксировать baseline для показов/кликов/переходов в рабочий поиск и контактов.'
+        - 'При отсутствии доступа оставить blocked_external, не объявлять страницы проиндексированными.'
+      outputs: [indexing_submission_report, measurement_baseline]
+      acceptance: ['Есть проверяемые подтверждения внешних действий или явный перечень отсутствующих входов.']
+      evidence: []
+      actual_changes: []
+    - id: T14
+      title: 'Решение о масштабировании'
+      status: pending
+      depends_on: [T13]
+      actions:
+        - 'На 2/4/8 неделе выполнить observation_protocol и проверить свежесть снимков.'
+        - 'Сопоставить кластер, индексацию, CTR, использование trial/Excel и качество лидов.'
+        - 'Рекомендовать расширение, улучшение страниц или продолжение наблюдения по фактическим данным.'
+      outputs: [pilot_results, next_scope_recommendation]
+      acceptance: ['Массовое создание страниц не запущено автоматически.', 'Ограничения выборки и атрибуции указаны.']
+      evidence: []
+      actual_changes: []
+
+test_matrix:
+  - {id: QA01, layer: content, scenario: 'Unknown fields/private customer fields in snapshot', expected: 'Validator rejects; nothing published.'}
+  - {id: QA02, layer: content, scenario: 'Unconfirmed group/brand, circular evidence, absent source/date, duplicate identity', expected: 'Not eligible for number publication.'}
+  - {id: QA03, layer: content, scenario: 'Leading zeros, aliases, mixed-case and hyphens', expected: 'Number preserved; only reviewed aliases resolve; brand collisions excluded.'}
+  - {id: QA04, layer: content, scenario: 'Clock fixed at 6/8/31 days and failed refresh', expected: 'Fresh/aging/stale policies applied; fetched_at unchanged by failure.'}
+  - {id: QA05, layer: http, scenario: 'GET category/number with JS off, anonymous and signed-in', expected: 'Same public useful body, one H1, table, sources, working links, no private data.'}
+  - {id: QA06, layer: http, scenario: 'Monkeypatch aggregator and reserve_queries to fail if called during public GET', expected: 'SEO, robots, sitemap and aliases still succeed without calls.'}
+  - {id: QA07, layer: http, scenario: 'Unknown, draft, archived, stale and alias URL', expected: 'Status/canonical/indexability match matrix; no soft 404/redirect loops.'}
+  - {id: QA08, layer: http, scenario: 'Sitemap after publish/unpublish and clock advance', expected: 'Exactly eligible canonical URLs; correct lastmod; no query/login/export entries.'}
+  - {id: QA09, layer: security, scenario: 'XSS in fields and JSON-LD, hostile next/Host/source URL', expected: 'Escaped output, fixed origin, no external redirects or unsafe href.'}
+  - {id: QA10, layer: integration, scenario: 'Prefill → Find without trial', expected: 'Access menu opens, number/group preserved, no API search and no quota change.'}
+  - {id: QA11, layer: integration, scenario: 'Prefill → trial POST → reload → explicit Find', expected: 'Prefill survives; only explicit Find makes one request/one reservation.'}
+  - {id: QA12, layer: integration, scenario: 'Prefill → failed login → successful login', expected: 'Intent survives both, password never echoed; account auth and autocomplete unchanged.'}
+  - {id: QA13, layer: browser, scenario: 'Delayed/failed/retried loadGroups; edit OE/group before opening login', expected: 'Latest user values retained and correct group submitted.'}
+  - {id: QA14, layer: browser, scenario: 'Excel CTA before and after login, invalid upload, correct upload', expected: 'Focus upload, file picked explicitly, existing quota and validation apply.'}
+  - {id: QA15, layer: browser, scenario: 'Back, reload, two tabs, SEO example click', expected: 'No automatic search or duplicate quota charge.'}
+  - {id: QA16, layer: browser, scenario: '320/390/768/1440/1920 viewport; Chromium and WebKit; keyboard', expected: 'No page overflow, visible focus, readable table, usable header/forms and stable mobile background.'}
+  - {id: QA17, layer: analytics, scenario: 'Success/error events, reload, adblock, disabled provider', expected: 'Only permitted fields, no duplicate success events, workflow unaffected.'}
+  - {id: QA18, layer: regression, scenario: 'Existing authenticated/guest search, history, pagination and XLSX/CSV/JSON exports', expected: 'Existing tests pass, empty sections remain hidden before first search.'}
+  - {id: QA19, layer: release, scenario: 'SEO flags off and back on; old /categories route', expected: 'Old route preserved when off; no duplicate handlers; no broken root.'}
+  - {id: QA20, layer: release, scenario: 'Smoke public domain after deploy', expected: 'Correct HTML/links/headers, health OK, no browser errors; no real customer search used.'}
+
+release_gates:
+  - {id: G01, required: true, condition: 'Актуальное поручение на реализацию/выпуск и понятные границы scope; изменения уже подготовлены для просмотра.'}
+  - {id: G02, required: true, condition: 'Для каждой публикуемой страницы пройдены проверка данных и review, нет неподтверждённых фактов; неизвестный спрос явно отмечен.'}
+  - {id: G03, required: true, condition: 'QA01–QA20 пройдены по применимым этапам, необходимые внешние действия явно отделены от локальной проверки.'}
+  - {id: G04, required: true, condition: 'Есть предыдущий commit/config и точные шаги отката, БД клиентов не мигрирует.'}
+  - {id: G05, required_for_measurement: true, condition: 'IN03 доступен для измеримого SEO-эксперимента; иначе запуск сайта и запуск наблюдения имеют разный статус.'}
+release_sequence:
+  - 'Локальный preview с CP_SEO_ENABLED=true и тестовыми/одобренными данными, без изменения production.'
+  - 'Качественные категории можно выпустить раньше карточек, если T06 блокируется данными; оформить partial scope и выполнить применимые QA/Gates.'
+  - 'Зафиксировать production revision и только нужные переменные окружения без секретов в отчёте.'
+  - 'Деплой кода сначала с SEO flags off, smoke / и текущего /categories.'
+  - 'Включить CP_SEO_ENABLED для хаба/категорий, CP_SEO_NUMBER_PAGES_ENABLED только для reviewed pilot cards.'
+  - 'Перезапустить crossparts.service в рамках поручения на выпуск, проверить health, серверный HTML и браузер.'
+  - 'Выполнить T13 при доступах; обычный GET не проверяет фактическую индексацию поисковиком.'
+rollback:
+  immediate_trigger: 'Регрессия поиска/входа, публикация приватных/ошибочных данных, 5xx, повреждение навигации или неконтролируемые вызовы каталогов.'
+  steps:
+    - 'Для дефектных карточек отключить number flag либо отозвать конкретные страницы; удалить их из sitemap и внутренних ссылок.'
+    - 'Для общего дефекта отключить SEO flag, восстановить прежний /categories и навигацию; при проблеме интеграции откатить release commit.'
+    - 'Восстановить изменённые настройки из сохранённой версии, перезапустить только нужный сервис и повторить smoke.'
+    - 'Не откатывать рабочую БД и не сбрасывать квоты/историю аккаунтов.'
+    - 'Для уже индексированных ошибочных URL отдельно управлять удалением/noindex/410 согласно типу отзыва; не считать выключение флага мгновенным удалением из поиска.'
+
+observation_protocol:
+  proposed_checkpoints_days: [14, 28, 56]
+  timing_note: '6–8 недель — первое окно оценки пилота, а не обещанный срок SEO-эффекта.'
+  metrics:
+    - {id: M01, name: index_coverage, formula: 'indexed_canonical_pilot_urls / eligible_published_pilot_urls', source: search_consoles}
+    - {id: M02, name: organic_ctr, formula: 'organic_clicks / organic_impressions', source: search_consoles}
+    - {id: M03, name: workspace_transition, formula: 'sessions_with_seo_workspace_click / organic_landing_sessions', source: analytics}
+    - {id: M04, name: trial_conversion, formula: 'attributed_sessions_with_trial_activated / organic_landing_sessions', source: analytics}
+    - {id: M05, name: meaningful_usage, formula: 'attributed_sessions_with_search_completed_or_excel_job_created / organic_landing_sessions', source: analytics}
+    - {id: M06, name: contact_intent, formula: 'attributed_sessions_with_support_click / organic_landing_sessions', source: analytics}
+    - {id: M07, name: qualified_leads, formula: 'Ручная оценка подтверждённых B2B-обращений; клик по контакту не равен лиду или оплате.', source: sales_feedback}
+  segmentation: [page_type, category, search_engine, device, brand_vs_nonbrand_query]
+  zero_denominator: 'null/not_enough_data, не 0% и не вывод об эффективности.'
+  decisions:
+    expand: 'Есть индексируемые страницы, релевантные переходы и подтверждённое использование/качественные лиды. Предложить следующую небольшую партию; согласовать scope.'
+    improve_indexing: 'URL не попадают в индекс — проверить доступность, дубли, контент и спрос до генерации новых.'
+    improve_conversion: 'Переходы есть, запуска поиска нет — проверить намерение аудитории, CTA, авторизацию и качество ответа.'
+    insufficient_sample: 'Мало данных — продолжить наблюдение; не объявлять победу/провал по нескольким визитам.'
+    stop_expansion: 'Ошибки соответствий, массовое исключение малоценных страниц или ухудшение работы основного сервиса.'
+
+risks:
+  - {id: R01, risk: 'Ошибочный аналог на публичной карточке', mitigation: 'Прямые доказательства и review; исключение circular/ambiguous, дата и отзыв записи.'}
+  - {id: R02, risk: 'Дубли и малоценные страницы', mitigation: 'Один URL на intent/entity, allowlist, самостоятельный ответ, небольшой пилот.'}
+  - {id: R03, risk: 'Устаревшие или недоступные источники', mitigation: 'Снимки и дата; freshness policy, отсутствие live lookup на GET.'}
+  - {id: R04, risk: 'Расход квоты/потеря номера через авторизацию', mitigation: 'Явный запуск, валидированный intent, браузерные/серверные тесты.'}
+  - {id: R05, risk: 'Утечка данных клиентов из кэша/истории', mitigation: 'Allowlist сериализации, не читать jobs/accounts для публикации, ручной review артефакта.'}
+  - {id: R06, risk: 'Трафик частных покупателей вместо B2B-клиентов', mitigation: 'Раздельные метрики категории/артикула и квалификация лидов селзом.'}
+  - {id: R07, risk: 'Лишняя нагрузка от ботов', mitigation: 'Локальный SSR, bounded payload/cache, нет произвольной генерации URL/каталожных запросов.'}
+  - {id: R08, risk: 'Неполная внешняя аналитика', mitigation: 'Явный blocked_external по IN03, no-op adapter, не выдавать setup за завершённый.'}
+
+references:
+  - id: REF01
+    url: 'https://developers.google.com/search/docs/fundamentals/using-gen-ai-content'
+    verified_at: '2026-09-22'
+    takeaway: 'AI допустим как инструмент; массовые страницы без дополнительной пользы могут нарушать правила. Проверять точность текста и метаданных.'
+  - id: REF02
+    url: 'https://yandex.ru/support/webmaster/en/site-indexing/low-demand'
+    verified_at: '2026-09-22'
+    takeaway: 'Пустые, дублирующиеся и не соответствующие спросу страницы могут исключаться; важное содержание должно быть видно роботу.'
+  - id: REF03
+    url: 'https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls'
+    verified_at: '2026-09-22'
+    takeaway: 'Согласовать канонические ссылки, редиректы и sitemap для вариантов одного документа.'
+reference_recheck_policy: 'Перед реализацией перепроверить официальные требования, если они изменились; ни один срок/метрика плана не является гарантией ранжирования.'
+
+verification_commands:
+  usage: 'Команды для будущей реализации. Запускать в изолированном worktree, не в рабочем процессе production.'
+  existing_offline_suite: 'env -u CP_LIVE python3 -m pytest tests -q'
+  future_manifest_validation: 'python3 scripts/validate_seo.py'
+  future_seo_suite: 'env -u CP_LIVE python3 -m pytest tests/test_seo_content.py tests/test_seo_routes.py tests/test_seo_journey.py -q'
+  existing_regressions: 'env -u CP_LIVE python3 -m pytest tests/test_frontend.py tests/test_login.py tests/test_marketing.py tests/test_guest_quota.py -q'
+  repository_check: 'git diff --check'
+  live_readonly_health: 'curl -fsS https://mrb-crossparts.ru/healthz'
+  outputs_policy: 'Скриншоты тестов сохранять во временный каталог; если существующие тесты пишут в output/, удалить только артефакты конкретного запуска, не чужие файлы.'
+
+completion:
+  implementation_done_when: 'T01–T12 выполнены для согласованного pilot scope; отдельные blocked_external/deferred явно отражены, не объявлены завершёнными.'
+  experiment_done_when: 'T13–T14 имеют фактические данные и решение по следующему scope; ожидание индексации не блокирует сдачу технической реализации.'
+  required_handoff: [release_commit, published_urls, test_report, missing_external_inputs, data_review_report, rollback_instructions, next_measurement_date]
+  final_report_style: 'Кратко: что опубликовано, что проверено, что ждёт данных/доступов; без обещаний трафика.'

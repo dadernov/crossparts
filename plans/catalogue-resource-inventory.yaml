@@ -1,0 +1,1621 @@
+schema_version: 1
+kind: catalogue_resource_inventory
+status: planning_only
+inspected_at: '2026-09-22'
+commit: ecf02f1007b3c97c8b3087a701eeb6c48573dba0
+input:
+  path: Ресурсы для парсинга.xlsx
+  sha256: 74a193961fe220717018fa6147d20e05622465e233d442345647ccf161ad8f91
+counts:
+  workbook_rows: 47
+  brands: 33
+  literal_urls: 36
+  logical_sources: 34
+  registered_adapters: 13
+  missing_adapters: 21
+  requested_source_group_pairs: 64
+  section_rows:
+    Тормозная система диски - колодки: 17
+    Амортизаторы: 14
+    Радиаторы охлаждения: 7
+    Тормозные шланги: 9
+interpretation:
+- URL в Excel — отправная точка исследования, не готовый API endpoint.
+- Статусы catalog.json и verified в коде исторические; живой доступ сейчас не проверялся.
+- Настройки перечислены по defaults исходного кода, не по конфигурации production.
+- Повтор бренда в разделе не требует отдельного парсера; нужен отдельный эталон для каждой группы.
+- SAKURA сопоставлена с brixo; историческая запись salura/SALURA — опечатка в метаданных, не второй каталог.
+resources:
+- id: xlsx-02
+  sheet: Сайты для парсинга
+  row: 2
+  brand_raw: 'SB NAGAMOCHI '
+  url_raw: https://sbparts.ru/catalog/
+  brand: SB NAGAMOCHI
+  url: https://sbparts.ru/catalog/
+  section: brakes
+  groups_requested: &id001
+  - brake_pads
+  - brake_discs
+  source_key: sbparts
+- id: xlsx-03
+  sheet: Сайты для парсинга
+  row: 3
+  brand_raw: NIBK
+  url_raw: https://www.jnbk-brakes.com/catalogue/cars
+  brand: NIBK
+  url: https://www.jnbk-brakes.com/catalogue/cars
+  section: brakes
+  groups_requested: *id001
+  source_key: jnbk
+- id: xlsx-04
+  sheet: Сайты для парсинга
+  row: 4
+  brand_raw: NIBK
+  url_raw: https://nibkbrakes.com/ru/catalog
+  brand: NIBK
+  url: https://nibkbrakes.com/ru/catalog
+  section: brakes
+  groups_requested: *id001
+  source_key: nibkru
+- id: xlsx-05
+  sheet: Сайты для парсинга
+  row: 5
+  brand_raw: Brembo
+  url_raw: https://www.bremboparts.com/europe/ru
+  brand: Brembo
+  url: https://www.bremboparts.com/europe/ru
+  section: brakes
+  groups_requested: *id001
+  source_key: brembo
+- id: xlsx-06
+  sheet: Сайты для парсинга
+  row: 6
+  brand_raw: Mintex
+  url_raw: https://www.mintex.brakebook.com/
+  brand: Mintex
+  url: https://www.mintex.brakebook.com/
+  section: brakes
+  groups_requested: *id001
+  source_key: mintex
+- id: xlsx-07
+  sheet: Сайты для парсинга
+  row: 7
+  brand_raw: TRIALLI
+  url_raw: https://trialli.ru/catalogue/tormoznaya-sistema/
+  brand: TRIALLI
+  url: https://trialli.ru/catalogue/tormoznaya-sistema/
+  section: brakes
+  groups_requested: *id001
+  source_key: trialli
+- id: xlsx-08
+  sheet: Сайты для парсинга
+  row: 8
+  brand_raw: ATE
+  url_raw: https://www.ate-brakes.com/catalogues/online-catalogues/
+  brand: ATE
+  url: https://www.ate-brakes.com/catalogues/online-catalogues/
+  section: brakes
+  groups_requested: *id001
+  source_key: ate
+- id: xlsx-09
+  sheet: Сайты для парсинга
+  row: 9
+  brand_raw: ZIMMERMANN
+  url_raw: https://www.otto-zimmermann.de/ru/novosti/onlain-katalog/
+  brand: ZIMMERMANN
+  url: https://www.otto-zimmermann.de/ru/novosti/onlain-katalog/
+  section: brakes
+  groups_requested: *id001
+  source_key: zimmermann
+- id: xlsx-10
+  sheet: Сайты для парсинга
+  row: 10
+  brand_raw: BRANNOR
+  url_raw: https://brannor.ru/search-oem/?search=MXD1550AB
+  brand: BRANNOR
+  url: https://brannor.ru/search-oem/?search=MXD1550AB
+  section: brakes
+  groups_requested: *id001
+  source_key: brannor
+- id: xlsx-11
+  sheet: Сайты для парсинга
+  row: 11
+  brand_raw: FAP
+  url_raw: https://fapbrakes.ru/ru/catalogue
+  brand: FAP
+  url: https://fapbrakes.ru/ru/catalogue
+  section: brakes
+  groups_requested: *id001
+  source_key: fap
+- id: xlsx-12
+  sheet: Сайты для парсинга
+  row: 12
+  brand_raw: MONAER
+  url_raw: https://monaer-russia.ru/catalog/tproduct/509164220562-perednie-tormoznie-diski-m61784
+  brand: MONAER
+  url: https://monaer-russia.ru/catalog/tproduct/509164220562-perednie-tormoznie-diski-m61784
+  section: brakes
+  groups_requested: *id001
+  source_key: monaer
+- id: xlsx-13
+  sheet: Сайты для парсинга
+  row: 13
+  brand_raw: Marshall
+  url_raw: https://cars.marshall.parts/shop/
+  brand: Marshall
+  url: https://cars.marshall.parts/shop/
+  section: brakes
+  groups_requested: *id001
+  source_key: marshall
+- id: xlsx-14
+  sheet: Сайты для парсинга
+  row: 14
+  brand_raw: TRW
+  url_raw: https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/
+  brand: TRW
+  url: https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/
+  section: brakes
+  groups_requested: *id001
+  source_key: trw
+- id: xlsx-15
+  sheet: Сайты для парсинга
+  row: 15
+  brand_raw: Metaco
+  url_raw: https://metaco.parts/category
+  brand: Metaco
+  url: https://metaco.parts/category
+  section: brakes
+  groups_requested: *id001
+  source_key: metaco
+- id: xlsx-16
+  sheet: Сайты для парсинга
+  row: 16
+  brand_raw: Masterkit
+  url_raw: https://masterkit.it/production
+  brand: Masterkit
+  url: https://masterkit.it/production
+  section: brakes
+  groups_requested: *id001
+  source_key: masterkit
+- id: xlsx-17
+  sheet: Сайты для парсинга
+  row: 17
+  brand_raw: LYNX Auto
+  url_raw: https://lynxauto.info/
+  brand: LYNX Auto
+  url: https://lynxauto.info/
+  section: brakes
+  groups_requested: *id001
+  source_key: lynxauto
+- id: xlsx-18
+  sheet: Сайты для парсинга
+  row: 18
+  brand_raw: GANZ
+  url_raw: https://ganz-parts.ru/
+  brand: GANZ
+  url: https://ganz-parts.ru/
+  section: brakes
+  groups_requested: *id001
+  source_key: ganz
+- id: xlsx-25
+  sheet: Сайты для парсинга
+  row: 25
+  brand_raw: KYB
+  url_raw: https://kyb.ru/
+  brand: KYB
+  url: https://kyb.ru/
+  section: shocks
+  groups_requested: &id002
+  - shock_absorbers
+  source_key: kyb
+- id: xlsx-26
+  sheet: Сайты для парсинга
+  row: 26
+  brand_raw: Bilstein
+  url_raw: https://www.bilstein.ru/
+  brand: Bilstein
+  url: https://www.bilstein.ru/
+  section: shocks
+  groups_requested: *id002
+  source_key: bilstein
+- id: xlsx-27
+  sheet: Сайты для парсинга
+  row: 27
+  brand_raw: TRIALLI
+  url_raw: https://trialli.ru/catalogue/amortizatory-i-opory/
+  brand: TRIALLI
+  url: https://trialli.ru/catalogue/amortizatory-i-opory/
+  section: shocks
+  groups_requested: *id002
+  source_key: trialli
+- id: xlsx-28
+  sheet: Сайты для парсинга
+  row: 28
+  brand_raw: SACHS
+  url_raw: https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/sachs/
+  brand: SACHS
+  url: https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/sachs/
+  section: shocks
+  groups_requested: *id002
+  source_key: sachs
+- id: xlsx-29
+  sheet: Сайты для парсинга
+  row: 29
+  brand_raw: BOGE
+  url_raw: http://boge.com.ru/catalog/
+  brand: BOGE
+  url: http://boge.com.ru/catalog/
+  section: shocks
+  groups_requested: *id002
+  source_key: boge
+- id: xlsx-30
+  sheet: Сайты для парсинга
+  row: 30
+  brand_raw: KONI
+  url_raw: https://koni.ru/
+  brand: KONI
+  url: https://koni.ru/
+  section: shocks
+  groups_requested: *id002
+  source_key: koni
+- id: xlsx-31
+  sheet: Сайты для парсинга
+  row: 31
+  brand_raw: HOLA
+  url_raw: https://www.hola-auto.ru/production/shock-absorbers/
+  brand: HOLA
+  url: https://www.hola-auto.ru/production/shock-absorbers/
+  section: shocks
+  groups_requested: *id002
+  source_key: hola
+- id: xlsx-32
+  sheet: Сайты для парсинга
+  row: 32
+  brand_raw: TRW
+  url_raw: https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/
+  brand: TRW
+  url: https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/
+  section: shocks
+  groups_requested: *id002
+  source_key: trw
+- id: xlsx-33
+  sheet: Сайты для парсинга
+  row: 33
+  brand_raw: Monroe
+  url_raw: https://www.monroe.com/ru-ru/find-my-part.html
+  brand: Monroe
+  url: https://www.monroe.com/ru-ru/find-my-part.html
+  section: shocks
+  groups_requested: *id002
+  source_key: monroe
+- id: xlsx-34
+  sheet: Сайты для парсинга
+  row: 34
+  brand_raw: Metaco
+  url_raw: https://metaco.parts/category
+  brand: Metaco
+  url: https://metaco.parts/category
+  section: shocks
+  groups_requested: *id002
+  source_key: metaco
+- id: xlsx-35
+  sheet: Сайты для парсинга
+  row: 35
+  brand_raw: LYNX Auto
+  url_raw: https://lynxauto.info/
+  brand: LYNX Auto
+  url: https://lynxauto.info/
+  section: shocks
+  groups_requested: *id002
+  source_key: lynxauto
+- id: xlsx-36
+  sheet: Сайты для парсинга
+  row: 36
+  brand_raw: Febest
+  url_raw: https://catalog.febest.club/
+  brand: Febest
+  url: https://catalog.febest.club/
+  section: shocks
+  groups_requested: *id002
+  source_key: febest
+- id: xlsx-37
+  sheet: Сайты для парсинга
+  row: 37
+  brand_raw: TORR
+  url_raw: https://controltorr.de/ru/catalog
+  brand: TORR
+  url: https://controltorr.de/ru/catalog
+  section: shocks
+  groups_requested: *id002
+  source_key: torr
+- id: xlsx-38
+  sheet: Сайты для парсинга
+  row: 38
+  brand_raw: GANZ
+  url_raw: https://ganz-parts.ru/
+  brand: GANZ
+  url: https://ganz-parts.ru/
+  section: shocks
+  groups_requested: *id002
+  source_key: ganz
+- id: xlsx-45
+  sheet: Сайты для парсинга
+  row: 45
+  brand_raw: Nissens
+  url_raw: https://catalogue.nissens.com/Product
+  brand: Nissens
+  url: https://catalogue.nissens.com/Product
+  section: cooling
+  groups_requested: &id003
+  - radiators
+  source_key: nissens
+- id: xlsx-46
+  sheet: Сайты для парсинга
+  row: 46
+  brand_raw: LUZAR
+  url_raw: https://luzar.ru/catalogue
+  brand: LUZAR
+  url: https://luzar.ru/catalogue
+  section: cooling
+  groups_requested: *id003
+  source_key: luzar
+- id: xlsx-47
+  sheet: Сайты для парсинга
+  row: 47
+  brand_raw: SAKURA
+  url_raw: https://brixogroup.com/catalog
+  brand: SAKURA
+  url: https://brixogroup.com/catalog
+  section: cooling
+  groups_requested: *id003
+  source_key: brixo
+- id: xlsx-48
+  sheet: Сайты для парсинга
+  row: 48
+  brand_raw: NRF
+  url_raw: https://webshop.nrf.eu/
+  brand: NRF
+  url: https://webshop.nrf.eu/
+  section: cooling
+  groups_requested: *id003
+  source_key: nrf
+- id: xlsx-49
+  sheet: Сайты для парсинга
+  row: 49
+  brand_raw: AVA
+  url_raw: https://ava-cooling.com/ru/%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3.html
+  brand: AVA
+  url: https://ava-cooling.com/ru/%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3.html
+  section: cooling
+  groups_requested: *id003
+  source_key: ava
+- id: xlsx-50
+  sheet: Сайты для парсинга
+  row: 50
+  brand_raw: Metaco
+  url_raw: https://metaco.parts/category
+  brand: Metaco
+  url: https://metaco.parts/category
+  section: cooling
+  groups_requested: *id003
+  source_key: metaco
+- id: xlsx-51
+  sheet: Сайты для парсинга
+  row: 51
+  brand_raw: GANZ
+  url_raw: https://ganz-parts.ru/
+  brand: GANZ
+  url: https://ganz-parts.ru/
+  section: cooling
+  groups_requested: *id003
+  source_key: ganz
+- id: xlsx-56
+  sheet: Сайты для парсинга
+  row: 56
+  brand_raw: PATRON
+  url_raw: https://patron.ru/
+  brand: PATRON
+  url: https://patron.ru/
+  section: hoses
+  groups_requested: &id004
+  - brake_hoses
+  source_key: patron
+- id: xlsx-57
+  sheet: Сайты для парсинга
+  row: 57
+  brand_raw: TRIALLI
+  url_raw: https://trialli.ru/catalogue/tormoznaya-sistema/diskovaya-tormoznaya-sistema/supporty-i-komplektuyushchie/shlangi-tormoznye/
+  brand: TRIALLI
+  url: https://trialli.ru/catalogue/tormoznaya-sistema/diskovaya-tormoznaya-sistema/supporty-i-komplektuyushchie/shlangi-tormoznye/
+  section: hoses
+  groups_requested: *id004
+  source_key: trialli
+- id: xlsx-58
+  sheet: Сайты для парсинга
+  row: 58
+  brand_raw: HEL
+  url_raw: https://helrussia.ru/about_us/
+  brand: HEL
+  url: https://helrussia.ru/about_us/
+  section: hoses
+  groups_requested: *id004
+  source_key: hel
+- id: xlsx-59
+  sheet: Сайты для парсинга
+  row: 59
+  brand_raw: TRW
+  url_raw: https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/
+  brand: TRW
+  url: https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/
+  section: hoses
+  groups_requested: *id004
+  source_key: trw
+- id: xlsx-60
+  sheet: Сайты для парсинга
+  row: 60
+  brand_raw: STELLOX
+  url_raw: https://ru.stellox.com/catalog/
+  brand: STELLOX
+  url: https://ru.stellox.com/catalog/
+  section: hoses
+  groups_requested: *id004
+  source_key: stellox
+- id: xlsx-61
+  sheet: Сайты для парсинга
+  row: 61
+  brand_raw: Metaco
+  url_raw: https://metaco.parts/category
+  brand: Metaco
+  url: https://metaco.parts/category
+  section: hoses
+  groups_requested: *id004
+  source_key: metaco
+- id: xlsx-62
+  sheet: Сайты для парсинга
+  row: 62
+  brand_raw: ATE
+  url_raw: https://www.ate-brakes.com/catalogues/online-catalogues/
+  brand: ATE
+  url: https://www.ate-brakes.com/catalogues/online-catalogues/
+  section: hoses
+  groups_requested: *id004
+  source_key: ate
+- id: xlsx-63
+  sheet: Сайты для парсинга
+  row: 63
+  brand_raw: Brembo
+  url_raw: https://www.bremboparts.com/europe/ru
+  brand: Brembo
+  url: https://www.bremboparts.com/europe/ru
+  section: hoses
+  groups_requested: *id004
+  source_key: brembo
+- id: xlsx-64
+  sheet: Сайты для парсинга
+  row: 64
+  brand_raw: LYNX Auto
+  url_raw: https://lynxauto.info/
+  brand: LYNX Auto
+  url: https://lynxauto.info/
+  section: hoses
+  groups_requested: *id004
+  source_key: lynxauto
+sources:
+- id: sbparts
+  brands_in_workbook:
+  - SB NAGAMOCHI
+  workbook_rows:
+  - 2
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: true
+  adapter_path: app/sources/sbparts.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  - brake_hoses
+  enabled_by_code_default: true
+  metadata_key: sbparts
+  metadata_status_historical: implemented
+  metadata_note_historical: Кроме колодок и дисков находит и тормозные шланги (серии BH / T).
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_hoses
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: jnbk
+  brands_in_workbook:
+  - NIBK
+  workbook_rows:
+  - 3
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: true
+  adapter_path: app/sources/jnbk.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  enabled_by_code_default: false
+  metadata_key: jnbk
+  metadata_status_historical: blocked
+  metadata_note_historical: Закрыт для нашего IP (AWS WAF). Кроссы NiBK берём из каталога Brixo — источник brixo.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: nibkru
+  brands_in_workbook:
+  - NIBK
+  workbook_rows:
+  - 4
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: true
+  adapter_path: app/sources/nibkru.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  enabled_by_code_default: true
+  metadata_key: nibkru
+  metadata_status_historical: implemented
+  metadata_note_historical: Отдельный адаптер NiBK использует общую публичную базу NiBK/Brixo без дублирования запросов.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: brembo
+  brands_in_workbook:
+  - Brembo
+  workbook_rows:
+  - 5
+  - 63
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  - brake_hoses
+  registered_in_code: true
+  adapter_path: app/sources/brembo.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  - brake_hoses
+  enabled_by_code_default: true
+  metadata_key: brembo
+  metadata_status_historical: implemented
+  metadata_note_historical: Кроме колодок и дисков находит и тормозные шланги (серии BH / T).
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_hoses
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: mintex
+  brands_in_workbook:
+  - Mintex
+  workbook_rows:
+  - 6
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: true
+  adapter_path: app/sources/mintex.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  enabled_by_code_default: false
+  metadata_key: mintex
+  metadata_status_historical: blocked
+  metadata_note_historical: Cloudflare managed challenge
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: trialli
+  brands_in_workbook:
+  - TRIALLI
+  workbook_rows:
+  - 7
+  - 27
+  - 57
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  - brake_hoses
+  registered_in_code: true
+  adapter_path: app/sources/trialli.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  - brake_hoses
+  - shock_absorbers
+  enabled_by_code_default: true
+  metadata_key: trialli
+  metadata_status_historical: implemented
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_hoses
+  - brake_pads
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: ate
+  brands_in_workbook:
+  - ATE
+  workbook_rows:
+  - 8
+  - 62
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  - brake_hoses
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: ate
+  metadata_status_historical: planned
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - brake_hoses
+  regression_groups:
+  - brake_discs
+  - brake_hoses
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: zimmermann
+  brands_in_workbook:
+  - ZIMMERMANN
+  workbook_rows:
+  - 9
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: zimmermann
+  metadata_status_historical: planned
+  metadata_note_historical: 'Поиск по сайту игнорирует номер: выдача одинаковая на любой запрос.'
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: brannor
+  brands_in_workbook:
+  - BRANNOR
+  workbook_rows:
+  - 10
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: true
+  adapter_path: app/sources/brannor.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  enabled_by_code_default: true
+  metadata_key: brannor
+  metadata_status_historical: implemented
+  metadata_note_historical: Поиск по ОЕ, на карточке вкладка «Оригинальные номера».
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: fap
+  brands_in_workbook:
+  - FAP
+  workbook_rows:
+  - 11
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: fap
+  metadata_status_historical: planned
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: monaer
+  brands_in_workbook:
+  - MONAER
+  workbook_rows:
+  - 12
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: monaer
+  metadata_status_historical: planned
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: marshall
+  brands_in_workbook:
+  - Marshall
+  workbook_rows:
+  - 13
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: null
+  metadata_status_historical: null
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - brake_pads
+  - brake_discs
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: trw
+  brands_in_workbook:
+  - TRW
+  workbook_rows:
+  - 14
+  - 32
+  - 59
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  - brake_hoses
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: trw
+  metadata_status_historical: planned
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  regression_groups:
+  - brake_discs
+  - brake_hoses
+  - brake_pads
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: metaco
+  brands_in_workbook:
+  - Metaco
+  workbook_rows:
+  - 15
+  - 34
+  - 50
+  - 61
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  - radiators
+  - brake_hoses
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: null
+  metadata_status_historical: null
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  - radiators
+  - brake_hoses
+  regression_groups:
+  - brake_discs
+  - brake_hoses
+  - brake_pads
+  - radiators
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: masterkit
+  brands_in_workbook:
+  - Masterkit
+  workbook_rows:
+  - 16
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: null
+  metadata_status_historical: null
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - brake_pads
+  - brake_discs
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: lynxauto
+  brands_in_workbook:
+  - LYNX Auto
+  workbook_rows:
+  - 17
+  - 35
+  - 64
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  - brake_hoses
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: null
+  metadata_status_historical: null
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  - brake_hoses
+  regression_groups:
+  - brake_discs
+  - brake_hoses
+  - brake_pads
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: ganz
+  brands_in_workbook:
+  - GANZ
+  workbook_rows:
+  - 18
+  - 38
+  - 51
+  requested_groups:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  - radiators
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: null
+  metadata_status_historical: null
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - brake_pads
+  - brake_discs
+  - shock_absorbers
+  - radiators
+  regression_groups:
+  - brake_discs
+  - brake_pads
+  - radiators
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: kyb
+  brands_in_workbook:
+  - KYB
+  workbook_rows:
+  - 25
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: true
+  adapter_path: app/sources/kyb.py
+  code_groups:
+  - shock_absorbers
+  enabled_by_code_default: true
+  metadata_key: kyb
+  metadata_status_historical: implemented
+  metadata_note_historical: 'Сервис кроссировки KYB: по ОЕ-номеру отдаёт артикулы KYB.'
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: bilstein
+  brands_in_workbook:
+  - Bilstein
+  workbook_rows:
+  - 26
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: bilstein
+  metadata_status_historical: planned
+  metadata_note_historical: Витрина дилера на платформе ABCP (поиск по коду детали в магазине), каталога кроссов
+    производителя нет.
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: sachs
+  brands_in_workbook:
+  - SACHS
+  workbook_rows:
+  - 28
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: sachs
+  metadata_status_historical: planned
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: boge
+  brands_in_workbook:
+  - BOGE
+  workbook_rows:
+  - 29
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: boge
+  metadata_status_historical: planned
+  metadata_note_historical: Поиск магазина по ОЕ-номерам ничего не находит — индексируются только свои артикулы.
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: koni
+  brands_in_workbook:
+  - KONI
+  workbook_rows:
+  - 30
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: koni
+  metadata_status_historical: planned
+  metadata_note_historical: Поиск по сайту ОЕ-номера не индексирует — находит только артикулы KONI.
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: hola
+  brands_in_workbook:
+  - HOLA
+  workbook_rows:
+  - 31
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: true
+  adapter_path: app/sources/hola.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  - brake_hoses
+  - shock_absorbers
+  enabled_by_code_default: true
+  metadata_key: hola
+  metadata_status_historical: implemented
+  metadata_note_historical: 'В таблице заказчика указан в амортизаторах, но каталог у бренда шире: колодки, диски
+    и шланги тоже есть.'
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_discs
+  - brake_hoses
+  - brake_pads
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: monroe
+  brands_in_workbook:
+  - Monroe
+  workbook_rows:
+  - 33
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: null
+  metadata_status_historical: null
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - shock_absorbers
+  regression_groups:
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: febest
+  brands_in_workbook:
+  - Febest
+  workbook_rows:
+  - 36
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: null
+  metadata_status_historical: null
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - shock_absorbers
+  regression_groups:
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: torr
+  brands_in_workbook:
+  - TORR
+  workbook_rows:
+  - 37
+  requested_groups:
+  - shock_absorbers
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: null
+  metadata_status_historical: null
+  metadata_note_historical: null
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata:
+  - shock_absorbers
+  regression_groups:
+  - shock_absorbers
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: nissens
+  brands_in_workbook:
+  - Nissens
+  workbook_rows:
+  - 45
+  requested_groups:
+  - radiators
+  registered_in_code: true
+  adapter_path: app/sources/nissens.py
+  code_groups:
+  - radiators
+  enabled_by_code_default: true
+  metadata_key: nissens
+  metadata_status_historical: implemented
+  metadata_note_historical: Поиск по ОЕ, ОЕМ-номера с карточки товара.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - radiators
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: luzar
+  brands_in_workbook:
+  - LUZAR
+  workbook_rows:
+  - 46
+  requested_groups:
+  - radiators
+  registered_in_code: true
+  adapter_path: app/sources/luzar.py
+  code_groups:
+  - radiators
+  enabled_by_code_default: true
+  metadata_key: luzar
+  metadata_status_historical: implemented
+  metadata_note_historical: Радиаторы охлаждения, поиск по ОЕМ-номеру.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - radiators
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: brixo
+  brands_in_workbook:
+  - SAKURA
+  workbook_rows:
+  - 47
+  requested_groups:
+  - radiators
+  registered_in_code: true
+  adapter_path: app/sources/brixo.py
+  code_groups:
+  - radiators
+  enabled_by_code_default: true
+  metadata_key: salura
+  metadata_status_historical: implemented
+  metadata_note_historical: 'Общий каталог Brixo: радиаторы SAKURA и остальные бренды группы (источник brixo).'
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - radiators
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: nrf
+  brands_in_workbook:
+  - NRF
+  workbook_rows:
+  - 48
+  requested_groups:
+  - radiators
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: nrf
+  metadata_status_historical: blocked
+  metadata_note_historical: 'Витрина B2B: список найденных товаров скрыт от гостя, нужен аккаунт дилера.'
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - radiators
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: ava
+  brands_in_workbook:
+  - AVA
+  workbook_rows:
+  - 49
+  requested_groups:
+  - radiators
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: ava
+  metadata_status_historical: blocked
+  metadata_note_historical: Домен не открывается (404 от фронтенда).
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - radiators
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: patron
+  brands_in_workbook:
+  - PATRON
+  workbook_rows:
+  - 56
+  requested_groups:
+  - brake_hoses
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: patron
+  metadata_status_historical: blocked
+  metadata_note_historical: Сайт отвечает 503 (балансировщик не отдаёт бэкенд).
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_hoses
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: hel
+  brands_in_workbook:
+  - HEL
+  workbook_rows:
+  - 58
+  requested_groups:
+  - brake_hoses
+  registered_in_code: true
+  adapter_path: app/sources/hel.py
+  code_groups:
+  - brake_hoses
+  enabled_by_code_default: true
+  metadata_key: hel
+  metadata_status_historical: implemented
+  metadata_note_historical: Армированные шланги, узкий модельный ряд. Номера видны в выдаче поиска.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_hoses
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
+- id: stellox
+  brands_in_workbook:
+  - STELLOX
+  workbook_rows:
+  - 60
+  requested_groups:
+  - brake_hoses
+  registered_in_code: false
+  adapter_path: null
+  code_groups: []
+  enabled_by_code_default: false
+  metadata_key: stellox
+  metadata_status_historical: planned
+  metadata_note_historical: 'Каталог без поиска по ОЕ: номера видны только в карточке товара, обратного поиска сайт
+    не даёт.'
+  live_verified_at: null
+  readiness: discovery_required
+  next_action: discover_access_and_cross_reference_contract
+  groups_missing_in_metadata: []
+  regression_groups:
+  - brake_hoses
+  required_test_suites:
+  - adapter_contract
+  - golden_by_group
+  - transport_replay
+  - normalization
+  - failure_classification
+  - routing
+  - latency_and_request_budget
+  release_status: not_authorized
