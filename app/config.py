@@ -70,8 +70,11 @@ class Settings(BaseSettings):
     marshall_index_path: str = ""
     # Immutable index built from reviewed public MONAER product cards.
     monaer_index_path: str = ""
-    # Fail-closed JSON map for disabled candidate adapters, for example:
+    # JSON map for candidate adapters, for example:
     # {"metaco":{"groups":["brake_pads"],"tenants":["pilot"],"default":true}}
+    # A candidate enabled for a tenant also participates in searches without a
+    # selected group.  Set ``ungrouped: false`` only for a source that cannot
+    # safely answer an unclassified number.
     pilot_rules: str = ""
 
     @property
@@ -166,7 +169,7 @@ class Settings(BaseSettings):
                 "groups": groups,
                 "tenants": tenants,
                 "default": rule.get("default") is True,
-                "ungrouped": rule.get("ungrouped") is True,
+                "ungrouped": rule.get("ungrouped") is not False,
             }
         return out
 

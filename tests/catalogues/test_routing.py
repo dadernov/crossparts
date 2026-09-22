@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 from pathlib import Path
 
@@ -34,6 +35,7 @@ def test_explicit_candidate_key_cannot_bypass_tenant_or_group_rule():
             "groups": [BRAKE_PADS],
             "tenants": ["pilot-account"],
             "default": False,
+            "ungrouped": False,
         }
     })
     assert registry.resolve(["metaco"], BRAKE_PADS, tenant="other") == []
@@ -109,6 +111,22 @@ def test_wildcard_rule_enables_candidate_for_every_resolved_tenant():
             None, BRAKE_PADS, tenant=tenant
         )] == ["sbparts", "metaco"]
     assert "metaco" not in {source.key for source in registry.all(tenant=None)}
+
+
+def test_candidate_defaults_to_ungrouped_search_when_enabled():
+    registry = _registry({
+        "metaco": {
+            "groups": [BRAKE_PADS, BRAKE_DISCS],
+            "tenants": ["*"],
+            "default": True,
+        }
+    })
+    try:
+        source = registry.resolve(None, None, tenant="ordinary-user")[-1]
+        assert source.key == "metaco"
+        assert source.groups == (BRAKE_PADS, BRAKE_DISCS)
+    finally:
+        asyncio.run(registry.close())
 
 
 @pytest.mark.asyncio
