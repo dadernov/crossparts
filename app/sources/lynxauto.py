@@ -23,9 +23,9 @@ class LynxautoSource(BaseSource):
     key = "lynxauto"
     title = "LYNXauto"
     homepage = BASE + "/"
-    verified = False
+    verified = True
     groups = (BRAKE_PADS,)
-    note = "Candidate W1: OE-поиск и карточка LYNXauto; выключен до отдельного gate."
+    note = "Тормозные колодки. Официальный OE-поиск и карточки LYNXauto."
 
     async def lookup(self, oe: str) -> SourceResult:
         started = self.timer()

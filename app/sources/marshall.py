@@ -280,9 +280,9 @@ class MarshallSource(BaseSource):
     key = "marshall"
     title = "MARSHALL"
     homepage = HOMEPAGE
-    verified = False
+    verified = True
     groups = (BRAKE_PADS,)
-    note = "Candidate W1: локальный индекс из публичного XLSX MARSHALL; выключен до отдельного gate."
+    note = "Тормозные колодки. Локальный индекс из публичного XLSX-каталога MARSHALL."
 
     def __init__(self, settings, http_factory=None, pool=None, *, index=None):
         super().__init__(settings, http_factory, pool)
