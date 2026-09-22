@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="45.547" timestamp="2026-09-22T07:29:04.977675-04:00" hostname="CloudVPS118754.pez936"><testcase classname="tests.test_sources_live" name="test_hel_finds_hose_by_oe" time="45.215"><failure message="AssertionError: assert &lt;SourceStatus.ERROR: 'error'&gt; is &lt;SourceStatus.OK: 'ok'&gt;&#10; +  where &lt;SourceStatus.ERROR: 'error'&gt; = SourceResult(source='hel', status=&lt;SourceStatus.ERROR: 'error'&gt;, crosses=[], products=[], message='ReadTimeout', elapsed_ms=45211, url=None).status&#10; +  and   &lt;SourceStatus.OK: 'ok'&gt; = SourceStatus.OK">@pytest.mark.asyncio
+    async def test_hel_finds_hose_by_oe():
+        from app.sources.hel import HelSource
+        res = await HelSource(get_settings(), None).lookup("1K0611701")
+&gt;       assert res.status is SourceStatus.OK
+E       AssertionError: assert &lt;SourceStatus.ERROR: 'error'&gt; is &lt;SourceStatus.OK: 'ok'&gt;
+E        +  where &lt;SourceStatus.ERROR: 'error'&gt; = SourceResult(source='hel', status=&lt;SourceStatus.ERROR: 'error'&gt;, crosses=[], products=[], message='ReadTimeout', elapsed_ms=45211, url=None).status
+E        +  and   &lt;SourceStatus.OK: 'ok'&gt; = SourceStatus.OK
+
+tests/test_sources_live.py:108: AssertionError</failure></testcase></testsuite></testsuites>

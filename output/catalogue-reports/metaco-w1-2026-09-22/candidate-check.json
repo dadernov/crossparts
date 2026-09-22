@@ -1,0 +1,526 @@
+{
+  "index_sha256": "4f4b4fdd46a060c31d2b100ddc52c0edceddf6d867b06749dd2a05a643c05ab5",
+  "fixture_hashes": {
+    "brake_discs/oem.csv": "0a4418d00f1d1cf6f21c4b6da5c5cfef456c8cc70482b4d69aa085b23dc1823b",
+    "brake_discs/replacements.csv": "9cfa98589ed84d70ffb3c2f611283cc1bf1aad0124fbe706ca646bd8cb742e0c",
+    "brake_pads/oem.csv": "82d42d87d71de670419c38aa8b81f4148ab97eabe1941b4f6e59550f1d298753",
+    "brake_pads/replacements.csv": "ace80541ceb0cc7bb2760a69ef4c0b7f1ce896051a728b5a134010e8713a4f5b"
+  },
+  "passed_cases": 40,
+  "cases": [
+    {
+      "case": "metaco-brake_discs-positive-001",
+      "query": "1K0615301AA",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 17,
+      "unique_pairs": 17,
+      "products": [
+        "3050-016"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-002",
+      "query": "0000424994",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 11,
+      "unique_pairs": 11,
+      "products": [
+        "3050-085"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-003",
+      "query": "00004249A6",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 10,
+      "unique_pairs": 10,
+      "products": [
+        "3050-458"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-004",
+      "query": "0004211112",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 20,
+      "unique_pairs": 20,
+      "products": [
+        "3050-187"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-005",
+      "query": "0004211212",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 9,
+      "unique_pairs": 9,
+      "products": [
+        "3050-296"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-006",
+      "query": "0004212112",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 22,
+      "unique_pairs": 22,
+      "products": [
+        "3050-426"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-007",
+      "query": "0004212212",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 10,
+      "unique_pairs": 10,
+      "products": [
+        "3050-485"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-008",
+      "query": "005105513AA",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 10,
+      "unique_pairs": 10,
+      "products": [
+        "3050-028"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-009",
+      "query": "022689994",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 11,
+      "unique_pairs": 11,
+      "products": [
+        "3050-132"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-010",
+      "query": "03.088.34.02.0",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 33,
+      "unique_pairs": 33,
+      "products": [
+        "3080-001"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-011",
+      "query": "04509994AA",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 12,
+      "unique_pairs": 12,
+      "products": [
+        "3050-223"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-positive-012",
+      "query": "04695957",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 14,
+      "unique_pairs": 14,
+      "products": [
+        "3050-213"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-negative-001",
+      "query": "58101H5A25",
+      "group": "brake_discs",
+      "status": "not_found",
+      "evidence_rows": 0,
+      "unique_pairs": 0,
+      "products": [],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-negative-002",
+      "query": "8200735038",
+      "group": "brake_discs",
+      "status": "not_found",
+      "evidence_rows": 0,
+      "unique_pairs": 0,
+      "products": [],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-negative-003",
+      "query": "4851080378",
+      "group": "brake_discs",
+      "status": "not_found",
+      "evidence_rows": 0,
+      "unique_pairs": 0,
+      "products": [],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-negative-004",
+      "query": "ZZDISC0000001",
+      "group": "brake_discs",
+      "status": "not_found",
+      "evidence_rows": 0,
+      "unique_pairs": 0,
+      "products": [],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-ambiguous-001",
+      "query": "0004212312",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 6,
+      "unique_pairs": 4,
+      "products": [
+        "3050-483",
+        "3050-619"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-ambiguous-002",
+      "query": "0004212612",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 60,
+      "unique_pairs": 24,
+      "products": [
+        "3050-426",
+        "3050-591",
+        "3050-591PRM"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-ambiguous-003",
+      "query": "0004218700",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 18,
+      "unique_pairs": 12,
+      "products": [
+        "3050-485",
+        "3050-601",
+        "3050-601PRM"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_discs-ambiguous-004",
+      "query": "082589999",
+      "group": "brake_discs",
+      "status": "ok",
+      "evidence_rows": 28,
+      "unique_pairs": 14,
+      "products": [
+        "3050-015",
+        "3050-537",
+        "3050-537PRM"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-001",
+      "query": "0004200105",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 23,
+      "unique_pairs": 23,
+      "products": [
+        "3000-123"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-002",
+      "query": "0004200205",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 31,
+      "unique_pairs": 31,
+      "products": [
+        "3010-052"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-003",
+      "query": "0004200305",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 30,
+      "unique_pairs": 30,
+      "products": [
+        "3000-077"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-004",
+      "query": "0004200405",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 13,
+      "unique_pairs": 13,
+      "products": [
+        "3000-287"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-005",
+      "query": "0004200605",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 27,
+      "unique_pairs": 27,
+      "products": [
+        "3010-211"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-006",
+      "query": "0004201003",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 26,
+      "unique_pairs": 26,
+      "products": [
+        "3000-395"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-007",
+      "query": "0004201006",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 19,
+      "unique_pairs": 19,
+      "products": [
+        "3000-514"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-008",
+      "query": "0004201105",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 15,
+      "unique_pairs": 15,
+      "products": [
+        "3000-089"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-009",
+      "query": "0004201203",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 28,
+      "unique_pairs": 28,
+      "products": [
+        "3000-778"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-010",
+      "query": "0004201405",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 10,
+      "unique_pairs": 10,
+      "products": [
+        "3000-529"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-011",
+      "query": "0004201605",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 14,
+      "unique_pairs": 14,
+      "products": [
+        "3010-094"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-positive-012",
+      "query": "0004202106",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 18,
+      "unique_pairs": 18,
+      "products": [
+        "3010-389"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-negative-001",
+      "query": "1K0615301AA",
+      "group": "brake_pads",
+      "status": "not_found",
+      "evidence_rows": 0,
+      "unique_pairs": 0,
+      "products": [],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-negative-002",
+      "query": "8200735038",
+      "group": "brake_pads",
+      "status": "not_found",
+      "evidence_rows": 0,
+      "unique_pairs": 0,
+      "products": [],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-negative-003",
+      "query": "4851080378",
+      "group": "brake_pads",
+      "status": "not_found",
+      "evidence_rows": 0,
+      "unique_pairs": 0,
+      "products": [],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-negative-004",
+      "query": "ZZPAD0000001",
+      "group": "brake_pads",
+      "status": "not_found",
+      "evidence_rows": 0,
+      "unique_pairs": 0,
+      "products": [],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-ambiguous-001",
+      "query": "58101H5A25",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 1157,
+      "unique_pairs": 425,
+      "products": [
+        "3000-410",
+        "3000-555",
+        "3000-587",
+        "3000-745",
+        "3000-746",
+        "3000-1131",
+        "3000-1131PRM"
+      ],
+      "merged_kind_evidence_mismatches": 66
+    },
+    {
+      "case": "metaco-brake_pads-ambiguous-002",
+      "query": "0252430620/K1",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 50,
+      "unique_pairs": 32,
+      "products": [
+        "3000-077",
+        "3000-1055",
+        "3000-1055PRM"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-ambiguous-003",
+      "query": "0252431019/PD",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 38,
+      "unique_pairs": 26,
+      "products": [
+        "3000-123",
+        "3000-760",
+        "3000-1062",
+        "3000-1062PRM"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    },
+    {
+      "case": "metaco-brake_pads-ambiguous-004",
+      "query": "0252491815",
+      "group": "brake_pads",
+      "status": "ok",
+      "evidence_rows": 50,
+      "unique_pairs": 24,
+      "products": [
+        "3010-109",
+        "3010-1046",
+        "3010-1046PRM"
+      ],
+      "merged_kind_evidence_mismatches": 0
+    }
+  ],
+  "precision": 1.0,
+  "recall": 1.0,
+  "scope": "Exact raw adapter evidence in 40 declared golden cases; merged brand/number/product pairs exact. Merged kind conflicts are reported separately, not counted as a pass.",
+  "merged_kind_evidence_mismatches": 66,
+  "benchmark": [
+    {
+      "query": "58101H5A25",
+      "group": "brake_pads",
+      "samples": 200,
+      "p50_ms": 11.268610949628055,
+      "p95_ms": 47.81485698185861,
+      "p99_ms": 83.31099105998874,
+      "max_ms": 87.21938077360392,
+      "scope": "registry + group-scoped adapter + merge; local full index, no shared cache",
+      "unique_pairs": 425,
+      "external_requests": 0
+    },
+    {
+      "query": "1K0615301AA",
+      "group": "brake_discs",
+      "samples": 200,
+      "p50_ms": 0.5046488950029016,
+      "p95_ms": 0.7240721024572849,
+      "p99_ms": 1.8509749788790941,
+      "max_ms": 29.48814700357616,
+      "scope": "registry + group-scoped adapter + merge; local full index, no shared cache",
+      "unique_pairs": 17,
+      "external_requests": 0
+    }
+  ]
+}

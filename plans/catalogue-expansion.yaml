@@ -480,7 +480,7 @@ execution:
       actual_changes:
         - "Создан общий формат golden manifest; точный компактный fixture scope есть для 13 существующих адаптеров и pilot METACO."
         - "SB/Brembo/TRIALLI/Brixo ответы пересняты и очищены от cookies/token; для Brembo JSON parsing вынесен в чистые функции."
-        - "Требуемые 12 positive + 4 negative + 4 ambiguous на каждую source-group пару ещё не набраны, поэтому P03 остаётся in_progress."
+        - "METACO: по 12 positive + 4 negative + 4 ambiguous на каждую из двух W1 групп. Для остальных source-group пар объём ещё не набран; P03 остаётся in_progress."
     - id: P04
       title: "Развернуть тестовые матрицы и измерить baseline W0"
       depends_on: [P03]
@@ -499,6 +499,8 @@ execution:
       preliminary_evidence:
         - "Локальная защита одинаковых cache miss: 20 конкурентных вызовов объединяются в 1 обращение к source."
         - "Дедупликация SB убирает 4 повторные строки до aggregator merge."
+        - "Добавлен fail-closed gate по source/group/tenant; проверены явные keys, Excel jobs, одновременный поиск одинакового номера в разных группах."
+        - "METACO использует scope одной группы и не читает общий cache: нет смешивания групп/версий локального индекса."
       blocking_before_start: "P04 baseline и остальные safeguard cases ещё не завершены; изменения остаются только в candidate branch."
     - id: P06
       title: "W1: исследовать и подключать диски/колодки по одному источнику"
@@ -509,7 +511,7 @@ execution:
         - "METACO discovery: официальный OEM/cross-list CSV, проверено 2026-09-22."
         - "Выключенный adapter pilot на af34e69: 41,779 W1 связей, SQLite lookup без внешнего HTTP."
         - "Отчёт: output/catalogue-reports/metaco-w1-2026-09-22/."
-      blocking_before_start: "Сначала завершить P03–P05; pilot не зарегистрирован и не выпускается."
+      blocking_before_start: "Сначала завершить P03–P05; candidate доступен только по явному pilot rule, по умолчанию выключен. Потери kind evidence при merge неоднозначных номеров блокируют выпуск."
     - id: P07
       title: "W2: амортизаторы"
       depends_on: [P06]

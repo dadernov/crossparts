@@ -1,14 +1,17 @@
 {
-  "commit": "af34e69",
+  "commit": "4b19019",
   "inventory_hash": "b8a3246c9ca4a7181debe07b32d862e504fed2227a91bb6bd1637b634b70df68",
   "source": "metaco",
-  "groups": ["brake_pads", "brake_discs"],
+  "groups": [
+    "brake_pads",
+    "brake_discs"
+  ],
   "environment": "isolated catalogue-expansion worktree; temporary pytest SQLite; production untouched",
   "fixture_hashes": {
-    "brake_pads/oem.csv": "9fba62ee68b4b41292c4740b360bfeb21aeb8dbdff81a47c0eaeac2c1565e345",
-    "brake_pads/replacements.csv": "414a11bc1debd2a830b08ef0e0d4f144e1c5b73bcbbf490d7ae5fe8b045ca22b",
-    "brake_discs/oem.csv": "21bd1981863e40d9b72a89e7ff50547ee1adf6bf68be17ab06de348ac35085d2",
-    "brake_discs/replacements.csv": "cc8793aa9267fd606075b2ddaac27623cff1dd118df8afa870991b41280fd4c8"
+    "brake_discs/oem.csv": "0a4418d00f1d1cf6f21c4b6da5c5cfef456c8cc70482b4d69aa085b23dc1823b",
+    "brake_discs/replacements.csv": "9cfa98589ed84d70ffb3c2f611283cc1bf1aad0124fbe706ca646bd8cb742e0c",
+    "brake_pads/oem.csv": "82d42d87d71de670419c38aa8b81f4148ab97eabe1941b4f6e59550f1d298753",
+    "brake_pads/replacements.csv": "ace80541ceb0cc7bb2760a69ef4c0b7f1ce896051a728b5a134010e8713a4f5b"
   },
   "official_snapshots": {
     "oem": {
@@ -29,47 +32,61 @@
       "sha256": "4f4b4fdd46a060c31d2b100ddc52c0edceddf6d867b06749dd2a05a643c05ab5"
     }
   },
-  "test_counts": {"passed": 116, "skipped_live": 10, "failed": 0},
-  "skipped_reasons": ["Live checks of the existing adapters require explicit CP_LIVE=1."],
+  "test_counts": {
+    "offline_passed": 168,
+    "offline_skipped_live": 10,
+    "offline_failed": 0,
+    "live_passed": 9,
+    "live_failed": 1,
+    "hel_recheck_failed": 1
+  },
+  "skipped_reasons": [
+    "Live checks of the existing adapters require explicit CP_LIVE=1."
+  ],
   "precision": 1.0,
   "recall": 1.0,
-  "quality_scope": "Two reviewed positive fixture products and two confirmed fixture negatives only; insufficient for release.",
+  "quality_scope": "Exact raw adapter evidence in 40 declared golden cases; merged brand/number/product pairs exact. Merged kind conflicts are reported separately, not counted as a pass.",
   "forbidden_pairs": 0,
   "partial_cases": 0,
-  "latency_samples": 1000,
+  "latency_samples": 200,
   "p50": {
-    "large_pads_425_crosses_ms": 5.0244,
-    "disc_17_crosses_ms": 0.1838
+    "58101H5A25": 11.268610949628055,
+    "1K0615301AA": 0.5046488950029016
   },
   "p95": {
-    "large_pads_425_crosses_ms": 51.1069,
-    "disc_17_crosses_ms": 0.3619
+    "58101H5A25": 47.81485698185861,
+    "1K0615301AA": 0.7240721024572849
   },
   "p99_if_enough_samples": {
-    "large_pads_425_crosses_ms": 52.6318,
-    "disc_17_crosses_ms": 1.1154
+    "58101H5A25": 83.31099105998874,
+    "1K0615301AA": 1.8509749788790941
   },
   "external_request_count": 0,
-  "rss": {"measured_growth_kib": 22172, "scope": "1000 repeated local SQLite lookups in one process"},
-  "queue_wait": "not measured; adapter is not registered",
-  "regression_diff": "No existing source, registry default, API, database schema or production configuration changed.",
+  "rss": {
+    "current_candidate": "not measured",
+    "prior_raw_lookup_growth_kib": 22172
+  },
+  "queue_wait": "not isolated; benchmark includes source gate and merge, without competing jobs",
+  "regression_diff": "168 offline tests pass. Current sources: 9 live tests pass; HEL twice returns ReadTimeout at 45s. Existing defaults and production untouched; candidate adds opt-in routing and skips shared cache.",
   "gates": {
     "G0": "pass",
     "G1": "partial: METACO W1 contract established; other inventory rows unchanged",
-    "G2": "pass only for the declared tiny fixture scope; blocked for release sample size",
-    "G3": "offline suite pass",
-    "G4": "local lookup budget pass; staging comparison still required",
-    "G5": "blocked: no staging live sample",
-    "G6": "blocked: no staging/backup/rollback rehearsal",
-    "G7": "blocked: no production release requested",
-    "G8": "blocked: no pilot"
+    "G2": "40/40 raw evidence and merged brand/number/product checks pass; merged kind evidence conflicts block end-to-end quality gate",
+    "G3": "168 offline tests pass; broader plan-specific coverage incomplete",
+    "G4": "local routed lookup benchmark recorded; W0/staging queue and memory comparison still required",
+    "G5": "Existing catalogues 9/10 live pass, HEL timeout repeated. Candidate public snapshot checked locally; HTTP staging pilot pending",
+    "G6": "source/group/tenant isolation and Excel integration tested; staging backup/rollback rehearsal pending",
+    "G7": "not requested; production unchanged",
+    "G8": "not started"
   },
-  "rollback": "The adapter is absent from BUILTIN and enabled_sources. No runtime rollback is needed; dropping the candidate commit removes the pilot code.",
+  "rollback": "Clear CP_PILOT_RULES in isolated staging config and restart that staging instance; runtime rollback rehearsal and production release not performed.",
   "unresolved_issues": [
-    "Collect at least 12 independent positives, 4 negatives and 4 ambiguous/partial cases for each W1 group.",
-    "Measure the candidate beside the W0 baseline on staging.",
-    "Implement source+group+cohort gating before registry registration.",
-    "Define controlled snapshot refresh, signature/hash review and atomic artifact installation.",
-    "Run disabled staging checks and a rollback rehearsal before any production proposal."
-  ]
+    "Resolve contradictory OEM/aftermarket evidence before merged result export; exact mismatch count in candidate-check.json.",
+    "Finish P03 independent golden coverage for existing source/group pairs.",
+    "HEL live search ReadTimeout reproduced twice; do not report all live sources healthy.",
+    "Compare full candidate and W0 on isolated staging including queue fairness, deadline and memory.",
+    "Define controlled official snapshot refresh and artifact installation.",
+    "Complete staging backup/rollback rehearsal and G7 before production."
+  ],
+  "merged_kind_evidence_mismatches": 66
 }
