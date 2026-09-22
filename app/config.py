@@ -62,6 +62,8 @@ class Settings(BaseSettings):
     # Immutable index built from a reviewed public MARSHALL XLSX catalogue.
     # Empty means that the W1 candidate cannot answer customer requests.
     marshall_index_path: str = ""
+    # Immutable index built from reviewed public MONAER product cards.
+    monaer_index_path: str = ""
     # Fail-closed JSON map for disabled candidate adapters, for example:
     # {"metaco":{"groups":["brake_pads"],"tenants":["pilot"],"default":true}}
     pilot_rules: str = ""

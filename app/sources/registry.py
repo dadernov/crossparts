@@ -18,6 +18,7 @@ from .kyb import KybSource
 from .luzar import LuzarSource
 from .lynxauto import LynxautoSource
 from .masterkit import MasterkitSource
+from .monaer import MonaerSource
 from .mintex import MintexSource
 from .metaco import MetacoSource
 from .marshall import MarshallSource
@@ -36,7 +37,7 @@ BUILTIN = (SbPartsSource, BremboSource, TrialliSource, BrixoSource, NibkRuSource
            LuzarSource, NissensSource, KybSource, HolaSource, BrannorSource, HelSource,
            JnbkSource, MintexSource)
 CANDIDATES = (MetacoSource, MarshallSource, LynxautoSource, MasterkitSource, FapSource,
-              GanzSource, ZimmermannSource)
+              GanzSource, ZimmermannSource, MonaerSource)
 
 
 class SourceRegistry:
