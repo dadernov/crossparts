@@ -111,6 +111,47 @@ def test_wildcard_rule_enables_candidate_for_every_resolved_tenant():
     assert "metaco" not in {source.key for source in registry.all(tenant=None)}
 
 
+@pytest.mark.asyncio
+async def test_ungrouped_rollout_searches_only_configured_candidate_groups(tmp_path):
+    pads = Path(__file__).parents[1] / "fixtures/catalogues/metaco/brake_pads"
+    discs = Path(__file__).parents[1] / "fixtures/catalogues/metaco/brake_discs"
+    # The production index contains both groups; combine the reviewed fixture
+    # closures here to exercise the same ungrouped routing contract.
+    oem = tmp_path / "oem.csv"
+    replacements = tmp_path / "replacements.csv"
+    oem.write_bytes((pads / "oem.csv").read_bytes() + (discs / "oem.csv").read_bytes())
+    replacements.write_bytes(
+        (pads / "replacements.csv").read_bytes()
+        + (discs / "replacements.csv").read_bytes()
+    )
+    database = tmp_path / "metaco.sqlite3"
+    build_sqlite_index(oem, replacements, database)
+    settings = Settings(
+        _env_file=None,
+        enabled_sources="",
+        browser_fallback=False,
+        metaco_index_path=str(database),
+        pilot_rules=json.dumps({
+            "metaco": {
+                "groups": [BRAKE_PADS, BRAKE_DISCS],
+                "tenants": ["*"],
+                "default": True,
+                "ungrouped": True,
+            }
+        }),
+    )
+    registry = SourceRegistry(settings)
+    try:
+        result = await Aggregator(settings, registry, None).lookup(
+            "1K0615301AA", use_cache=False, tenant="ordinary-user"
+        )
+        assert result["status"] == "ok"
+        assert result["sources"][0]["source"] == "metaco"
+        assert result["sources"][0]["products"] == ["3050-016"]
+    finally:
+        await registry.close()
+
+
 def test_existing_sources_keep_their_current_routing():
     registry = _registry()
     assert [source.key for source in registry.resolve(None, BRAKE_PADS)] == ["sbparts"]

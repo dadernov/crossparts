@@ -10,12 +10,13 @@ inventory: plans/catalogue-resource-inventory.yaml
 explanation: PARSING.md
 
 authorization:
-  current: "Пользователь поручил выполнять расширение каталогов по этому плану; production-выпуск отдельно не поручен."
+  current: "Пользователь отдельно поручил добавить METACO на сайт; production rollout METACO W1 выполнен 2026-09-22. Остальные источники не разрешены к выпуску автоматически."
   implementation_authorized: true
-  production_changes_authorized: false
+  production_changes_authorized: true
+  production_authorization_scope: "Только METACO для brake_pads и brake_discs; последующие каталоги проходят отдельную проверку и выпуск."
   live_catalogue_checks_performed: true
   tests_executed_during_implementation: true
-  next_instruction: "Продолжать P03–P06 в отдельной ветке; выпуск только после готового отчёта и отдельного поручения по G7."
+  next_instruction: "Продолжать остальные source/group пары по волнам; использовать готовые fixtures/gates/index tooling, не переносить следующие источники на production без проверки."
 
 scope:
   input: Ресурсы для парсинга.xlsx
@@ -505,13 +506,15 @@ execution:
     - id: P06
       title: "W1: исследовать и подключать диски/колодки по одному источнику"
       depends_on: [P05]
-      status: planned
+      status: in_progress
       outputs: ["По каждому источнику discovery → fixtures → tests → staging → review report; production только через G7"]
       preliminary_evidence:
         - "METACO discovery: официальный OEM/cross-list CSV, проверено 2026-09-22."
         - "Выключенный adapter pilot на af34e69: 41,779 W1 связей, SQLite lookup без внешнего HTTP."
         - "Отчёт: output/catalogue-reports/metaco-w1-2026-09-22/."
-      blocking_before_start: "Сначала завершить P03–P05; candidate доступен только по явному pilot rule, по умолчанию выключен. Потери kind evidence при merge неоднозначных номеров блокируют выпуск."
+        - "METACO включён на production по прямому поручению пользователя: global tenant rule, только brake_pads/brake_discs; ungrouped включён для ручного поиска со скрытым выбором группы."
+        - "Runtime smoke: 0004200105 → 3000-123; 1K0615301AA → 3050-016; public sources endpoint показывает METACO default."
+      blocking_before_start: "Для следующих W1 источников завершить их собственные golden/live проверки. У METACO остаётся известное ограничение объединённой метки kind, сами пары не теряются."
     - id: P07
       title: "W2: амортизаторы"
       depends_on: [P06]

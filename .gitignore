@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 .env
 data/*.db
+data/catalogues/*.sqlite3
 out/
 .pytest_cache/
 deploy/duckdns.env

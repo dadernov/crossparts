@@ -127,6 +127,7 @@ class Settings(BaseSettings):
                 "groups": groups,
                 "tenants": tenants,
                 "default": rule.get("default") is True,
+                "ungrouped": rule.get("ungrouped") is True,
             }
         return out
 

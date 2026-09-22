@@ -118,7 +118,13 @@ class SourceRegistry:
         if source.key not in self._candidate_keys:
             return source
         scoped = copy(source)
-        scoped.groups = (group,) if group else ()
+        if group:
+            scoped.groups = (group,)
+        else:
+            rule = self._pilot_rules[source.key]
+            scoped.groups = tuple(
+                value for value in source.groups if value in rule["groups"]
+            ) if rule["ungrouped"] else ()
         return scoped
 
     def select_for_job(self, keys: list[str] | None, *, tenant: str) -> list[BaseSource]:
@@ -165,9 +171,10 @@ class SourceRegistry:
             rule
             and tenant
             and ("*" in rule["tenants"] or tenant in rule["tenants"])
-            and group
-            and group in rule["groups"]
-            and group in source.groups
+            and (
+                (group is None and rule["ungrouped"])
+                or (group in rule["groups"] and group in source.groups)
+            )
         )
 
     def describe(self, tenant: str | None = None) -> list[dict]:
