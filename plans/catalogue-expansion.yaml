@@ -2,7 +2,7 @@ schema_version: 1
 kind: implementation_plan
 id: catalogue-expansion
 title: "Поэтапное расширение каталогов с проверкой точности и производительности"
-status: planning_only
+status: in_progress
 prepared_at: '2026-09-22'
 baseline_commit: ecf02f1007b3c97c8b3087a701eeb6c48573dba0
 language: ru
@@ -10,12 +10,12 @@ inventory: plans/catalogue-resource-inventory.yaml
 explanation: PARSING.md
 
 authorization:
-  current: "Только исследование локального Excel и кода, подготовка плана и объяснения."
-  implementation_authorized: false
+  current: "Пользователь поручил выполнять расширение каталогов по этому плану; production-выпуск отдельно не поручен."
+  implementation_authorized: true
   production_changes_authorized: false
   live_catalogue_checks_performed: false
-  tests_executed_during_planning: false
-  next_instruction: "Реализовать подготовку изолированных тестов и указанную волну; выпуск отдельно по готовому отчёту."
+  tests_executed_during_implementation: true
+  next_instruction: "Продолжать P03–P06 в отдельной ветке; выпуск только после готового отчёта и отдельного поручения по G7."
 
 scope:
   input: Ресурсы для парсинга.xlsx
@@ -445,18 +445,34 @@ execution:
     - id: P01
       title: "Пересверить инвентарь и текущую архитектуру"
       depends_on: []
-      status: planned
+      status: complete
       outputs: ["Актуальные 47 строк, 34 источника, 64 пары; diff изменений после baseline"]
+      evidence:
+        - "python3 scripts/verify_catalogue_matrix.py: ok=true"
+        - "workbook sha256: 74a193961fe220717018fa6147d20e05622465e233d442345647ccf161ad8f91"
+        - "inventory sha256: 299da69051b18220ee5d3454d3a61f38d217d31d98de7f6aa024a7d82aef3e2e"
+      actual_changes:
+        - "Добавлен read-only verifier Excel → inventory → BUILTIN adapters."
+        - "Подтверждены 47 строк, 33 бренда, 34 источника, 13/21 адаптеров и 64 пары."
     - id: P02
       title: "Создать изолированный test harness и запрет сети"
       depends_on: [P01]
-      status: planned
+      status: complete
       outputs: ["tmp DB/settings, import guard, HTTP/Playwright mocks, markers, воспроизводимое test окружение"]
+      evidence:
+        - "CP_LIVE=0 python3 -m pytest -q -rs: 104 passed, 10 skipped"
+        - "tests/test_test_harness.py проверяет временную БД, блок внешнего DNS/socket и разрешённый loopback."
+      actual_changes:
+        - "tests/conftest.py до импорта приложения принудительно задаёт свежую временную SQLite и тестовые секреты."
+        - "Offline-тесты блокируют внешнюю сеть, оставляя loopback для ASGI, mock server и Playwright."
+        - "Live-маркер требует точного CP_LIVE=1; CP_LIVE=0 больше не открывает сеть."
     - id: P03
       title: "Описать контракт качества и собрать независимые golden для существующих источников"
       depends_on: [P02]
-      status: planned
+      status: in_progress
       outputs: ["Версионированные manifests, fixtures и классификация ошибок/partial"]
+      evidence: []
+      actual_changes: []
     - id: P04
       title: "Развернуть тестовые матрицы и измерить baseline W0"
       depends_on: [P03]

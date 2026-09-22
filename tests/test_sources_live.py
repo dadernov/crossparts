@@ -11,7 +11,13 @@ from app.sources.brembo import BremboSource
 from app.sources.base import SourceStatus
 from app.sources.sbparts import SbPartsSource
 
-pytestmark = pytest.mark.skipif(not os.getenv("CP_LIVE"), reason="нужен доступ в интернет: CP_LIVE=1")
+pytestmark = [
+    pytest.mark.live,
+    pytest.mark.skipif(
+        os.getenv("CP_LIVE") != "1",
+        reason="нужен явный доступ в интернет: CP_LIVE=1",
+    ),
+]
 
 OE = "58101H5A25"
 
