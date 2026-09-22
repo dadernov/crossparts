@@ -248,7 +248,9 @@ async def test_same_number_in_two_groups_uses_separate_cache_namespaces():
     ))
     assert pads['sources'][0]['products'] == ['PAD-123']
     assert discs['sources'][0]['products'] == ['DISC-456']
-    assert registry._sources['metaco'].groups == (BRAKE_PADS, BRAKE_DISCS, SHOCK_ABSORBERS)
+    assert registry._sources['metaco'].groups == (
+        BRAKE_PADS, BRAKE_DISCS, SHOCK_ABSORBERS, RADIATORS,
+    )
     await registry.close()
 
 

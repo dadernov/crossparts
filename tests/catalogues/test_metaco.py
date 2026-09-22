@@ -25,10 +25,15 @@ def _index(group: str) -> MetacoIndex:
     return MetacoIndex.from_files(root / "oem.csv", root / "replacements.csv")
 
 
-def test_classifies_brakes_and_suspension_shocks_without_neighbouring_parts():
+def test_classifies_brakes_shocks_and_main_radiators_without_neighbouring_parts():
     assert classify_group("Колодки тормозные передние к-кт") == BRAKE_PADS
     assert classify_group("Диск тормозной передний вентилируемый") == BRAKE_DISCS
-    assert classify_group("Радиатор основной") is None
+    assert classify_group("Радиатор основной") == RADIATORS
+    assert classify_group("Радиатор основной алюминиевый") == RADIATORS
+    assert classify_group("Радиатор кондиционера (конденсер)") is None
+    assert classify_group("Радиатор отопителя") is None
+    assert classify_group("Радиатор масляный") is None
+    assert classify_group("Вентилятор радиатора") is None
     assert classify_group("Диск сцепления") is None
     assert classify_group("Пыльник тормозного диска") is None
     assert classify_group("Регулировочный к-кт тормозных колодок") is None
@@ -96,6 +101,21 @@ def test_suspension_shock_rows_do_not_mix_with_brake_rows():
     assert {(row.brand, row.number, row.kind) for row in crosses} == {
         ("METACO", "4820-052", KIND_AFTERMARKET),
         ("HYUNDAI-KIA", "55310-1G210", KIND_OEM),
+    }
+
+
+def test_main_radiator_rows_do_not_mix_with_condensers_or_heaters():
+    main = MetacoRow("Metaco", "3100-001", "Renault", "8200735038",
+                     "Радиатор основной", RADIATORS, KIND_OEM)
+    condenser = MetacoRow("Metaco", "3200-001", "Renault", "8200735038",
+                          "Радиатор кондиционера (конденсер)", "other", KIND_OEM)
+    products, crosses = MetacoIndex([main, condenser]).lookup(
+        "8200735038", groups={RADIATORS}
+    )
+    assert products == ["3100-001"]
+    assert {(row.brand, row.number, row.kind) for row in crosses} == {
+        ("METACO", "3100-001", KIND_AFTERMARKET),
+        ("RENAULT", "8200735038", KIND_OEM),
     }
 
 

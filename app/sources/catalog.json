@@ -153,11 +153,12 @@
       "groups": [
         "brake_pads",
         "brake_discs",
-        "shock_absorbers"
+        "shock_absorbers",
+        "radiators"
       ],
       "url": "https://metaco.parts/content/downloads",
       "status": "implemented",
-      "note": "Локальный индекс из официальных OEM и cross-list CSV: колодки, диски и амортизаторы подвески."
+      "note": "Локальный индекс из официальных OEM и cross-list CSV: колодки, диски, амортизаторы подвески и основные радиаторы."
     },
     {
       "brand": "LYNXauto",

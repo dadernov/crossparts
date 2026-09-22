@@ -18,7 +18,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..groups import BRAKE_DISCS, BRAKE_PADS, SHOCK_ABSORBERS
+from ..groups import BRAKE_DISCS, BRAKE_PADS, RADIATORS, SHOCK_ABSORBERS
 from ..normalize import (
     KIND_AFTERMARKET,
     KIND_OEM,
@@ -59,6 +59,12 @@ def classify_group(description: str) -> str | None:
         return BRAKE_PADS
     if text == "диск тормозной" or text.startswith("диск тормозной "):
         return BRAKE_DISCS
+    # В группу охлаждения входят только основные радиаторы двигателя. В
+    # исходной выгрузке рядом есть конденсоры, отопители, масляные
+    # радиаторы, вентиляторы и детали крепления — их нельзя выдавать как
+    # замену основного радиатора.
+    if text == "радиатор основной" or text.startswith("радиатор основной "):
+        return RADIATORS
     # Общая выгрузка содержит также газовые упоры капота/багажника, опоры
     # стоек и стойки стабилизатора. В группу амортизаторов подвески попадает
     # только собственно амортизатор, чтобы не смешивать разные детали.
@@ -287,8 +293,8 @@ class MetacoSource(BaseSource):
     title = "METACO"
     homepage = "https://metaco.parts/category"
     verified = True
-    groups = (BRAKE_PADS, BRAKE_DISCS, SHOCK_ABSORBERS)
-    note = "Локальный индекс из официальных OEM и cross-list CSV METACO: колодки, диски и амортизаторы подвески."
+    groups = (BRAKE_PADS, BRAKE_DISCS, SHOCK_ABSORBERS, RADIATORS)
+    note = "Локальный индекс из официальных OEM и cross-list CSV METACO: колодки, диски, амортизаторы подвески и основные радиаторы."
 
     def __init__(self, settings, http_factory=None, pool=None, *, index=None):
         super().__init__(settings, http_factory, pool)
