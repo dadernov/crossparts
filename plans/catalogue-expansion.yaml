@@ -486,11 +486,20 @@ execution:
       depends_on: [P03]
       status: planned
       outputs: ["Обязательные suites и benchmark, воспроизведения найденных дефектов"]
+      preliminary_evidence:
+        - "Offline baseline после golden capture: 157 passed, 10 live skipped, 0 failed."
+        - "SB fixture воспроизвёл 82 исходные строки при 78 уникальных парах."
+        - "METACO full W1 index: 41,779 rows; large-result SQLite lookup p95 51.11 ms на 1000 samples."
+      blocking_before_start: "Расширить P03 до требуемого числа независимых cases по source-group."
     - id: P05
       title: "Реализовать необходимые защитные механизмы отдельными небольшими изменениями"
       depends_on: [P04]
       status: planned
       outputs: ["source/group/cohort gating, cache policy, domain budgets, deadline, graceful rollout — только доказанные необходимые изменения"]
+      preliminary_evidence:
+        - "Локальная защита одинаковых cache miss: 20 конкурентных вызовов объединяются в 1 обращение к source."
+        - "Дедупликация SB убирает 4 повторные строки до aggregator merge."
+      blocking_before_start: "P04 baseline и остальные safeguard cases ещё не завершены; изменения остаются только в candidate branch."
     - id: P06
       title: "W1: исследовать и подключать диски/колодки по одному источнику"
       depends_on: [P05]

@@ -144,7 +144,7 @@ def test_brannor_golden_is_exact():
     assert _pairs(source.parse_oems(details, url="fixture", product="BRP1386A")) == _expected(case)
 
 
-def test_sbparts_golden_is_exact_and_documents_duplicate_rows():
+def test_sbparts_golden_is_exact_and_deduplicates_repeated_rows():
     import json
 
     path = MANIFESTS[7]
@@ -158,8 +158,7 @@ def test_sbparts_golden_is_exact_and_documents_duplicate_rows():
         *source._parse_analogs(details, "BP11537", "fixture"),
     ]
     assert _pairs(crosses) == _expected(case)
-    assert len(crosses) == 82
-    assert len(_pairs(crosses)) == 78, "W0 baseline: source contains four duplicate rows"
+    assert len(crosses) == len(_pairs(crosses)) == 78
 
 
 def test_brembo_golden_is_exact():

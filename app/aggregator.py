@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+import weakref
 from dataclasses import replace
 
 from sqlalchemy import select
@@ -19,6 +20,11 @@ class Aggregator:
         self.session_factory = session_factory
         # One gate per source: parallel across catalogues, polite within each.
         self._gates: dict[str, asyncio.Semaphore] = {}
+        # A cache miss for the same source+number must produce one upstream
+        # request. Weak values prevent an unbounded lock table over time.
+        self._lookup_locks: weakref.WeakValueDictionary[
+            tuple[str, str], asyncio.Lock
+        ] = weakref.WeakValueDictionary()
 
     async def lookup(self, oe: str, source_keys: list[str] | None = None,
                      *, use_cache: bool = True, group: str | None = None) -> dict:
@@ -102,6 +108,19 @@ class Aggregator:
             cached = await self._cache_get(source.key, key)
             if cached is not None:
                 return cached
+        lock = self._lookup_lock_for(source.key, key) if use_cache else None
+        if lock is None:
+            return await self._lookup_and_cache(source, oe, key, use_cache=False)
+        async with lock:
+            # Another coroutine may have filled the cache while this one was
+            # waiting for the same source+number lock.
+            cached = await self._cache_get(source.key, key)
+            if cached is not None:
+                return cached
+            return await self._lookup_and_cache(source, oe, key, use_cache=True)
+
+    async def _lookup_and_cache(self, source, oe: str, key: str,
+                                *, use_cache: bool) -> SourceResult:
         async with self._gate_for(source.key):
             try:
                 result = await asyncio.wait_for(
@@ -112,9 +131,17 @@ class Aggregator:
             except Exception as exc:
                 return SourceResult(source.key, SourceStatus.ERROR, message=str(exc)[:300])
         # Only cache deterministic answers; blocks and errors should be retried.
-        if result.status in (SourceStatus.OK, SourceStatus.NOT_FOUND):
+        if use_cache and result.status in (SourceStatus.OK, SourceStatus.NOT_FOUND):
             await self._cache_put(source.key, key, result)
         return result
+
+    def _lookup_lock_for(self, source: str, oe_key: str) -> asyncio.Lock:
+        key = (source, oe_key)
+        lock = self._lookup_locks.get(key)
+        if lock is None:
+            lock = asyncio.Lock()
+            self._lookup_locks[key] = lock
+        return lock
 
     def _gate_for(self, key: str) -> asyncio.Semaphore:
         gate = self._gates.get(key)

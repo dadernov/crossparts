@@ -109,9 +109,14 @@ class SbPartsSource(BaseSource):
         if block is None:
             return []
         out = []
+        seen = set()
         for row in block.css("tr"):
             cells = [c.text(strip=True) for c in row.css("td")]
             if len(cells) < 2:
                 continue
-            out.extend(self.make_cross(cells[0], cells[1], product=sku, url=url))
+            for cross in self.make_cross(cells[0], cells[1], product=sku, url=url):
+                if cross.key in seen:
+                    continue
+                seen.add(cross.key)
+                out.append(cross)
         return out
