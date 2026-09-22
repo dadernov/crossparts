@@ -8,6 +8,7 @@ from ..groups import BY_KEY, title as group_title
 from .base import BaseSource
 from .brembo import BremboSource
 from .brannor import BrannorSource
+from .ate import AteSource
 from .brixo import BrixoSource
 from .browser import BrowserPool
 from .generic import BrowserProfile, BrowserProfileSource
@@ -37,7 +38,7 @@ BUILTIN = (SbPartsSource, BremboSource, TrialliSource, BrixoSource, NibkRuSource
            LuzarSource, NissensSource, KybSource, HolaSource, BrannorSource, HelSource,
            JnbkSource, MintexSource)
 CANDIDATES = (MetacoSource, MarshallSource, LynxautoSource, MasterkitSource, FapSource,
-              GanzSource, ZimmermannSource, MonaerSource)
+              GanzSource, ZimmermannSource, MonaerSource, AteSource)
 
 
 class SourceRegistry:

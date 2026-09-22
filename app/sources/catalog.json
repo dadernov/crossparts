@@ -79,7 +79,8 @@
         "brake_discs"
       ],
       "url": "https://www.ate-brakes.com/catalogues/online-catalogues/",
-      "status": "planned"
+      "status": "implemented",
+      "note": "Открытый фирменный TecDoc-каталог ATE: точный OE-поиск колодок и тормозных дисков."
     },
     {
       "brand": "ZIMMERMANN",
@@ -283,11 +284,14 @@
       "brand": "TRW",
       "key": "trw",
       "groups": [
+        "brake_pads",
+        "brake_discs",
+        "shock_absorbers",
         "brake_hoses"
       ],
       "url": "https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/",
       "status": "blocked",
-      "note": "Штатный ZF-каталог возвращает WAF 403 с сервера; источник не включён без подтверждённого доступа."
+      "note": "Запрошен для колодок, дисков, амортизаторов и шлангов. Штатный ZF-каталог возвращает WAF 403 с сервера, а публичного branded TecDoc-каталога TRW нет; источник выключен."
     },
     {
       "brand": "STELLOX",
