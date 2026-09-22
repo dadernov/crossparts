@@ -86,9 +86,10 @@ def test_build_workbook_layout():
     wb = load_workbook(io.BytesIO(blob))
     assert wb.sheetnames == ["Вариант 1", "Вариант 2"]
     v1 = list(wb["Вариант 1"].iter_rows(values_only=True))
-    assert v1[0] == ("Номер ОЕ (запрос)", "Бренд аналога", "Номер аналога",
-                     "Раздел", "Источники")
-    assert v1[1] == ("58101H5A25", "HYUNDAI", "58101H5A25", "OEM", "sbparts")
+    assert v1[0] == ("Наш номер", "Номер ОЕ (запрос)", "Бренд аналога",
+                     "Номер аналога", "Раздел", "Источники")
+    assert v1[1] == ("BPF159CG", "58101H5A25", "HYUNDAI", "58101H5A25",
+                     "OEM", "sbparts")
     v2 = list(wb["Вариант 2"].iter_rows(values_only=True))
     assert v2[0] == ("Наш артикул", "Товарная группа", "Номер ОЕ (запрос)",
                      "Кол-во", "ОЕМ/Афтермаркет", "Все кроссы")
@@ -110,8 +111,8 @@ def test_export_strips_all_special_characters_from_cross_numbers():
     workbook = load_workbook(io.BytesIO(blob))
     variant_one = list(workbook["Вариант 1"].iter_rows(values_only=True))
     variant_two = list(workbook["Вариант 2"].iter_rows(values_only=True))
-    assert variant_one[1][2] == "AB12345"
-    assert variant_one[2][2] == "AB12345"
+    assert variant_one[1][3] == "AB12345"
+    assert variant_one[2][3] == "AB12345"
     assert variant_two[1][3] == 1
     assert variant_two[1][5] == "AB12345"
 

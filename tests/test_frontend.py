@@ -90,7 +90,9 @@ def test_frontend_states_and_layout(browser_name):
             assert 'Onest' in page.locator(selector).first.evaluate('(e)=>getComputedStyle(e).fontFamily')
         assert page.locator('#profile-dropdown').is_hidden()
         assert page.locator('.results-panel').is_hidden()
-        assert page.locator('.history-panel').is_hidden()
+        # Existing account history is visible immediately after login; only the
+        # still-empty results panel stays hidden until a search is opened.
+        assert page.locator('.history-panel').is_visible()
         assert page.locator('.catalogues').is_visible()
         page.locator('#profile-toggle').click()
         assert page.locator('#profile-dropdown').is_visible()
@@ -113,9 +115,11 @@ def test_frontend_states_and_layout(browser_name):
             if width in [390, 1440] and browser_name == 'chromium':
                 page.screenshot(path=f'output/workspace-site/main-{width}.png', full_page=True)
         page.set_viewport_size({'width':1440,'height':1000})
+        content_box = page.locator('.content-grid').bounding_box()
         search_box = page.locator('.combined-search').bounding_box()
         catalog_box = page.locator('.catalogues').bounding_box()
         assert search_box['y'] < catalog_box['y']
+        assert abs(search_box['width'] - content_box['width']) < 2
         assert abs(search_box['width'] - catalog_box['width']) < 2
         assert page.locator('#result-table th').first.evaluate('(e)=>getComputedStyle(e).backgroundColor') == 'rgb(244, 245, 248)'
         # Choosing a file is an explicit picker, never an automatic upload.

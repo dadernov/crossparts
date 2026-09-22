@@ -109,12 +109,14 @@ def build_workbook(items: list[dict]) -> bytes:
 
     ws1 = wb.active
     ws1.title = "Вариант 1"
-    ws1.append(["Номер ОЕ (запрос)", "Бренд аналога", "Номер аналога", "Раздел", "Источники"])
-    _style_header(ws1, {1: 20, 2: 24, 3: 26, 4: 18, 5: 24})
+    ws1.append(["Наш номер", "Номер ОЕ (запрос)", "Бренд аналога", "Номер аналога",
+                "Раздел", "Источники"])
+    _style_header(ws1, {1: 18, 2: 20, 3: 24, 4: 26, 5: 18, 6: 24})
     kind_ru = {KIND_OEM: "OEM", KIND_AFTERMARKET: "Афтермаркет", "standard": "Стандарт"}
     for item in items:
         for cross in _export_crosses(item.get("crosses", [])):
             ws1.append([
+                item.get("our_sku", ""),
                 item.get("oe_number", ""),
                 cross["brand"],
                 number_key(cross["number"]),

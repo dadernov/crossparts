@@ -519,6 +519,7 @@ async function refreshJobs() {
   state.jobsBusy = true; $('#refresh-jobs').disabled = true;
   try {
     const jobs = await api(`/api/v1/jobs?limit=${state.limit}`);
+    $('.history-panel').hidden = jobs.length === 0;
     state.active = jobs.some(j => ['pending','running'].includes(j.status));
     const serialized = JSON.stringify(jobs);
     if (serialized !== state.jobsJSON) {
