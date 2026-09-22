@@ -515,6 +515,7 @@ execution:
         - "METACO включён на production по прямому поручению пользователя: global tenant rule, только brake_pads/brake_discs; ungrouped включён для ручного поиска со скрытым выбором группы."
         - "Runtime smoke: 0004200105 → 3000-123; 1K0615301AA → 3050-016; public sources endpoint показывает METACO default."
         - "MARSHALL brake_pads discovery: публичный XLSX с отдельными OEM/аналогами, SHA-256 2dd223e5eaf11b53640a6105188d8cdcb83c6955b0d3c0dca4d5245f5255bb08; локальный candidate-index и первые 2 positive + 2 negative live-пробы описаны в output/catalogue-reports/marshall-w1-2026-09-22/."
+        - "LYNXauto brake_pads discovery: прямой OE-search → карточка с отдельными OE/analog таблицами; 2 positive + 1 negative live-пробы и специфичное правило Accept-Language описаны в output/catalogue-reports/lynxauto-w1-2026-09-22/."
       blocking_before_start: "Для следующих W1 источников завершить их собственные golden/live проверки. У METACO остаётся известное ограничение объединённой метки kind, сами пары не теряются."
     - id: P07
       title: "W2: амортизаторы"

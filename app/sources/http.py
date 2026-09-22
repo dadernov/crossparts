@@ -14,7 +14,14 @@ def build_client(
         "User-Agent": settings.user_agent,
         "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
     }
-    headers.update(base_headers or {})
+    for name, value in (base_headers or {}).items():
+        # A few official catalogues route by the mere presence of
+        # Accept-Language.  ``None`` is an explicit request to omit a default
+        # header for that one source.
+        if value is None:
+            headers.pop(name, None)
+        else:
+            headers[name] = value
     kwargs = {
         "headers": headers,
         "timeout": httpx.Timeout(timeout or settings.source_timeout),

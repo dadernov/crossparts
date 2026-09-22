@@ -16,6 +16,7 @@ from .hola import HolaSource
 from .jnbk import JnbkSource
 from .kyb import KybSource
 from .luzar import LuzarSource
+from .lynxauto import LynxautoSource
 from .mintex import MintexSource
 from .metaco import MetacoSource
 from .marshall import MarshallSource
@@ -30,7 +31,7 @@ CATALOG_PATH = Path(__file__).with_name("catalog.json")
 BUILTIN = (SbPartsSource, BremboSource, TrialliSource, BrixoSource, NibkRuSource,
            LuzarSource, NissensSource, KybSource, HolaSource, BrannorSource, HelSource,
            JnbkSource, MintexSource)
-CANDIDATES = (MetacoSource, MarshallSource)
+CANDIDATES = (MetacoSource, MarshallSource, LynxautoSource)
 
 
 class SourceRegistry:
