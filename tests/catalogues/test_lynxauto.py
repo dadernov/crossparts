@@ -6,7 +6,7 @@ import json
 import pytest
 
 from app.config import Settings
-from app.groups import BRAKE_DISCS, BRAKE_PADS, SHOCK_ABSORBERS
+from app.groups import BRAKE_DISCS, BRAKE_HOSES, BRAKE_PADS, SHOCK_ABSORBERS
 from app.normalize import KIND_AFTERMARKET, KIND_OEM, number_key
 from app.sources.base import SourceStatus
 from app.sources.lynxauto import LynxautoSource
@@ -25,6 +25,11 @@ SHOCK_CARD = """
 <div class='pcard-model'>G32458LR</div><div class='pcard-name'><h1>Стойка амортизаторная с газовым подпором, передняя</h1></div>
 <table class='pcard-oeno-bottom'><tr><td>TOYOTA</td><td>48510-0D030</td><td></td></tr></table>
 <table class='pcard-analog-bottom'><tr><td>KYB</td><td>333333</td><td></td></tr></table>
+"""
+HOSE_CARD = """
+<div class='pcard-model'>BL-3102</div><div class='pcard-name'><h1>Шланг тормозной передний</h1></div>
+<table class='pcard-oeno-bottom'><tr><td>VAG</td><td>1K0 611 701 K</td><td></td></tr></table>
+<table class='pcard-analog-bottom'><tr><td>ATE</td><td>24.5143-0564.3</td><td></td></tr></table>
 """
 
 
@@ -64,14 +69,30 @@ def test_shock_card_is_classified_and_keeps_oe_and_analogue_rows():
     }
 
 
+def test_brake_hose_card_is_classified_and_keeps_only_its_tables():
+    source = LynxautoSource(Settings(_env_file=None), None)
+    assert source.product_group(HOSE_CARD) == BRAKE_HOSES
+    rows = [
+        *source.parse_table(HOSE_CARD, ".pcard-oeno-bottom", KIND_OEM,
+                            product="BL-3102", url="fixture"),
+        *source.parse_table(HOSE_CARD, ".pcard-analog-bottom", KIND_AFTERMARKET,
+                            product="BL-3102", url="fixture"),
+    ]
+    assert _pairs(rows) == {
+        ("VAG", "1K0611701K", KIND_OEM, "BL-3102"),
+        ("ATE", "24514305643", KIND_AFTERMARKET, "BL-3102"),
+    }
+
+
 def test_candidate_is_fail_closed_by_group_and_tenant():
     settings = Settings(_env_file=None, enabled_sources="", browser_fallback=False,
-        pilot_rules=json.dumps({"lynxauto": {"groups": [BRAKE_PADS, SHOCK_ABSORBERS],
+        pilot_rules=json.dumps({"lynxauto": {"groups": [BRAKE_PADS, SHOCK_ABSORBERS, BRAKE_HOSES],
             "tenants": ["catalogue-review"], "default": True}}))
     registry = SourceRegistry(settings)
     try:
         assert [source.key for source in registry.resolve(None, BRAKE_PADS, tenant="catalogue-review")] == ["lynxauto"]
         assert [source.key for source in registry.resolve(None, SHOCK_ABSORBERS, tenant="catalogue-review")] == ["lynxauto"]
+        assert [source.key for source in registry.resolve(None, BRAKE_HOSES, tenant="catalogue-review")] == ["lynxauto"]
         assert registry.resolve(["lynxauto"], BRAKE_DISCS, tenant="catalogue-review") == []
         assert registry.resolve(["lynxauto"], BRAKE_PADS, tenant="another") == []
     finally:

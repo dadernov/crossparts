@@ -7,7 +7,7 @@ an ATE account nor a browser session.
 """
 from __future__ import annotations
 
-from ..groups import BRAKE_DISCS, BRAKE_PADS
+from ..groups import BRAKE_DISCS, BRAKE_HOSES, BRAKE_PADS
 from ..normalize import KIND_AFTERMARKET, KIND_OEM, clean_number
 from .antibot import looks_blocked
 from .base import BaseSource, SourceResult, SourceStatus
@@ -24,8 +24,8 @@ class AteSource(BaseSource):
     title = "ATE"
     homepage = BASE
     verified = True
-    groups = (BRAKE_PADS, BRAKE_DISCS)
-    note = "Колодки и тормозные диски. Открытый фирменный TecDoc-каталог ATE."
+    groups = (BRAKE_PADS, BRAKE_DISCS, BRAKE_HOSES)
+    note = "Колодки, тормозные диски и шланги. Открытый фирменный TecDoc-каталог ATE."
 
     @staticmethod
     def article_group(article: object) -> str | None:
@@ -37,6 +37,8 @@ class AteSource(BaseSource):
         ).casefold()
         if "brake disc" in descriptions or "тормозной диск" in descriptions:
             return BRAKE_DISCS
+        if "brake hose" in descriptions or "тормозн" in descriptions and "шланг" in descriptions:
+            return BRAKE_HOSES
         if (("brake pad" in descriptions and "disc brake" in descriptions)
                 or ("колодок" in descriptions and "тормозн" in descriptions)):
             return BRAKE_PADS

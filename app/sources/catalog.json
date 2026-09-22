@@ -18,7 +18,8 @@
       "key": "jnbk",
       "groups": [
         "brake_pads",
-        "brake_discs"
+        "brake_discs",
+        "brake_hoses"
       ],
       "url": "https://www.jnbk-brakes.com/catalogue/cars",
       "status": "blocked",
@@ -80,7 +81,7 @@
       ],
       "url": "https://www.ate-brakes.com/catalogues/online-catalogues/",
       "status": "implemented",
-      "note": "Открытый фирменный TecDoc-каталог ATE: точный OE-поиск колодок и тормозных дисков."
+      "note": "Открытый фирменный TecDoc-каталог ATE: точный OE-поиск колодок, тормозных дисков и шлангов."
     },
     {
       "brand": "ZIMMERMANN",
@@ -154,22 +155,24 @@
         "brake_pads",
         "brake_discs",
         "shock_absorbers",
-        "radiators"
+        "radiators",
+        "brake_hoses"
       ],
       "url": "https://metaco.parts/content/downloads",
       "status": "implemented",
-      "note": "Локальный индекс из официальных OEM и cross-list CSV: колодки, диски, амортизаторы подвески и основные радиаторы."
+      "note": "Локальный индекс из официальных OEM и cross-list CSV: колодки, диски, амортизаторы подвески, основные радиаторы и тормозные шланги."
     },
     {
       "brand": "LYNXauto",
       "key": "lynxauto",
       "groups": [
         "brake_pads",
-        "shock_absorbers"
+        "shock_absorbers",
+        "brake_hoses"
       ],
       "url": "https://lynxauto.info/",
       "status": "implemented",
-      "note": "Официальный OE-поиск и карточки LYNXauto для колодок и амортизаторов."
+      "note": "Официальный OE-поиск и карточки LYNXauto для колодок, амортизаторов и тормозных шлангов."
     },
     {
       "brand": "KYB",

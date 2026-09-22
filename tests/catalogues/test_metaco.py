@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from app.config import Settings
-from app.groups import BRAKE_DISCS, BRAKE_PADS, RADIATORS, SHOCK_ABSORBERS
+from app.groups import BRAKE_DISCS, BRAKE_HOSES, BRAKE_PADS, RADIATORS, SHOCK_ABSORBERS
 from app.normalize import KIND_AFTERMARKET, KIND_OEM, number_key
 from app.sources.base import SourceStatus
 from app.sources.metaco import (
@@ -34,6 +34,11 @@ def test_classifies_brakes_shocks_and_main_radiators_without_neighbouring_parts(
     assert classify_group("Радиатор отопителя") is None
     assert classify_group("Радиатор масляный") is None
     assert classify_group("Вентилятор радиатора") is None
+    assert classify_group("Шланг тормозной передний") == BRAKE_HOSES
+    assert classify_group("Шланг тормозной задний левый") == BRAKE_HOSES
+    assert classify_group("Шланг тормозной задний правый") == BRAKE_HOSES
+    assert classify_group("Шланг топливный перепускной") is None
+    assert classify_group("Шланг системы охлаждения") is None
     assert classify_group("Диск сцепления") is None
     assert classify_group("Пыльник тормозного диска") is None
     assert classify_group("Регулировочный к-кт тормозных колодок") is None
@@ -116,6 +121,21 @@ def test_main_radiator_rows_do_not_mix_with_condensers_or_heaters():
     assert {(row.brand, row.number, row.kind) for row in crosses} == {
         ("METACO", "3100-001", KIND_AFTERMARKET),
         ("RENAULT", "8200735038", KIND_OEM),
+    }
+
+
+def test_brake_hose_rows_do_not_mix_with_other_hoses_or_adapters():
+    hose = MetacoRow("Metaco", "3500-001", "VAG", "1K0611701K",
+                     "Шланг тормозной передний", BRAKE_HOSES, KIND_OEM)
+    coolant = MetacoRow("Metaco", "3600-001", "VAG", "1K0611701K",
+                        "Шланг системы охлаждения", "other", KIND_OEM)
+    products, crosses = MetacoIndex([hose, coolant]).lookup(
+        "1K0611701K", groups={BRAKE_HOSES}
+    )
+    assert products == ["3500-001"]
+    assert {(row.brand, row.number, row.kind) for row in crosses} == {
+        ("METACO", "3500-001", KIND_AFTERMARKET),
+        ("VAG", "1K0611701K", KIND_OEM),
     }
 
 

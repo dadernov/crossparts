@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from selectolax.parser import HTMLParser
 
-from ..groups import BRAKE_PADS, SHOCK_ABSORBERS
+from ..groups import BRAKE_HOSES, BRAKE_PADS, SHOCK_ABSORBERS
 from ..normalize import KIND_AFTERMARKET, KIND_OEM
 from .antibot import looks_blocked
 from .base import BaseSource, SourceResult, SourceStatus
@@ -24,8 +24,8 @@ class LynxautoSource(BaseSource):
     title = "LYNXauto"
     homepage = BASE + "/"
     verified = True
-    groups = (BRAKE_PADS, SHOCK_ABSORBERS)
-    note = "Колодки и амортизаторы. Официальный OE-поиск и карточки LYNXauto."
+    groups = (BRAKE_PADS, SHOCK_ABSORBERS, BRAKE_HOSES)
+    note = "Колодки, амортизаторы и тормозные шланги. Официальный OE-поиск и карточки LYNXauto."
 
     async def lookup(self, oe: str) -> SourceResult:
         started = self.timer()
@@ -79,6 +79,8 @@ class LynxautoSource(BaseSource):
         text = heading.text(strip=True).casefold() if heading is not None else ""
         if "колодк" in text and "тормозн" in text:
             return BRAKE_PADS
+        if "шланг" in text and "тормозн" in text:
+            return BRAKE_HOSES
         if "амортизатор" in text:
             return SHOCK_ABSORBERS
         return None

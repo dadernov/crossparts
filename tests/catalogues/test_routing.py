@@ -8,7 +8,7 @@ import pytest
 
 from app.aggregator import Aggregator
 from app.config import Settings
-from app.groups import BRAKE_DISCS, BRAKE_PADS, RADIATORS, SHOCK_ABSORBERS
+from app.groups import BRAKE_DISCS, BRAKE_HOSES, BRAKE_PADS, RADIATORS, SHOCK_ABSORBERS
 from app.sources.registry import SourceRegistry
 from app.sources.metaco import build_sqlite_index
 
@@ -249,7 +249,7 @@ async def test_same_number_in_two_groups_uses_separate_cache_namespaces():
     assert pads['sources'][0]['products'] == ['PAD-123']
     assert discs['sources'][0]['products'] == ['DISC-456']
     assert registry._sources['metaco'].groups == (
-        BRAKE_PADS, BRAKE_DISCS, SHOCK_ABSORBERS, RADIATORS,
+        BRAKE_PADS, BRAKE_DISCS, SHOCK_ABSORBERS, RADIATORS, BRAKE_HOSES,
     )
     await registry.close()
 
