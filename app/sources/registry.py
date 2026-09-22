@@ -145,7 +145,11 @@ class SourceRegistry:
 
     def _pilot_tenant_allowed(self, key: str, tenant: str | None) -> bool:
         rule = self._pilot_rules.get(key)
-        return bool(rule and tenant and tenant in rule["tenants"])
+        return bool(
+            rule
+            and tenant
+            and ("*" in rule["tenants"] or tenant in rule["tenants"])
+        )
 
     def _source_allowed(self, source: BaseSource, group: str | None,
                         tenant: str | None) -> bool:
@@ -160,7 +164,7 @@ class SourceRegistry:
         return bool(
             rule
             and tenant
-            and tenant in rule["tenants"]
+            and ("*" in rule["tenants"] or tenant in rule["tenants"])
             and group
             and group in rule["groups"]
             and group in source.groups

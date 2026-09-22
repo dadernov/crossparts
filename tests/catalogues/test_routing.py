@@ -96,6 +96,21 @@ def test_candidate_visibility_exposes_only_allowed_groups():
     assert metaco["enabled_by_default"] is True
 
 
+def test_wildcard_rule_enables_candidate_for_every_resolved_tenant():
+    registry = _registry({
+        "metaco": {
+            "groups": [BRAKE_PADS, BRAKE_DISCS],
+            "tenants": ["*"],
+            "default": True,
+        }
+    })
+    for tenant in ("autobody", "guest-ip-hash", "api-client"):
+        assert [source.key for source in registry.resolve(
+            None, BRAKE_PADS, tenant=tenant
+        )] == ["sbparts", "metaco"]
+    assert "metaco" not in {source.key for source in registry.all(tenant=None)}
+
+
 def test_existing_sources_keep_their_current_routing():
     registry = _registry()
     assert [source.key for source in registry.resolve(None, BRAKE_PADS)] == ["sbparts"]
