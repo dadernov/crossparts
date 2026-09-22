@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from selectolax.parser import HTMLParser
 
-from ..groups import BRAKE_PADS
+from ..groups import BRAKE_PADS, SHOCK_ABSORBERS
 from ..normalize import KIND_AFTERMARKET, KIND_OEM
 from .antibot import looks_blocked
 from .base import BaseSource, SourceResult, SourceStatus
@@ -24,8 +24,8 @@ class LynxautoSource(BaseSource):
     title = "LYNXauto"
     homepage = BASE + "/"
     verified = True
-    groups = (BRAKE_PADS,)
-    note = "Тормозные колодки. Официальный OE-поиск и карточки LYNXauto."
+    groups = (BRAKE_PADS, SHOCK_ABSORBERS)
+    note = "Колодки и амортизаторы. Официальный OE-поиск и карточки LYNXauto."
 
     async def lookup(self, oe: str) -> SourceResult:
         started = self.timer()
@@ -48,9 +48,10 @@ class LynxautoSource(BaseSource):
             return SourceResult(self.key, SourceStatus.NOT_FOUND,
                                 message="номер не найден в каталоге LYNXauto",
                                 elapsed_ms=self.elapsed(started), url=str(response.url))
-        if not self.is_brake_pad(response.text):
+        group = self.product_group(response.text)
+        if group not in self.groups:
             return SourceResult(self.key, SourceStatus.NOT_FOUND,
-                                message="найденная карточка LYNXauto не относится к колодкам",
+                                message="найденная карточка LYNXauto не относится к выбранной группе",
                                 elapsed_ms=self.elapsed(started), url=str(response.url))
         crosses = [*self.make_cross("LYNXAUTO", product, product=product, url=str(response.url), kind=KIND_AFTERMARKET)]
         crosses.extend(self.parse_table(response.text, ".pcard-oeno-bottom", KIND_OEM,
@@ -69,9 +70,18 @@ class LynxautoSource(BaseSource):
 
     @staticmethod
     def is_brake_pad(html: str) -> bool:
+        return LynxautoSource.product_group(html) == BRAKE_PADS
+
+    @staticmethod
+    def product_group(html: str) -> str | None:
         document = HTMLParser(html)
         heading = document.css_first(".pcard-name h1")
-        return bool(heading and "колодк" in heading.text(strip=True).casefold())
+        text = heading.text(strip=True).casefold() if heading is not None else ""
+        if "колодк" in text and "тормозн" in text:
+            return BRAKE_PADS
+        if "амортизатор" in text:
+            return SHOCK_ABSORBERS
+        return None
 
     def parse_table(self, html: str, selector: str, kind: str, *, product: str, url: str):
         document = HTMLParser(html)

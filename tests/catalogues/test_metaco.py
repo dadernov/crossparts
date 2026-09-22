@@ -3,11 +3,12 @@ from pathlib import Path
 import pytest
 
 from app.config import Settings
-from app.groups import BRAKE_DISCS, BRAKE_PADS, RADIATORS
+from app.groups import BRAKE_DISCS, BRAKE_PADS, RADIATORS, SHOCK_ABSORBERS
 from app.normalize import KIND_AFTERMARKET, KIND_OEM, number_key
 from app.sources.base import SourceStatus
 from app.sources.metaco import (
     MetacoIndex,
+    MetacoRow,
     MetacoSource,
     SQLiteMetacoIndex,
     build_sqlite_index,
@@ -24,7 +25,7 @@ def _index(group: str) -> MetacoIndex:
     return MetacoIndex.from_files(root / "oem.csv", root / "replacements.csv")
 
 
-def test_classifies_only_w1_brake_descriptions():
+def test_classifies_brakes_and_suspension_shocks_without_neighbouring_parts():
     assert classify_group("Колодки тормозные передние к-кт") == BRAKE_PADS
     assert classify_group("Диск тормозной передний вентилируемый") == BRAKE_DISCS
     assert classify_group("Радиатор основной") is None
@@ -32,6 +33,12 @@ def test_classifies_only_w1_brake_descriptions():
     assert classify_group("Пыльник тормозного диска") is None
     assert classify_group("Регулировочный к-кт тормозных колодок") is None
     assert classify_group("Барабан тормозной") is None
+    assert classify_group("Амортизатор задний") == SHOCK_ABSORBERS
+    assert classify_group("Амортизатор передний (вставка)") == SHOCK_ABSORBERS
+    assert classify_group("Амортизатор двери багажника") is None
+    assert classify_group("Амортизатор капота") is None
+    assert classify_group("Стойка переднего стабилизатора") is None
+    assert classify_group("Опора переднего амортизатора") is None
 
 
 def test_oem_csv_apostrophes_are_removed_and_kind_is_preserved():
@@ -75,6 +82,21 @@ def test_group_filter_prevents_cross_category_results():
     )
     assert products == []
     assert crosses == []
+
+
+def test_suspension_shock_rows_do_not_mix_with_brake_rows():
+    shock = MetacoRow("Metaco", "4820-052", "Hyundai-Kia", "55310-1G210",
+                      "Амортизатор задний", SHOCK_ABSORBERS, KIND_OEM)
+    pad = MetacoRow("Metaco", "3000-410", "Hyundai-Kia", "58101-H5A25",
+                    "Колодки тормозные передние к-кт", BRAKE_PADS, KIND_OEM)
+    products, crosses = MetacoIndex([shock, pad]).lookup(
+        "55310-1G210", groups={SHOCK_ABSORBERS}
+    )
+    assert products == ["4820-052"]
+    assert {(row.brand, row.number, row.kind) for row in crosses} == {
+        ("METACO", "4820-052", KIND_AFTERMARKET),
+        ("HYUNDAI-KIA", "55310-1G210", KIND_OEM),
+    }
 
 
 @pytest.mark.asyncio

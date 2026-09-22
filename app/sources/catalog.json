@@ -148,6 +148,29 @@
       "note": "Локальный индекс публичных карточек Monaer: OE-номера, группа и собственный артикул."
     },
     {
+      "brand": "METACO",
+      "key": "metaco",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "shock_absorbers"
+      ],
+      "url": "https://metaco.parts/content/downloads",
+      "status": "implemented",
+      "note": "Локальный индекс из официальных OEM и cross-list CSV: колодки, диски и амортизаторы подвески."
+    },
+    {
+      "brand": "LYNXauto",
+      "key": "lynxauto",
+      "groups": [
+        "brake_pads",
+        "shock_absorbers"
+      ],
+      "url": "https://lynxauto.info/",
+      "status": "implemented",
+      "note": "Официальный OE-поиск и карточки LYNXauto для колодок и амортизаторов."
+    },
+    {
       "brand": "KYB",
       "key": "kyb",
       "groups": [
