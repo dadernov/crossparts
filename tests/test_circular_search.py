@@ -28,7 +28,7 @@ def setup_search(answers, **settings):
             return answer or result(self.key, status=SourceStatus.NOT_FOUND)
 
     class Registry:
-        def resolve(self, keys, group):
+        def resolve(self, keys, group, *, tenant=None):
             return [Source(key) for key in (keys or ["a", "b"])]
 
     config = Settings(_env_file=None, circular_search_enabled=True, **settings)

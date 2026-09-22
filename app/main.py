@@ -72,7 +72,7 @@ async def index(request: Request):
     username = request.session.get("username")
     return templates.TemplateResponse(
         request,
-        "index.html", {"sources": registry.describe(), "settings": settings,
+        "index.html", {"sources": registry.describe(username), "settings": settings,
                         "username": username, "is_guest": not username,
                         "trial_active": bool(request.session.get("trial_active")),
                         "login_open": False, "login_error": None},
@@ -153,7 +153,11 @@ async def healthz():
 
 @app.get("/api/v1/sources")
 async def list_sources(tenant: str = Depends(require_tenant)):
-    return {"sources": registry.describe(), "default": settings.default_sources}
+    sources = registry.describe(tenant)
+    return {
+        "sources": sources,
+        "default": [source["key"] for source in sources if source["enabled_by_default"]],
+    }
 
 
 @app.get("/api/v1/groups")
@@ -175,7 +179,9 @@ async def lookup(req: LookupRequest, tenant: str = Depends(require_search_access
     group = product_groups.resolve(req.group) if req.group else None
     limit = settings.trial_requests if is_guest_tenant(tenant) else settings.requests_per_account
     await reserve_queries(SessionLocal, tenant, 1, limit)
-    result = await aggregator.lookup(req.oe, req.sources, use_cache=True, group=group)
+    result = await aggregator.lookup(
+        req.oe, req.sources, use_cache=True, group=group, tenant=tenant
+    )
     # Persist the result already fetched: no second lookup or quota charge.
     async with SessionLocal() as session:
         job = Job(tenant=tenant, status="done", total=1, done=1,
@@ -240,7 +246,7 @@ async def upload_job(
 
 
 async def _create_job(items, sources, tenant, filename) -> JobOut:
-    chosen = [s.key for s in registry.resolve(sources)]
+    chosen = [s.key for s in registry.select_for_job(sources, tenant=tenant)]
     if not chosen:
         raise HTTPException(400, "Не выбран ни один известный источник")
     limit = settings.trial_requests if is_guest_tenant(tenant) else settings.requests_per_account

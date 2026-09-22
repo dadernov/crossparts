@@ -54,7 +54,7 @@ async def test_lookup_reads_cached_source_before_making_network_request():
     source = Source()
 
     class Registry:
-        def resolve(self, keys, group):
+        def resolve(self, keys, group, *, tenant=None):
             return [source]
 
     aggregator = Aggregator(type("Settings", (), {

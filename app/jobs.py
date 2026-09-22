@@ -68,6 +68,7 @@ class JobRunner:
             job.status = "running"
             await session.commit()
             sources = list(job.sources or [])
+            tenant = job.tenant
             pending = (
                 await session.execute(
                     select(JobItem).where(
@@ -79,7 +80,9 @@ class JobRunner:
             todo = [(i.id, i.oe_number, i.group) for i in pending]
 
         for item_id, oe, group in todo:
-            result = await self.aggregator.lookup(oe, sources, group=group)
+            result = await self.aggregator.lookup(
+                oe, sources, group=group, tenant=tenant
+            )
             async with self.session_factory() as session:
                 item = await session.get(JobItem, item_id)
                 if item is None:

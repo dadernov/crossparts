@@ -27,10 +27,11 @@ class Aggregator:
         ] = weakref.WeakValueDictionary()
 
     async def lookup(self, oe: str, source_keys: list[str] | None = None,
-                     *, use_cache: bool = True, group: str | None = None) -> dict:
+                     *, use_cache: bool = True, group: str | None = None,
+                     tenant: str | None = None) -> dict:
         # Товарная группа сужает список каталогов: искать колодки в каталоге
         # радиаторов бессмысленно и только тратит запросы.
-        sources = self.registry.resolve(source_keys, group)
+        sources = self.registry.resolve(source_keys, group, tenant=tenant)
         results = await asyncio.gather(
             *(self._run_source(src, oe, use_cache) for src in sources)
         )
@@ -103,6 +104,7 @@ class Aggregator:
     # -- one source -----------------------------------------------------
 
     async def _run_source(self, source, oe: str, use_cache: bool) -> SourceResult:
+        use_cache = use_cache and getattr(source, "cache_enabled", True)
         key = number_key(oe)
         if use_cache:
             cached = await self._cache_get(source.key, key)

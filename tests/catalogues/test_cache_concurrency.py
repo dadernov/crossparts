@@ -30,7 +30,7 @@ class _Registry:
     def __init__(self, source):
         self.source = source
 
-    def resolve(self, keys, group):
+    def resolve(self, keys, group, *, tenant=None):
         return [self.source]
 
 
@@ -80,4 +80,3 @@ async def test_cache_bypass_remains_an_explicit_fresh_lookup(tmp_path):
 
     assert source.calls == 5
     await engine.dispose()
-

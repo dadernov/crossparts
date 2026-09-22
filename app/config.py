@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from functools import lru_cache
 
 from pydantic import Field
@@ -53,8 +54,11 @@ class Settings(BaseSettings):
         "sbparts,brembo,trialli,nibkru,brixo,luzar,nissens,kyb,hola,brannor,hel"
     )
     # Immutable index built from reviewed snapshots on the official METACO
-    # download page.  An empty path keeps the unregistered W1 adapter inert.
+    # download page.  An empty path prevents the W1 candidate from querying an index.
     metaco_index_path: str = ""
+    # Fail-closed JSON map for disabled candidate adapters, for example:
+    # {"metaco":{"groups":["brake_pads"],"tenants":["pilot"],"default":true}}
+    pilot_rules: str = ""
 
     @property
     def api_key_map(self) -> dict[str, str]:
@@ -96,6 +100,35 @@ class Settings(BaseSettings):
     @property
     def default_sources(self) -> list[str]:
         return [s.strip() for s in self.enabled_sources.split(",") if s.strip()]
+
+    @property
+    def pilot_rule_map(self) -> dict[str, dict]:
+        if not self.pilot_rules.strip():
+            return {}
+        try:
+            raw = json.loads(self.pilot_rules)
+        except (TypeError, ValueError):
+            return {}
+        if not isinstance(raw, dict):
+            return {}
+        out = {}
+        for source, rule in raw.items():
+            if not isinstance(source, str) or not isinstance(rule, dict):
+                continue
+            groups = rule.get("groups")
+            tenants = rule.get("tenants")
+            if not isinstance(groups, list) or not isinstance(tenants, list):
+                continue
+            groups = [value for value in groups if isinstance(value, str) and value]
+            tenants = [value for value in tenants if isinstance(value, str) and value]
+            if not groups or not tenants:
+                continue
+            out[source] = {
+                "groups": groups,
+                "tenants": tenants,
+                "default": rule.get("default") is True,
+            }
+        return out
 
 
 @lru_cache

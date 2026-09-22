@@ -5,8 +5,8 @@ adapter reads local, reviewed snapshots: search requests never download a
 multi-megabyte catalogue and never depend on the website during a customer
 request.  Updating those snapshots is a separate controlled operation.
 
-This source deliberately is not registered in ``SourceRegistry`` yet.  It must
-pass the W1 release gates before it can be selected by any API request.
+This candidate is disabled by default and requires an exact source/group/tenant
+pilot rule. Production activation still requires the W1 release gates.
 """
 from __future__ import annotations
 
@@ -281,6 +281,9 @@ class MetacoSource(BaseSource):
     title = "METACO"
     homepage = "https://metaco.parts/category"
     verified = False
+    # Local indexed lookup is cheap; never reuse shared HTTP cache entries
+    # across group scopes or immutable snapshot versions.
+    cache_enabled = False
     groups = (BRAKE_PADS, BRAKE_DISCS)
     note = "Pilot W1: локальный индекс из официальных OEM и cross-list CSV; выключен."
 
