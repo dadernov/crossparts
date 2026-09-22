@@ -164,10 +164,37 @@ def test_frontend_states_and_layout(browser_name):
             page.screenshot(path='output/workspace-site/lookup-controls.png')
         assert calls['payload'] == {'oe':'58101H5A25','group':'brake_pads'}
         assert page.locator('#result-table th').all_text_contents() == ['№', 'Номер OE / OEM', 'Бренд', 'Номер аналога', 'Источник']
+        # Searching numbers ignores catalogue separators, just like Excel export.
+        lookup['crosses'] = [
+            dict(brand='TRIALLI', number='PF 0806CR', kind='aftermarket', sources=['trialli','metaco']),
+            dict(brand='NiBK', number='PN0537', kind='aftermarket', sources=['brixo']),
+            dict(brand='TRIALLI', number='PP 0806CR', kind='aftermarket', sources=['trialli']),
+        ]
+        page.locator('#btn-lookup').click()
+        page.locator('#result-filter').fill('PF0806CR')
+        assert page.locator('#result-rows tr').count() == 1
+        assert page.locator('#result-rows code').inner_text() == 'PF0806CR'
+        page.locator('#result-filter').fill('')
+        # Header menus exclude unchecked brands and any row containing an
+        # unchecked source; a new search resets both filters.
+        page.locator('#brand-filter-trigger').click()
+        assert page.locator('#brand-filter-menu').is_visible()
+        page.locator('#brand-filter-menu label', has_text='NiBK').locator('input').uncheck()
+        assert page.locator('#result-rows tr').count() == 2
+        assert page.locator('#brand-filter-trigger').get_attribute('aria-label') == 'Бренд: скрыто 1'
+        page.get_by_role('button', name='Выбрать все', exact=True).click()
+        assert page.locator('#result-rows tr').count() == 3
+        page.keyboard.press('Escape')
+        page.locator('#source-filter-trigger').click()
+        page.locator('#source-filter-menu label', has_text='metaco').locator('input').uncheck()
+        assert page.locator('#result-rows tr').count() == 2
+        assert 'PF0806CR' not in page.locator('#result-rows').inner_text()
+        page.keyboard.press('Escape')
         lookup['crosses'] = [{**cross, 'number':f'PN{i:04d}'} for i in range(25)]
         page.locator('#btn-lookup').click()
         page.wait_for_function('document.querySelector("#result-count").textContent === "25 номеров"')
         assert page.locator('#result-rows tr').count() == 12
+        assert not page.locator('#brand-filter-trigger').evaluate('(e)=>e.classList.contains("active")')
         page.get_by_role('button', name='Страница 2', exact=True).click()
         assert page.locator('#result-rows td').first.inner_text() == '13'
         page.get_by_role('button', name='Следующая страница', exact=True).click()

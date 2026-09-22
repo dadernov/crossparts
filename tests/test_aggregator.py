@@ -2,6 +2,7 @@ import pathlib, sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from app.aggregator import Aggregator
+from app.normalize import number_key
 from app.sources.base import Cross, SourceResult, SourceStatus
 import pytest
 
@@ -39,6 +40,20 @@ def test_searched_number_is_pushed_to_the_end():
         _res("sbparts", [("HYUNDAI", "58101H5A25"), ("KIA", "58101H8A05")]),
     ])
     assert merged["crosses"][-1]["number"] == "58101H5A25"
+
+
+def test_similar_pf_and_pp_numbers_stay_distinct_while_sources_are_merged():
+    merged = Aggregator.merge("58101H5A25", [
+        _res("trialli", [("TRIALLI", "PF 0806"), ("TRIALLI", "PF 0806CR"),
+                         ("TRIALLI", "PP 0806"), ("TRIALLI", "PP 0806CR")]),
+        _res("metaco", [("TRIALLI", "PF0806"), ("TRIALLI", "PF0806CR")]),
+    ])
+    assert len(merged["crosses"]) == 4
+    by_number = {number_key(c["number"]): c for c in merged["crosses"]}
+    assert by_number["PF0806"]["sources"] == ["trialli", "metaco"]
+    assert by_number["PF0806CR"]["sources"] == ["trialli", "metaco"]
+    assert by_number["PP0806"]["sources"] == ["trialli"]
+    assert by_number["PP0806CR"]["sources"] == ["trialli"]
 
 
 @pytest.mark.asyncio

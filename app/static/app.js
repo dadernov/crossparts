@@ -1,7 +1,7 @@
 const $ = (selector) => document.querySelector(selector);
 const KIND = {oem: 'OEM', aftermarket: 'Аналог', standard: 'Стандарт'};
 const STATUS = {ok: 'Найдено', not_found: 'Нет совпадений', blocked: 'Недоступен', error: 'Ошибка', no_sources: 'Нет каталогов', pending: 'В очереди', running: 'Обрабатывается', done: 'Завершено', failed: 'Ошибка задания'};
-const state = {crosses: [], sources: new Map(), busy: false, uploading: false, jobsBusy: false, limit: 2, active: false, jobsJSON: '', file: null, mode: 'empty', selectedJob: null, jobVersion: '', viewRequest: 0, page: 1};
+const state = {crosses: [], sources: new Map(), busy: false, uploading: false, jobsBusy: false, limit: 2, active: false, jobsJSON: '', file: null, mode: 'empty', selectedJob: null, jobVersion: '', viewRequest: 0, page: 1, excludedBrands: new Set(), excludedSources: new Set()};
 
 // All untrusted values are text nodes, including catalogue data and filenames.
 function el(tag, text, className) {
@@ -258,6 +258,7 @@ async function loadQuota() {
 }
 function clearResult() {
   state.crosses = []; state.lookup = null; state.page = 1; $('#result-pages').replaceChildren();
+  resetColumnFilters();
   $('#result-rows').replaceChildren(); $('#result-table').hidden = true; $('#result-tools').hidden = true;
   $('#result-empty').hidden = true; $('#result-filter').value = ''; $('#filter-count').textContent = '';
   $('#result-count').textContent = ''; $('#result-query').textContent = '';
@@ -287,7 +288,7 @@ $('#lookup-form').addEventListener('submit', async event => {
   try {
     const data = await api('/api/v1/lookup', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({oe, group})});
     if (request !== state.viewRequest) return;
-    state.lookup = {oe: data.oe, group, groupTitle}; state.crosses = data.crosses;
+    state.lookup = {oe: data.oe, group, groupTitle}; state.crosses = data.crosses; resetColumnFilters();
     const answered = data.sources.filter(s => ['ok','not_found'].includes(s.status));
     const unavailable = data.sources.filter(s => ['error','blocked'].includes(s.status));
     let summary;
@@ -311,7 +312,16 @@ $('#lookup-form').addEventListener('submit', async event => {
 });
 function renderRows() {
   const query = $('#result-filter').value.trim().toLocaleLowerCase();
-  const rows = state.crosses.filter(c => `${c.oe_number || state.lookup?.oe || ''} ${c.brand} ${c.number} ${(c.sources || []).map(sourceTitle).join(' ')}`.toLocaleLowerCase().includes(query));
+  const canonicalQuery = canonicalNumber(query);
+  const rows = state.crosses.filter(c => {
+    if (state.excludedBrands.has(c.brand || '—')) return false;
+    if ((c.sources || []).some(source => state.excludedSources.has(source))) return false;
+    if (!query) return true;
+    const oe = c.oe_number || state.lookup?.oe || '';
+    const sources = (c.sources || []).map(sourceTitle).join(' ');
+    const text = `${oe} ${c.brand} ${c.number} ${sources}`.toLocaleLowerCase();
+    return text.includes(query) || (canonicalQuery && [oe, c.number].some(value => canonicalNumber(value).includes(canonicalQuery)));
+  });
   $('#result-count').textContent = state.crosses.length ? `${state.crosses.length} номеров` : '';
   $('#result-tools').hidden = !state.crosses.length; $('#result-table').hidden = false;
   const totalPages = Math.max(1, Math.ceil(rows.length / 12));
@@ -368,6 +378,82 @@ function renderRows() {
   if (!rows.length) { const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = 5; row.append(cell); $('#result-rows').append(row); }
 }
 $('#result-filter').oninput = () => { state.page = 1; renderRows(); };
+
+const columnFilters = {
+  brand: {trigger: $('#brand-filter-trigger'), menu: $('#brand-filter-menu'), excluded: state.excludedBrands},
+  source: {trigger: $('#source-filter-trigger'), menu: $('#source-filter-menu'), excluded: state.excludedSources},
+};
+function columnFilterOptions(kind) {
+  if (kind === 'brand') return [...new Set(state.crosses.map(c => c.brand || '—'))]
+    .sort((a, b) => a.localeCompare(b, 'ru')).map(value => ({value, label:value}));
+  return [...new Set(state.crosses.flatMap(c => c.sources || []))]
+    .sort((a, b) => sourceTitle(a).localeCompare(sourceTitle(b), 'ru'))
+    .map(value => ({value, label:sourceTitle(value).replace(/\s*\([^()]*\)\s*$/, '')}));
+}
+function closeColumnFilters(restoreFocus = false) {
+  for (const filter of Object.values(columnFilters)) {
+    const wasOpen = !filter.menu.hidden;
+    filter.menu.hidden = true; filter.trigger.setAttribute('aria-expanded', 'false');
+    if (restoreFocus && wasOpen) filter.trigger.focus();
+  }
+}
+function positionColumnFilter(filter) {
+  const rect = filter.trigger.getBoundingClientRect();
+  const width = filter.menu.offsetWidth;
+  filter.menu.style.top = `${Math.min(innerHeight - filter.menu.offsetHeight - 12, rect.bottom + 6)}px`;
+  filter.menu.style.left = `${Math.max(12, Math.min(innerWidth - width - 12, rect.left))}px`;
+}
+function renderColumnFilter(kind) {
+  const filter = columnFilters[kind];
+  const options = columnFilterOptions(kind);
+  const actions = el('div', undefined, 'column-filter-actions');
+  const all = el('button', 'Выбрать все'); all.type = 'button';
+  const none = el('button', 'Снять все'); none.type = 'button';
+  const applySelection = excluded => {
+    filter.excluded.clear(); excluded.forEach(value => filter.excluded.add(value));
+    state.page = 1; renderColumnFilter(kind); renderRows(); positionColumnFilter(filter);
+  };
+  all.onclick = () => applySelection([]);
+  none.onclick = () => applySelection(options.map(option => option.value));
+  actions.append(all, none);
+  const list = el('div', undefined, 'column-filter-options');
+  for (const option of options) {
+    const label = el('label'); const input = el('input'); input.type = 'checkbox';
+    input.checked = !filter.excluded.has(option.value);
+    input.onchange = () => {
+      input.checked ? filter.excluded.delete(option.value) : filter.excluded.add(option.value);
+      state.page = 1; updateColumnFilterTrigger(kind); renderRows();
+    };
+    label.append(input, el('span', option.label)); list.append(label);
+  }
+  filter.menu.replaceChildren(actions, list);
+  updateColumnFilterTrigger(kind);
+}
+function updateColumnFilterTrigger(kind) {
+  const filter = columnFilters[kind];
+  filter.trigger.classList.toggle('active', filter.excluded.size > 0);
+  const title = kind === 'brand' ? 'Бренд' : 'Источник';
+  filter.trigger.setAttribute('aria-label', filter.excluded.size ? `${title}: скрыто ${filter.excluded.size}` : `${title}: показать фильтр`);
+}
+function resetColumnFilters() {
+  state.excludedBrands.clear(); state.excludedSources.clear();
+  if (typeof columnFilters !== 'undefined') {
+    closeColumnFilters(); renderColumnFilter('brand'); renderColumnFilter('source');
+  }
+}
+for (const [kind, filter] of Object.entries(columnFilters)) {
+  filter.trigger.onclick = event => {
+    event.stopPropagation(); const open = filter.menu.hidden; closeColumnFilters();
+    if (open) { renderColumnFilter(kind); filter.menu.hidden = false; filter.trigger.setAttribute('aria-expanded', 'true'); positionColumnFilter(filter); filter.menu.querySelector('input,button')?.focus(); }
+  };
+  filter.menu.onclick = event => event.stopPropagation();
+}
+document.addEventListener('click', () => closeColumnFilters());
+document.addEventListener('keydown', event => { if (event.key === 'Escape' && Object.values(columnFilters).some(filter => !filter.menu.hidden)) { closeColumnFilters(true); event.preventDefault(); } });
+window.addEventListener('resize', () => closeColumnFilters());
+window.addEventListener('scroll', event => {
+  if (!(event.target instanceof Element && event.target.closest('.column-filter-menu'))) closeColumnFilters();
+}, true);
 // Styled format selector with native value retained for export handlers.
 function styleFormat(select) {
   const wrapper = el('div', undefined, 'format-picker');
@@ -501,7 +587,7 @@ async function showJob(id, background = false) {
     const [data, results] = await Promise.all([api(`/api/v1/jobs/${encodeURIComponent(id)}`),api(`/api/v1/jobs/${encodeURIComponent(id)}/results`)]);
     if (request !== state.viewRequest) return;
     state.jobVersion = JSON.stringify(data.job);
-    state.crosses = results.rows; state.lookup = null;
+    state.crosses = results.rows; state.lookup = null; resetColumnFilters();
     $('#results-title').textContent = 'Результаты поиска'; $('#result-query').textContent = data.job.filename || 'Задание из API';
     $('#result-summary').textContent = data.job.status === 'done' ? '' : `${STATUS[data.job.status] || data.job.status} · обработано ${data.job.done} из ${data.job.total}.`;
     const problematic = data.items.filter(i => ['blocked','error','no_sources'].includes(i.status)).length;
