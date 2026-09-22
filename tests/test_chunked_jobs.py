@@ -109,3 +109,94 @@ async def test_gerat_pacing_switches_to_slow_slots_after_daily_allowance(tmp_pat
         rows = (await session.execute(select(TenantDailyUsage))).scalars().all()
         assert [(row.day, row.count) for row in rows] == [("2026-09-22", 5), ("2026-09-23", 1)]
     await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_restart_resumes_unfinished_chunk_and_summary_is_idempotent(tmp_path):
+    engine, sessions = await sessions_for(tmp_path)
+    settings = Settings(_env_file=None, paced_tenants='', job_concurrency=1)
+    aggregator = Aggregator()
+    async with sessions() as session:
+        for index, status in enumerate(['done', 'running', 'pending']):
+            job = Job(id=f'chunk{index}', tenant='audit', batch_id='batch', batch_role='chunk',
+                      batch_order=index, total=1, done=int(status=='done'), status=status,
+                      sources=['catalogue'], filename=f'test.xlsx · часть {index+1}/3')
+            session.add(job)
+            session.add(JobItem(job_id=job.id, position=index, oe_number=f'OE{index}',
+                                our_sku=f'SKU{index}', status='ok' if index==0 else 'pending',
+                                crosses=[], source_reports=[]))
+        await session.commit()
+    runner = JobRunner(settings, aggregator, sessions)
+    try:
+        await runner.start()
+        await asyncio.wait_for(runner._queue.join(), 5)
+        await runner._advance_batch('batch')
+        await runner._advance_batch('batch')
+        async with sessions() as session:
+            jobs=(await session.execute(select(Job))).scalars().all()
+            summaries=[j for j in jobs if j.batch_role=='summary']
+            assert len(summaries)==1
+            assert summaries[0].done==summaries[0].total==3
+            items=(await session.execute(select(JobItem).where(JobItem.job_id==summaries[0].id).order_by(JobItem.position))).scalars().all()
+            assert [i.our_sku for i in items]==['SKU0','SKU1','SKU2']
+        assert aggregator.calls==[('audit','OE1'),('audit','OE2')]
+    finally:
+        await runner.stop()
+        await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_pacing_cursor_survives_runner_restart(tmp_path):
+    engine, sessions=await sessions_for(tmp_path)
+    settings=Settings(_env_file=None,paced_tenants='audit',paced_daily_fast_limit=3,paced_fast_window_seconds=30)
+    now=dt.datetime(2026,9,22,8,tzinfo=dt.timezone.utc)
+    try:
+        assert await TenantPacer(settings,sessions).reserve('audit',now=now)==0
+        assert await TenantPacer(settings,sessions).reserve('audit',now=now)==10
+        assert await TenantPacer(settings,sessions).reserve('other',now=now)==0
+    finally:
+        await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_paced_tenant_does_not_occupy_worker_while_waiting(tmp_path):
+    engine, sessions = await sessions_for(tmp_path)
+    settings = Settings(
+        _env_file=None,
+        paced_tenants="slow",
+        paced_daily_fast_limit=2,
+        paced_fast_window_seconds=1,
+        paced_slow_interval_seconds=1,
+        job_concurrency=1,
+    )
+    aggregator = Aggregator()
+    async with sessions() as session:
+        slow = Job(id="slow-job", tenant="slow", total=2, sources=["catalogue"])
+        fast = Job(id="fast-job", tenant="fast", total=1, sources=["catalogue"])
+        session.add_all([slow, fast])
+        session.add_all([
+            JobItem(job_id=slow.id, position=0, oe_number="SLOW-1"),
+            JobItem(job_id=slow.id, position=1, oe_number="SLOW-2"),
+            JobItem(job_id=fast.id, position=0, oe_number="FAST-1"),
+        ])
+        await session.commit()
+
+    runner = JobRunner(settings, aggregator, sessions)
+    try:
+        await runner.start()
+        await runner.submit("slow-job")
+        await runner.submit("fast-job")
+        for _ in range(50):
+            if ("fast", "FAST-1") in aggregator.calls:
+                break
+            await asyncio.sleep(0.02)
+        assert ("fast", "FAST-1") in aggregator.calls
+        assert ("slow", "SLOW-2") not in aggregator.calls
+        for _ in range(100):
+            if ("slow", "SLOW-2") in aggregator.calls:
+                break
+            await asyncio.sleep(0.02)
+        assert aggregator.calls.index(("fast", "FAST-1")) < aggregator.calls.index(("slow", "SLOW-2"))
+    finally:
+        await runner.stop()
+        await engine.dispose()

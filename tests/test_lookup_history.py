@@ -7,7 +7,7 @@ from app.models import Base
 from app.schemas import LookupRequest
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('status', ['ok','not_found','blocked'])
+@pytest.mark.parametrize('status', ['ok','partial','not_found','blocked'])
 async def test_single_lookup_saved_once_and_isolated(tmp_path, monkeypatch, status):
     engine = create_async_engine(f'sqlite+aiosqlite:///{tmp_path}/history.db')
     async with engine.begin() as connection:

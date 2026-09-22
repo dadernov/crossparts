@@ -1,0 +1,26 @@
+{
+  "path": "/tmp/metaco-w4-corrected.sqlite3",
+  "production_replaced": false,
+  "rows": 54396,
+  "size_bytes": 15896576,
+  "sha256": "f003ae32e10d11900e5374e0c8cb88e2eb5cd82bb0ba5e4fc11d4b5308ee776f",
+  "input_oem_sha256": "ec8f4d5c0fbabdce0b03afaf6b6844217701e4a6c0acf958c085010ad8b4e526",
+  "input_replacements_sha256": "bfb63a14a1dc8b12a1311dc551b02da8316b093f78960f8b37b29a38a6ba1ee2",
+  "integrity_check": "ok",
+  "kind_counts": {
+    "aftermarket": 32537,
+    "oem": 21859
+  },
+  "compound_oem_samples": {
+    "HYUNDAI-KIA": 2547,
+    "CITROEN-PEUGEOT": 780,
+    "CHERY": 217
+  },
+  "smoke": [
+    {"group": "brake_pads", "oe": "58101H5A25", "status": "ok"},
+    {"group": "brake_discs", "oe": "1K0615301AA", "status": "ok"},
+    {"group": "shock_absorbers", "oe": "553101G210", "status": "ok"},
+    {"group": "radiators", "oe": "8200735038", "status": "ok"},
+    {"group": "brake_hoses", "oe": "13399770", "status": "ok"}
+  ]
+}

@@ -13,7 +13,7 @@ from selectolax.parser import HTMLParser
 
 from ..groups import BRAKE_DISCS, BRAKE_PADS
 from ..normalize import KIND_AFTERMARKET, clean_number, number_key
-from .base import BaseSource, Cross, SourceResult, SourceStatus
+from .base import BaseSource, Cross, SourceResult, SourceStatus, file_snapshot_version
 
 BASE = "https://monaer-russia.ru"
 SITEMAP = BASE + "/sitemap-store.xml"
@@ -147,6 +147,13 @@ class MonaerSource(BaseSource):
     def __init__(self, settings, http_factory=None, pool=None, *, index=None):
         super().__init__(settings, http_factory, pool)
         self._index = index
+        self._cache_version = file_snapshot_version(
+            getattr(settings, "monaer_index_path", "")
+        )
+
+    @property
+    def cache_version(self) -> str:
+        return self._cache_version
 
     def _load_index(self):
         if self._index is not None:

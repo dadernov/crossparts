@@ -24,7 +24,7 @@ from ..groups import BRAKE_PADS
 from ..normalize import (
     KIND_AFTERMARKET, KIND_OEM, clean_brand, clean_number, number_key, split_brands,
 )
-from .base import BaseSource, Cross, SourceResult, SourceStatus
+from .base import BaseSource, Cross, SourceResult, SourceStatus, file_snapshot_version
 
 
 CATALOGUE_URL = (
@@ -287,6 +287,13 @@ class MarshallSource(BaseSource):
     def __init__(self, settings, http_factory=None, pool=None, *, index=None):
         super().__init__(settings, http_factory, pool)
         self._index = index
+        self._cache_version = file_snapshot_version(
+            getattr(settings, "marshall_index_path", "")
+        )
+
+    @property
+    def cache_version(self) -> str:
+        return self._cache_version
 
     def _load_index(self) -> MarshallIndex | SQLiteMarshallIndex:
         if self._index is not None:

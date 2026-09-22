@@ -1,0 +1,72 @@
+{
+  "checked_at": "2026-09-22T16:36:40.425110+00:00",
+  "scope": "transport and public-page availability only",
+  "results": [
+    {
+      "key": "jnbk",
+      "url": "https://www.jnbk-brakes.com/catalogue/cars",
+      "status": 403,
+      "final_url": "https://www.jnbk-brakes.com/catalogue/cars",
+      "bytes": 118,
+      "server": "awselb/2.0",
+      "content_type": "text/html"
+    },
+    {
+      "key": "mintex",
+      "url": "https://mintex.brakebook.com/",
+      "status": 403,
+      "final_url": "https://mintex.brakebook.com/",
+      "bytes": 5411,
+      "server": "cloudflare",
+      "content_type": "text/html; charset=UTF-8"
+    },
+    {
+      "key": "monroe",
+      "url": "https://www.monroe.com/ru-ru/find-my-part.html",
+      "error": "ConnectError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)"
+    },
+    {
+      "key": "nrf",
+      "url": "https://webshop.nrf.eu/catalogsearch/advanced/result/?p_oen=8200735038",
+      "status": 200,
+      "final_url": "https://webshop.nrf.eu/catalogsearch/advanced/result/?p_oen=8200735038",
+      "bytes": 217171,
+      "server": null,
+      "content_type": "text/html; charset=UTF-8",
+      "oe_query_echoed": true,
+      "product_result_markers": 2
+    },
+    {
+      "key": "ava",
+      "url": "https://ava-cooling.com/ru/",
+      "error": "ConnectError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)"
+    },
+    {
+      "key": "patron",
+      "url": "https://patron.ru/",
+      "status": 403,
+      "final_url": "https://patron.ru/",
+      "bytes": 63,
+      "server": null,
+      "content_type": "text/plain"
+    },
+    {
+      "key": "trw",
+      "url": "https://aftermarket.zf.com/catalog",
+      "status": 200,
+      "final_url": "https://aftermarket.zf.com/en/catalog/",
+      "bytes": 430950,
+      "server": null,
+      "content_type": "text/html;charset=utf-8"
+    },
+    {
+      "key": "stellox",
+      "url": "https://ru.stellox.com/catalog/",
+      "status": 200,
+      "final_url": "https://ru.stellox.com/catalog/",
+      "bytes": 190294,
+      "server": "Apache",
+      "content_type": "text/html; charset=utf-8"
+    }
+  ]
+}

@@ -116,20 +116,22 @@ def verify(workbook_path: Path, inventory_path: Path) -> dict:
             f"inventory={counts['section_rows']!r}"
         )
 
-    from app.sources.registry import BUILTIN
+    from app.sources.registry import BUILTIN, CANDIDATES
 
     builtin = {source.key: source for source in BUILTIN}
+    candidates = {source.key: source for source in CANDIDATES}
+    registered = builtin | candidates
     declared_registered = {
         source["id"]: source for source in inventory["sources"]
         if source["registered_in_code"]
     }
-    if set(builtin) != set(declared_registered):
+    if set(registered) != set(declared_registered):
         errors.append(
-            f"registered adapters: code={sorted(builtin)}, "
+            f"registered adapters: code={sorted(registered)}, "
             f"inventory={sorted(declared_registered)}"
         )
-    for key in set(builtin) & set(declared_registered):
-        code_groups = set(builtin[key].groups)
+    for key in set(registered) & set(declared_registered):
+        code_groups = set(registered[key].groups)
         inventory_groups = set(declared_registered[key]["code_groups"])
         if code_groups != inventory_groups:
             errors.append(
@@ -145,7 +147,9 @@ def verify(workbook_path: Path, inventory_path: Path) -> dict:
         "inventory_sha256": hashlib.sha256(inventory_path.read_bytes()).hexdigest(),
         "measured": measured,
         "section_rows": dict(section_rows),
-        "registered_keys": sorted(builtin),
+        "registered_keys": sorted(registered),
+        "builtin_keys": sorted(builtin),
+        "candidate_keys": sorted(candidates),
         "errors": errors,
     }
 

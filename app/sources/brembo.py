@@ -80,23 +80,42 @@ class BremboSource(BaseSource):
 
                 list_url = BASE + target
                 page = await client.get(list_url)
+                if page.status_code >= 400:
+                    return SourceResult(self.key, SourceStatus.ERROR,
+                                        message=f"product page HTTP {page.status_code}",
+                                        elapsed_ms=self.elapsed(started), url=list_url)
                 codes = self._brembo_codes(page.text)
                 if not codes:
                     return SourceResult(self.key, SourceStatus.NOT_FOUND,
                                         message="страница результатов пуста",
                                         elapsed_ms=self.elapsed(started), url=list_url)
 
+                truncated = len(codes) > self.settings.max_products_per_oe
+                selected_codes = codes[: self.settings.max_products_per_oe]
                 crosses = []
-                for code in codes[: self.settings.max_products_per_oe]:
+                failed_refs = 0
+                for code in selected_codes:
                     crosses.extend(self.make_cross("BREMBO", code, product=code, url=list_url))
-                    crosses.extend(await self._manufacturer_refs(client, headers, code, list_url))
-                    crosses.extend(await self._competitor_refs(client, headers, code, list_url))
+                    manufacturer, manufacturer_failed = await self._manufacturer_refs(
+                        client, headers, code, list_url
+                    )
+                    competitor, competitor_failed = await self._competitor_refs(
+                        client, headers, code, list_url
+                    )
+                    crosses.extend(manufacturer)
+                    crosses.extend(competitor)
+                    failed_refs += int(manufacturer_failed) + int(competitor_failed)
 
+                incomplete = failed_refs > 0 or truncated
                 return SourceResult(
                     self.key,
-                    SourceStatus.OK if crosses else SourceStatus.NOT_FOUND,
+                    SourceStatus.PARTIAL if crosses and incomplete else (
+                        SourceStatus.OK if crosses else SourceStatus.NOT_FOUND
+                    ),
                     crosses=crosses,
-                    products=codes,
+                    products=selected_codes,
+                    message=(f"не загружено таблиц ссылок: {failed_refs}; выдача ограничена: {truncated}"
+                             if incomplete else None),
                     elapsed_ms=self.elapsed(started),
                     url=list_url,
                 )
@@ -123,6 +142,14 @@ class BremboSource(BaseSource):
             if code and "{{" not in code and code not in seen:
                 seen.add(code)
                 out.append(code)
+        # A single hydraulic match redirects straight to the product detail,
+        # which has no app-globalcaritem list. Accept only the brake-hose
+        # subtype (TecDoc 83), never other hydraulic components or suggestions.
+        for node in tree.css('.product-detail app-globalcomparatorcta[product-sub-type="00083"]'):
+            code = node.attributes.get("brembo-code", "").strip()
+            if code and "{{" not in code and code not in seen:
+                seen.add(code)
+                out.append(code)
         return out
 
     async def _manufacturer_refs(self, client, headers, code, url):
@@ -131,8 +158,14 @@ class BremboSource(BaseSource):
             headers=headers, json={"bremboCode": code},
         )
         if resp.status_code >= 400:
-            return []
-        return self.parse_manufacturer_refs(resp.json(), code=code, url=url)
+            return [], True
+        try:
+            payload = resp.json()
+        except ValueError:
+            return [], True
+        if not isinstance(payload, list):
+            return [], True
+        return self.parse_manufacturer_refs(payload, code=code, url=url), False
 
     async def _competitor_refs(self, client, headers, code, url):
         resp = await client.post(
@@ -140,8 +173,14 @@ class BremboSource(BaseSource):
             headers=headers, json={"bremboCode": code},
         )
         if resp.status_code >= 400:
-            return []
-        return self.parse_competitor_refs(resp.json(), code=code, url=url)
+            return [], True
+        try:
+            payload = resp.json()
+        except ValueError:
+            return [], True
+        if not isinstance(payload, list):
+            return [], True
+        return self.parse_competitor_refs(payload, code=code, url=url), False
 
     def parse_manufacturer_refs(self, payload, *, code: str, url: str):
         out = []

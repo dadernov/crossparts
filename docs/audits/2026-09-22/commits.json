@@ -1,0 +1,560 @@
+[
+  {
+    "commit": "9cb4c5d",
+    "title": "Replace guest trial button with access request",
+    "review": "Исходная правка ломала активацию trial; отменена следующим коммитом. В текущем дереве проверена итоговая механика входа, trial и загрузки.",
+    "files": [
+      "app/static/app.js",
+      "app/static/main.css",
+      "app/templates/index.html",
+      "tests/test_login.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "5705c30",
+    "title": "Revert \"Replace guest trial button with access request\"",
+    "review": "Revert удаляет изменения предыдущего коммита; оценивается совместно с bf74dbf.",
+    "files": [
+      "app/static/app.js",
+      "app/static/main.css",
+      "app/templates/index.html",
+      "tests/test_login.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "bf74dbf",
+    "title": "Keep trial access when requesting full access",
+    "review": "Итоговая кнопка открывает Telegram и сохраняет POST /trial. Login/guest/upload regressions проходят.",
+    "files": [
+      "app/static/app.js",
+      "app/templates/index.html",
+      "tests/test_login.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "99776f2",
+    "title": "Show account history and include client number in exports",
+    "review": "История после входа, ширина блоков, Наш номер в пакетном Excel проверены API/Excel/Chromium/WebKit тестами.",
+    "files": [
+      "app/excel.py",
+      "app/static/app.js",
+      "app/static/main.css",
+      "app/templates/index.html",
+      "tests/test_excel.py",
+      "tests/test_frontend.py",
+      "tests/test_lookup_export.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "85a149e",
+    "title": "Add catalogue expansion plans and parsing resources",
+    "review": "Исходный XLSX и инвентаризация сверены; планы содержат незакрытые gates. Отдельно замечено удаление DuckDNS/старого backup nginx; текущий nginx -t и healthz успешны.",
+    "files": [
+      "PARSING.md",
+      "output/examples/crossparts-test-input-6-numbers.xlsx",
+      "plans/README.md",
+      "plans/catalogue-expansion.yaml",
+      "plans/catalogue-resource-inventory.yaml",
+      "plans/seo-public-pages.yaml",
+      "\"\\320\\240\\320\\265\\321\\201\\321\\203\\321\\200\\321\\201\\321\\213 \\320\\264\\320\\273\\321\\217 \\320\\277\\320\\260\\321\\200\\321\\201\\320\\270\\320\\275\\320\\263\\320\\260.xlsx\""
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "6295067",
+    "title": "Isolate catalogue expansion tests from production",
+    "review": "Изоляция БД и запрет внешней сети offline подтверждены. Найдена запись скриншотов в output; исправлена на tmp_path.",
+    "files": [
+      "plans/README.md",
+      "plans/catalogue-expansion.yaml",
+      "pytest.ini",
+      "scripts/verify_catalogue_matrix.py",
+      "tests/catalogues/test_inventory.py",
+      "tests/conftest.py",
+      "tests/test_sources_live.py",
+      "tests/test_test_harness.py"
+    ],
+    "historical_whitespace_warnings": 3,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "af34e69",
+    "title": "Add disabled METACO catalogue pilot",
+    "review": "METACO fixture equality, точное сопоставление групп, missing index, SQLite и fail-closed routing проверены. kind берётся из типа CSV: ограничение остаётся.",
+    "files": [
+      "app/config.py",
+      "app/sources/metaco.py",
+      "plans/catalogue-resource-inventory.yaml",
+      "scripts/build_metaco_index.py",
+      "tests/catalogues/test_metaco.py",
+      "tests/catalogues/test_quality.py",
+      "tests/fixtures/catalogues/metaco/brake_discs/manifest.yaml",
+      "tests/fixtures/catalogues/metaco/brake_discs/oem.csv",
+      "tests/fixtures/catalogues/metaco/brake_discs/replacements.csv",
+      "tests/fixtures/catalogues/metaco/brake_pads/manifest.yaml",
+      "tests/fixtures/catalogues/metaco/brake_pads/oem.csv",
+      "tests/fixtures/catalogues/metaco/brake_pads/replacements.csv",
+      "tests/performance/test_catalogue_budgets.py"
+    ],
+    "historical_whitespace_warnings": 4,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "6454db1",
+    "title": "Record METACO W1 pilot report",
+    "review": "Исторический отчёт не является доказательством текущего состояния; сопоставлен с новой матрицей и индексами.",
+    "files": [
+      "output/catalogue-reports/metaco-w1-2026-09-22/release.md",
+      "output/catalogue-reports/metaco-w1-2026-09-22/summary.json",
+      "plans/catalogue-expansion.yaml"
+    ],
+    "historical_whitespace_warnings": 1,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "2591876",
+    "title": "Add reviewed golden manifests for existing catalogues",
+    "review": "Контракт manifest и обязательные поля проходят; большинство компактных goldens не достигают целевого объёма плана.",
+    "files": [
+      "plans/catalogue-expansion.yaml",
+      "tests/catalogues/test_contract.py",
+      "tests/catalogues/test_existing_golden.py",
+      "tests/catalogues/test_quality.py",
+      "tests/fixtures/catalogues/brannor/brake_pads/manifest.yaml",
+      "tests/fixtures/catalogues/hel/brake_hoses/manifest.yaml",
+      "tests/fixtures/catalogues/hola/brake_pads/manifest.yaml",
+      "tests/fixtures/catalogues/jnbk/brake_discs/manifest.yaml",
+      "tests/fixtures/catalogues/kyb/shock_absorbers/manifest.yaml",
+      "tests/fixtures/catalogues/luzar/radiators/manifest.yaml",
+      "tests/fixtures/catalogues/nissens/radiators/manifest.yaml"
+    ],
+    "historical_whitespace_warnings": 7,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "e64f292",
+    "title": "Capture offline goldens for all current catalogues",
+    "review": "Хеши offline fixtures и воспроизведение ответов проходят; полнота живой выдачи этим не доказана.",
+    "files": [
+      "app/sources/brembo.py",
+      "plans/catalogue-expansion.yaml",
+      "tests/catalogues/test_existing_golden.py",
+      "tests/fixtures/catalogues/brembo/brake_pads/competitor_P30122.json",
+      "tests/fixtures/catalogues/brembo/brake_pads/manifest.yaml",
+      "tests/fixtures/catalogues/brembo/brake_pads/manufacturer_P30122.json",
+      "tests/fixtures/catalogues/brembo/brake_pads/results.html",
+      "tests/fixtures/catalogues/brixo/radiators/info_3631-1002.json",
+      "tests/fixtures/catalogues/brixo/radiators/manifest.yaml",
+      "tests/fixtures/catalogues/brixo/radiators/search_8200735038.json",
+      "tests/fixtures/catalogues/mintex/brake_discs/manifest.yaml",
+      "tests/fixtures/catalogues/nibkru/brake_pads/manifest.yaml",
+      "tests/fixtures/catalogues/sbparts/brake_pads/manifest.yaml",
+      "tests/fixtures/catalogues/sbparts/brake_pads/product_BP11537.html",
+      "tests/fixtures/catalogues/sbparts/brake_pads/search.json",
+      "tests/fixtures/catalogues/trialli/brake_pads/manifest.yaml",
+      "tests/fixtures/catalogues/trialli/brake_pads/product_PF_0806CR.html",
+      "tests/fixtures/catalogues/trialli/brake_pads/product_PP_0806CR.html",
+      "tests/fixtures/catalogues/trialli/brake_pads/search.html"
+    ],
+    "historical_whitespace_warnings": 4,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "b561b9d",
+    "title": "Coalesce duplicate catalogue lookups",
+    "review": "Конкурентные cache miss coalesce, нормализация номера, failure handling проходят тесты.",
+    "files": [
+      "app/aggregator.py",
+      "app/sources/sbparts.py",
+      "plans/catalogue-expansion.yaml",
+      "tests/catalogues/test_cache_concurrency.py",
+      "tests/catalogues/test_existing_golden.py"
+    ],
+    "historical_whitespace_warnings": 1,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "481f98f",
+    "title": "Expand METACO W1 golden coverage",
+    "review": "METACO W1: по 12 positive, 4 negative, 4 ambiguous на группу; exact fixture equality проходит.",
+    "files": [
+      "app/sources/metaco.py",
+      "tests/catalogues/test_metaco.py",
+      "tests/catalogues/test_quality.py",
+      "tests/fixtures/catalogues/metaco/brake_discs/manifest.yaml",
+      "tests/fixtures/catalogues/metaco/brake_discs/oem.csv",
+      "tests/fixtures/catalogues/metaco/brake_discs/replacements.csv",
+      "tests/fixtures/catalogues/metaco/brake_pads/manifest.yaml",
+      "tests/fixtures/catalogues/metaco/brake_pads/oem.csv",
+      "tests/fixtures/catalogues/metaco/brake_pads/replacements.csv"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "4b19019",
+    "title": "Gate METACO pilot by tenant and group with isolated cache policy",
+    "review": "Изоляция source/group/tenant и cache scope проходит. Версия индекса в ключ кэша не входит: остаётся риск устаревшей выдачи после замены индекса.",
+    "files": [
+      ".env.example",
+      "app/aggregator.py",
+      "app/config.py",
+      "app/jobs.py",
+      "app/main.py",
+      "app/sources/metaco.py",
+      "app/sources/registry.py",
+      "scripts/check_metaco_candidate.py",
+      "tests/catalogues/test_cache_concurrency.py",
+      "tests/catalogues/test_routing.py",
+      "tests/test_aggregator.py",
+      "tests/test_circular_search.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "9d573f2",
+    "title": "Record full candidate checks and METACO manual test workbook",
+    "review": "Исторические результаты отделены от текущего аудита; manual XLSX не исполнялся в production.",
+    "files": [
+      "output/catalogue-reports/metaco-w1-2026-09-22/candidate-check.json",
+      "output/catalogue-reports/metaco-w1-2026-09-22/hel-recheck.xml",
+      "output/catalogue-reports/metaco-w1-2026-09-22/junit.xml",
+      "output/catalogue-reports/metaco-w1-2026-09-22/live-junit.xml",
+      "output/catalogue-reports/metaco-w1-2026-09-22/manual-check.md",
+      "output/catalogue-reports/metaco-w1-2026-09-22/metaco-test.xlsx",
+      "output/catalogue-reports/metaco-w1-2026-09-22/release.md",
+      "output/catalogue-reports/metaco-w1-2026-09-22/reproduce.md",
+      "output/catalogue-reports/metaco-w1-2026-09-22/summary.json",
+      "plans/README.md",
+      "plans/catalogue-expansion.yaml"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "7b612b4",
+    "title": "Allow explicitly approved global catalogue rollout",
+    "review": "Wildcard tenant допускается только явным pilot rule; routing regressions проходят.",
+    "files": [
+      ".env.example",
+      "app/sources/registry.py",
+      "tests/catalogues/test_routing.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "ceee7fd",
+    "title": "Enable METACO catalogue on production search",
+    "review": "Публичный read-only sources endpoint подтверждает включение METACO; customer lookup/quota не использовались.",
+    "files": [
+      ".env.example",
+      ".gitignore",
+      "app/config.py",
+      "app/sources/registry.py",
+      "output/catalogue-reports/metaco-w1-2026-09-22/release.md",
+      "plans/catalogue-expansion.yaml",
+      "tests/catalogues/test_routing.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "8eabe1f",
+    "title": "Keep catalogue diagnostics closed and avoid repeated source timeouts",
+    "review": "Диагностика остаётся закрытой; cache/cooldown/coalesce проходят. Circuit breaker process-local, не глобальный для нескольких процессов.",
+    "files": [
+      ".env.example",
+      "app/aggregator.py",
+      "app/config.py",
+      "app/sources/hel.py",
+      "app/sources/metaco.py",
+      "app/sources/registry.py",
+      "app/static/app.js",
+      "tests/catalogues/test_cache_concurrency.py",
+      "tests/catalogues/test_routing.py",
+      "tests/test_frontend.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "39b8439",
+    "title": "Add staged MARSHALL brake-pad catalogue candidate",
+    "review": "MARSHALL: copied index integrity, positive/negative smoke, runtime benchmark; добавлена отсутствовавшая запись в catalog.json.",
+    "files": [
+      "app/config.py",
+      "app/sources/marshall.py",
+      "app/sources/registry.py",
+      "output/catalogue-reports/marshall-w1-2026-09-22/discovery.md",
+      "plans/catalogue-expansion.yaml",
+      "scripts/build_marshall_index.py",
+      "tests/catalogues/test_marshall.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "8149048",
+    "title": "Add staged LYNXauto brake-pad catalogue candidate",
+    "review": "LYNXauto: live pads/shocks/hoses, отрицательный номер. Исправлены HTTP-error=>not_found и классификация комплектующих.",
+    "files": [
+      "app/sources/http.py",
+      "app/sources/lynxauto.py",
+      "app/sources/registry.py",
+      "output/catalogue-reports/lynxauto-w1-2026-09-22/discovery.md",
+      "plans/catalogue-expansion.yaml",
+      "tests/catalogues/test_lynxauto.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "4b2abd1",
+    "title": "Fix result search and add column filters",
+    "review": "Фильтры, нормализация запроса, пагинация проверены Chromium/WebKit. Текущая семантика источников исключающая: снятый источник скрывает и общие строки; сохранена как существующий тестируемый контракт.",
+    "files": [
+      "app/static/app.js",
+      "app/static/main.css",
+      "app/templates/index.html",
+      "tests/test_aggregator.py",
+      "tests/test_frontend.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "0be9374",
+    "title": "Mark enabled brake-pad catalogues as verified",
+    "review": "verified=True означает ручную отметку реализации, а не прохождение всех gates качества.",
+    "files": [
+      "app/sources/lynxauto.py",
+      "app/sources/marshall.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "aa34a36",
+    "title": "Add W1 brake catalogue sources",
+    "review": "FAP/GANZ/Zimmermann/MasterKit live positives и negatives прошли. Исправлена ошибочная обработка API FAP/Zimmermann и поиск группы MasterKit по всему HTML. Частичные сбои карточек остаются риском.",
+    "files": [
+      "app/marketing.py",
+      "app/sources/catalog.json",
+      "app/sources/fap.py",
+      "app/sources/ganz.py",
+      "app/sources/masterkit.py",
+      "app/sources/registry.py",
+      "app/sources/zimmermann.py",
+      "app/static/app.js",
+      "app/static/images/brands/fap.svg",
+      "app/static/images/brands/ganz.svg",
+      "app/static/images/brands/lynxauto.svg",
+      "app/static/images/brands/marshall.svg",
+      "app/static/images/brands/masterkit.svg",
+      "app/static/images/brands/metaco.svg",
+      "app/static/images/brands/zimmermann.png",
+      "app/static/main.css",
+      "app/templates/index.html",
+      "tests/catalogues/test_fap.py",
+      "tests/catalogues/test_ganz.py",
+      "tests/catalogues/test_masterkit.py",
+      "tests/catalogues/test_zimmermann.py"
+    ],
+    "historical_whitespace_warnings": 1,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "6a721e8",
+    "title": "Add Monaer brake catalogue index",
+    "review": "MONAER: оба типа деталей найдены в скопированном индексе; 58101H5A25 отсутствует, это не поломка всего каталога.",
+    "files": [
+      "app/config.py",
+      "app/marketing.py",
+      "app/sources/catalog.json",
+      "app/sources/monaer.py",
+      "app/sources/registry.py",
+      "app/static/app.js",
+      "app/static/images/brands/monaer.png",
+      "app/templates/index.html",
+      "scripts/build_monaer_index.py",
+      "tests/catalogues/test_monaer.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "3246578",
+    "title": "Add ATE brake catalogue source",
+    "review": "ATE: live pads/discs/hoses. Исправлены malformed/HTTP ошибки и смешивание деталей с аксессуарами.",
+    "files": [
+      "app/marketing.py",
+      "app/sources/ate.py",
+      "app/sources/catalog.json",
+      "app/sources/registry.py",
+      "app/static/app.js",
+      "app/static/images/brands/ate.png",
+      "app/templates/index.html",
+      "tests/catalogues/test_ate.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "2e704c4",
+    "title": "Add tenant batching and paced processing",
+    "review": "Пакеты 33=>10/10/10/3, однократная квота и summary проходят. Добавлены restart/idempotent summary/persistent pacing tests. Возможное занятие всех workers ожидающими paced jobs требует отдельного scheduler-теста/исправления.",
+    "files": [
+      ".env.example",
+      "README.md",
+      "app/config.py",
+      "app/db.py",
+      "app/jobs.py",
+      "app/main.py",
+      "app/models.py",
+      "app/pacing.py",
+      "deploy/duckdns-update.sh",
+      "deploy/duckdns.service",
+      "deploy/duckdns.timer",
+      "deploy/home-tunnel/README.md",
+      "deploy/home-tunnel/crossparts-tunnel.service",
+      "deploy/home-tunnel/tunnel.sh",
+      "deploy/nginx-crossparts.conf",
+      "deploy/nginx-crossparts.conf.bak.20260910173055",
+      "output/admin-split-test-33.xlsx",
+      "tests/test_chunked_jobs.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "42071cc",
+    "title": "Add METACO and LYNXauto shock absorbers",
+    "review": "METACO/LYNXauto shocks подтверждены живой матрицей; исключение опор и пыльников усилено.",
+    "files": [
+      "app/sources/catalog.json",
+      "app/sources/lynxauto.py",
+      "app/sources/metaco.py",
+      "tests/catalogues/test_lynxauto.py",
+      "tests/catalogues/test_metaco.py",
+      "tests/catalogues/test_routing.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "24fa425",
+    "title": "Remove customer SKU from single lookup export",
+    "review": "Пакетный Excel сохраняет Наш номер; одиночный export.xlsx намеренно не содержит пустую SKU-колонку. Соответствующие тесты проходят.",
+    "files": [
+      "app/excel.py",
+      "app/main.py",
+      "tests/test_lookup_export.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "cbeb9df",
+    "title": "Add FEBEST and TORR shock absorber catalogues",
+    "review": "FEBEST/TORR положительные и отрицательные live проверки прошли. Добавлены защита от HTTP ошибок и отсечение аксессуаров FEBEST. Полнота при отказе карточек TORR не гарантируется.",
+    "files": [
+      "app/marketing.py",
+      "app/sources/catalog.json",
+      "app/sources/febest.py",
+      "app/sources/registry.py",
+      "app/sources/torr.py",
+      "app/static/app.js",
+      "app/static/images/brands/febest.svg",
+      "app/static/images/brands/torr.png",
+      "app/static/main.css",
+      "tests/catalogues/test_febest.py",
+      "tests/catalogues/test_torr.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "042003c",
+    "title": "Enable approved catalogue candidates without group selection",
+    "review": "Все разрешённые candidates участвуют без группы; запрещённые tenant/group и ungrouped:false покрыты тестами.",
+    "files": [
+      "app/config.py",
+      "tests/catalogues/test_routing.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "89a89d9",
+    "title": "Document Monroe TLS blocker",
+    "review": "Коммит только документирует прежнюю TLS-проверку Monroe. В этом аудите блокер не перепроверялся; свежий статус не утверждается.",
+    "files": [
+      "app/sources/catalog.json"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "cbbf7b0",
+    "title": "Add METACO main radiators",
+    "review": "METACO main radiators: 8200735038=>8010-025, отдельная группа и индекс integrity/benchmark проходят.",
+    "files": [
+      "app/sources/catalog.json",
+      "app/sources/metaco.py",
+      "tests/catalogues/test_metaco.py",
+      "tests/catalogues/test_routing.py",
+      "tests/test_groups.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "c07a43c",
+    "title": "Record radiator catalogue access checks",
+    "review": "NRF/AVA: записаны прежние наблюдения. Они не доказывают отсутствие любого публичного API; в данном аудите не перепроверялись.",
+    "files": [
+      "app/sources/catalog.json",
+      "plans/catalogue-expansion.yaml"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "7bdb479",
+    "title": "Close radiator catalogue wave",
+    "review": "P08 marked complete преждевременно относительно общего quality gate: нет полного independent golden корпуса и анализа partial.",
+    "files": [
+      "plans/catalogue-expansion.yaml"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  },
+  {
+    "commit": "113f98f",
+    "title": "Add brake hose catalogue coverage",
+    "review": "METACO/LYNXauto/ATE hoses прошли. Найден дефект Brembo direct hydraulic card и ошибка групп ATE/JNBK в catalog.json; исправлены локально с регрессиями.",
+    "files": [
+      "app/sources/ate.py",
+      "app/sources/catalog.json",
+      "app/sources/lynxauto.py",
+      "app/sources/metaco.py",
+      "tests/catalogues/test_ate.py",
+      "tests/catalogues/test_lynxauto.py",
+      "tests/catalogues/test_metaco.py",
+      "tests/catalogues/test_routing.py"
+    ],
+    "historical_whitespace_warnings": 0,
+    "test_execution": "HEAD aggregate regression, not separate deployment/execution of this historical revision"
+  }
+]

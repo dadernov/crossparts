@@ -136,7 +136,10 @@ class SourceRegistry:
             scoped.groups = tuple(
                 value for value in source.groups if value in rule["groups"]
             ) if rule["ungrouped"] else ()
+        version = source.cache_version
         scoped.cache_key = f"{source.key}:{'+'.join(scoped.groups)}"
+        if version:
+            scoped.cache_key += f"@{version}"
         return scoped
 
     def select_for_job(self, keys: list[str] | None, *, tenant: str) -> list[BaseSource]:

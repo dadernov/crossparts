@@ -22,11 +22,12 @@ from ..groups import BRAKE_DISCS, BRAKE_HOSES, BRAKE_PADS, RADIATORS, SHOCK_ABSO
 from ..normalize import (
     KIND_AFTERMARKET,
     KIND_OEM,
+    classify_reference_brand,
     clean_brand,
     clean_number,
     number_key,
 )
-from .base import BaseSource, Cross, SourceResult, SourceStatus
+from .base import BaseSource, Cross, SourceResult, SourceStatus, file_snapshot_version
 
 
 DOWNLOADS_URL = "https://metaco.parts/content/downloads"
@@ -107,7 +108,7 @@ def _read_csv(path: Path, *, kind: str) -> list[MetacoRow]:
             reference_number=ref_number,
             description=description,
             group=group,
-            kind=kind,
+            kind=classify_reference_brand(ref_brand, kind),
         ))
     return rows
 
@@ -304,6 +305,13 @@ class MetacoSource(BaseSource):
     def __init__(self, settings, http_factory=None, pool=None, *, index=None):
         super().__init__(settings, http_factory, pool)
         self._index = index
+        self._cache_version = file_snapshot_version(
+            getattr(settings, "metaco_index_path", "")
+        )
+
+    @property
+    def cache_version(self) -> str:
+        return self._cache_version
 
     def _load_index(self) -> MetacoIndex:
         if self._index is not None:

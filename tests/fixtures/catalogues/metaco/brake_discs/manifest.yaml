@@ -620,7 +620,7 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: '0004212612'
     number_key: '0004212612'
-    kind: aftermarket
+    kind: oem
     source_product: 3050-426
     evidence_locator: official snapshot product closure
   - brand_raw: MERCEDES BENZ
@@ -634,7 +634,7 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: A0004212612
     number_key: A0004212612
-    kind: aftermarket
+    kind: oem
     source_product: 3050-426
     evidence_locator: official snapshot product closure
   - brand_raw: METELLI
@@ -734,7 +734,7 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: 0004218700
     number_key: 0004218700
-    kind: aftermarket
+    kind: oem
     source_product: 3050-485
     evidence_locator: official snapshot product closure
   - brand_raw: MERCEDES BENZ
@@ -762,7 +762,7 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: A0004218700
     number_key: A0004218700
-    kind: aftermarket
+    kind: oem
     source_product: 3050-485
     evidence_locator: official snapshot product closure
   forbidden_pairs: []
@@ -1553,7 +1553,7 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: '0004212612'
     number_key: '0004212612'
-    kind: aftermarket
+    kind: oem
     source_product: 3050-426
     evidence_locator: official snapshot product closure
   - brand_raw: MERCEDES BENZ
@@ -1567,7 +1567,7 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: A0004212612
     number_key: A0004212612
-    kind: aftermarket
+    kind: oem
     source_product: 3050-426
     evidence_locator: official snapshot product closure
   - brand_raw: METELLI
@@ -1693,14 +1693,14 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: '0004212612'
     number_key: '0004212612'
-    kind: aftermarket
+    kind: oem
     source_product: 3050-591
     evidence_locator: official snapshot product closure
   - brand_raw: MERCEDES BENZ
     brand_canonical: MERCEDES BENZ
     number_raw: A0004212612
     number_key: A0004212612
-    kind: aftermarket
+    kind: oem
     source_product: 3050-591
     evidence_locator: official snapshot product closure
   - brand_raw: METELLI
@@ -1826,14 +1826,14 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: '0004212612'
     number_key: '0004212612'
-    kind: aftermarket
+    kind: oem
     source_product: 3050-591PRM
     evidence_locator: official snapshot product closure
   - brand_raw: MERCEDES BENZ
     brand_canonical: MERCEDES BENZ
     number_raw: A0004212612
     number_key: A0004212612
-    kind: aftermarket
+    kind: oem
     source_product: 3050-591PRM
     evidence_locator: official snapshot product closure
   - brand_raw: METELLI
@@ -1935,7 +1935,7 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: 0004218700
     number_key: 0004218700
-    kind: aftermarket
+    kind: oem
     source_product: 3050-485
     evidence_locator: official snapshot product closure
   - brand_raw: MERCEDES BENZ
@@ -1963,7 +1963,7 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: A0004218700
     number_key: A0004218700
-    kind: aftermarket
+    kind: oem
     source_product: 3050-485
     evidence_locator: official snapshot product closure
   - brand_raw: METACO PREMIUM
@@ -1984,14 +1984,14 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: 0004218700
     number_key: 0004218700
-    kind: aftermarket
+    kind: oem
     source_product: 3050-601
     evidence_locator: official snapshot product closure
   - brand_raw: MERCEDES BENZ
     brand_canonical: MERCEDES BENZ
     number_raw: A0004218700
     number_key: A0004218700
-    kind: aftermarket
+    kind: oem
     source_product: 3050-601
     evidence_locator: official snapshot product closure
   - brand_raw: METACO PREMIUM
@@ -2012,14 +2012,14 @@ cases:
     brand_canonical: MERCEDES BENZ
     number_raw: 0004218700
     number_key: 0004218700
-    kind: aftermarket
+    kind: oem
     source_product: 3050-601PRM
     evidence_locator: official snapshot product closure
   - brand_raw: MERCEDES BENZ
     brand_canonical: MERCEDES BENZ
     number_raw: A0004218700
     number_key: A0004218700
-    kind: aftermarket
+    kind: oem
     source_product: 3050-601PRM
     evidence_locator: official snapshot product closure
   forbidden_pairs: []

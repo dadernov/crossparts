@@ -34,7 +34,8 @@ class FebestSource(BaseSource):
         if not isinstance(row, dict):
             return False
         text = str(row.get("description") or "").casefold()
-        return "shock absorber" in text
+        return ("shock absorber" in text and not any(word in text for word in
+                ("boot", "mount", "bush", "bearing", "buffer", "stopper", "repair", "bracket", "support")))
 
     def parse_rows(self, payload: object, *, url: str):
         if not isinstance(payload, list):
@@ -75,8 +76,15 @@ class FebestSource(BaseSource):
                 return SourceResult(self.key, SourceStatus.BLOCKED, url=str(response.url),
                                     message=f"HTTP {response.status_code}",
                                     elapsed_ms=self.elapsed(started))
+            if response.status_code >= 400:
+                return SourceResult(self.key, SourceStatus.ERROR, url=str(response.url),
+                                    message=f"HTTP {response.status_code}",
+                                    elapsed_ms=self.elapsed(started))
             try:
-                products, crosses = self.parse_rows(response.json(), url=endpoint)
+                payload = response.json()
+                if not isinstance(payload, list):
+                    raise ValueError("invalid article response")
+                products, crosses = self.parse_rows(payload, url=endpoint)
             except ValueError:
                 return SourceResult(self.key, SourceStatus.ERROR, url=str(response.url),
                                     message="FEBEST вернул не JSON",

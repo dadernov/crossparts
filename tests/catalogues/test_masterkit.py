@@ -13,7 +13,7 @@ from app.sources.masterkit import MasterkitSource
 from app.sources.registry import SourceRegistry
 
 
-PAD_PAGE = "<main><h1>Комплект установочный тормозных колодок</h1><span>тормозные колодки</span></main>"
+PAD_PAGE = '<main><h1>MasterKit 77AA515</h1><div class="partsInfoPropertiesRow"><span class="partsInfoPropertiesRowProperty">Товарная группа:</span><span>тормозные колодки</span></div></main>'
 
 
 def test_search_payload_keeps_only_explicit_masterkit_cross_articles():

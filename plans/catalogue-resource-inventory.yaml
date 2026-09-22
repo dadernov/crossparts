@@ -11,8 +11,8 @@ counts:
   brands: 33
   literal_urls: 36
   logical_sources: 34
-  registered_adapters: 13
-  missing_adapters: 21
+  registered_adapters: 24
+  missing_adapters: 10
   requested_source_group_pairs: 64
   section_rows:
     Тормозная система диски - колодки: 17
@@ -22,9 +22,10 @@ counts:
 interpretation:
 - URL в Excel — отправная точка исследования, не готовый API endpoint.
 - Статусы catalog.json и verified в коде исторические; живой доступ сейчас не проверялся.
-- Настройки перечислены по defaults исходного кода, не по конфигурации production.
 - Повтор бренда в разделе не требует отдельного парсера; нужен отдельный эталон для каждой группы.
 - SAKURA сопоставлена с brixo; историческая запись salura/SALURA — опечатка в метаданных, не второй каталог.
+- BUILTIN и CANDIDATES считаются зарегистрированными адаптерами; pilot-источник может быть зарегистрирован, но выключен правилами
+  tenant/group.
 resources:
 - id: xlsx-02
   sheet: Сайты для парсинга
@@ -553,8 +554,8 @@ sources:
   enabled_by_code_default: false
   metadata_key: jnbk
   metadata_status_historical: blocked
-  metadata_note_historical: Закрыт для нашего IP (AWS WAF). Кроссы NiBK берём из каталога Brixo — источник brixo.
-  live_verified_at: null
+  metadata_note_historical: AWS WAF. Отдельный адаптер nibkru использует публичную базу NiBK/Brixo.
+  live_verified_at: '2026-09-22'
   readiness: needs_revalidation
   next_action: audit_existing_adapter
   groups_missing_in_metadata: []
@@ -657,7 +658,7 @@ sources:
   metadata_key: mintex
   metadata_status_historical: blocked
   metadata_note_historical: Cloudflare managed challenge
-  live_verified_at: null
+  live_verified_at: '2026-09-22'
   readiness: needs_revalidation
   next_action: audit_existing_adapter
   groups_missing_in_metadata: []
@@ -724,18 +725,20 @@ sources:
   - brake_pads
   - brake_discs
   - brake_hoses
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
+  registered_in_code: true
+  adapter_path: app/sources/ate.py
+  code_groups:
+  - brake_pads
+  - brake_discs
+  - brake_hoses
   enabled_by_code_default: false
   metadata_key: ate
-  metadata_status_historical: planned
-  metadata_note_historical: null
+  metadata_status_historical: implemented
+  metadata_note_historical: 'Открытый фирменный TecDoc-каталог ATE: точный OE-поиск колодок, тормозных дисков и шлангов.'
   live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
-  - brake_hoses
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
+  groups_missing_in_metadata: []
   regression_groups:
   - brake_discs
   - brake_hoses
@@ -757,16 +760,18 @@ sources:
   requested_groups:
   - brake_pads
   - brake_discs
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
+  registered_in_code: true
+  adapter_path: app/sources/zimmermann.py
+  code_groups:
+  - brake_pads
+  - brake_discs
   enabled_by_code_default: false
   metadata_key: zimmermann
-  metadata_status_historical: planned
-  metadata_note_historical: 'Поиск по сайту игнорирует номер: выдача одинаковая на любой запрос.'
+  metadata_status_historical: implemented
+  metadata_note_historical: 'Открытый фирменный TecDoc-каталог: точный поиск по OE, колодки и диски.'
   live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
   groups_missing_in_metadata: []
   regression_groups:
   - brake_discs
@@ -821,16 +826,18 @@ sources:
   requested_groups:
   - brake_pads
   - brake_discs
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
+  registered_in_code: true
+  adapter_path: app/sources/fap.py
+  code_groups:
+  - brake_pads
+  - brake_discs
   enabled_by_code_default: false
   metadata_key: fap
-  metadata_status_historical: planned
-  metadata_note_historical: null
+  metadata_status_historical: implemented
+  metadata_note_historical: 'Публичный API: OE → FAP-артикул и таблица оригинальных номеров.'
   live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
   groups_missing_in_metadata: []
   regression_groups:
   - brake_discs
@@ -852,16 +859,18 @@ sources:
   requested_groups:
   - brake_pads
   - brake_discs
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
+  registered_in_code: true
+  adapter_path: app/sources/monaer.py
+  code_groups:
+  - brake_pads
+  - brake_discs
   enabled_by_code_default: false
   metadata_key: monaer
-  metadata_status_historical: planned
-  metadata_note_historical: null
+  metadata_status_historical: implemented
+  metadata_note_historical: 'Локальный индекс публичных карточек Monaer: OE-номера, группа и собственный артикул.'
   live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
   groups_missing_in_metadata: []
   regression_groups:
   - brake_discs
@@ -883,18 +892,18 @@ sources:
   requested_groups:
   - brake_pads
   - brake_discs
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
-  enabled_by_code_default: false
-  metadata_key: null
-  metadata_status_historical: null
-  metadata_note_historical: null
-  live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
+  registered_in_code: true
+  adapter_path: app/sources/marshall.py
+  code_groups:
   - brake_pads
+  enabled_by_code_default: false
+  metadata_key: marshall
+  metadata_status_historical: implemented
+  metadata_note_historical: Локальный индекс официального XLSX; подключение регулируется pilot_rules.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
+  groups_missing_in_metadata:
   - brake_discs
   regression_groups:
   - brake_discs
@@ -925,15 +934,13 @@ sources:
   code_groups: []
   enabled_by_code_default: false
   metadata_key: trw
-  metadata_status_historical: planned
-  metadata_note_historical: null
-  live_verified_at: null
+  metadata_status_historical: blocked
+  metadata_note_historical: 22.09.2026 общий каталог ZF доступен, но стабильный точный OE-контракт с отдельной атрибуцией
+    TRW не подтверждён; источник выключен до discovery и goldens.
+  live_verified_at: '2026-09-22'
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
-  - brake_pads
-  - brake_discs
-  - shock_absorbers
+  groups_missing_in_metadata: []
   regression_groups:
   - brake_discs
   - brake_hoses
@@ -962,31 +969,30 @@ sources:
   - shock_absorbers
   - radiators
   - brake_hoses
-  registered_in_code: false
+  registered_in_code: true
   adapter_path: app/sources/metaco.py
   code_groups:
-  - brake_pads
-  - brake_discs
-  enabled_by_code_default: false
-  metadata_key: null
-  metadata_status_historical: null
-  metadata_note_historical: null
-  live_verified_at: '2026-09-22'
-  readiness: offline_passed_not_release_ready
-  next_action: expand_reviewed_golden_then_stage_disabled_adapter
-  verified_entry_url: https://metaco.parts/content/downloads
-  access_mode: official_public_csv_snapshots_compiled_to_local_sqlite
-  discovery_evidence:
-  - "OEM CSV: 4,794,078 bytes, sha256 ec8f4d5c0fbabdce0b03afaf6b6844217701e4a6c0acf958c085010ad8b4e526"
-  - "Replacement CSV: 10,566,715 bytes, sha256 bfb63a14a1dc8b12a1311dc551b02da8316b093f78960f8b37b29a38a6ba1ee2"
-  - "W1 index: 41,779 rows; 34,396 pads and 7,383 discs; no HTTP during lookup."
-  - "Pilot adapter and exact fixture manifests exist but are not in SourceRegistry.BUILTIN or defaults."
-  groups_missing_in_metadata:
   - brake_pads
   - brake_discs
   - shock_absorbers
   - radiators
   - brake_hoses
+  enabled_by_code_default: false
+  metadata_key: metaco
+  metadata_status_historical: implemented
+  metadata_note_historical: 'Локальный индекс из официальных OEM и cross-list CSV: колодки, диски, амортизаторы подвески,
+    основные радиаторы и тормозные шланги.'
+  live_verified_at: '2026-09-22'
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
+  verified_entry_url: https://metaco.parts/content/downloads
+  access_mode: official_public_csv_snapshots_compiled_to_local_sqlite
+  discovery_evidence:
+  - 'OEM CSV: 4,794,078 bytes, sha256 ec8f4d5c0fbabdce0b03afaf6b6844217701e4a6c0acf958c085010ad8b4e526'
+  - 'Replacement CSV: 10,566,715 bytes, sha256 bfb63a14a1dc8b12a1311dc551b02da8316b093f78960f8b37b29a38a6ba1ee2'
+  - 'W1 index: 41,779 rows; 34,396 pads and 7,383 discs; no HTTP during lookup.'
+  - Pilot adapter and exact fixture manifests exist but are not in SourceRegistry.BUILTIN or defaults.
+  groups_missing_in_metadata: []
   regression_groups:
   - brake_discs
   - brake_hoses
@@ -1010,18 +1016,18 @@ sources:
   requested_groups:
   - brake_pads
   - brake_discs
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
-  enabled_by_code_default: false
-  metadata_key: null
-  metadata_status_historical: null
-  metadata_note_historical: null
-  live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
+  registered_in_code: true
+  adapter_path: app/sources/masterkit.py
+  code_groups:
   - brake_pads
+  enabled_by_code_default: false
+  metadata_key: masterkit
+  metadata_status_historical: implemented
+  metadata_note_historical: Публичный OE-поиск; карточка товара подтверждает группу тормозных колодок.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
+  groups_missing_in_metadata:
   - brake_discs
   regression_groups:
   - brake_discs
@@ -1047,21 +1053,21 @@ sources:
   - brake_discs
   - shock_absorbers
   - brake_hoses
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
-  enabled_by_code_default: false
-  metadata_key: null
-  metadata_status_historical: null
-  metadata_note_historical: null
-  live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
+  registered_in_code: true
+  adapter_path: app/sources/lynxauto.py
+  code_groups:
   - brake_pads
-  - brake_discs
   - shock_absorbers
   - brake_hoses
+  enabled_by_code_default: false
+  metadata_key: lynxauto
+  metadata_status_historical: implemented
+  metadata_note_historical: Официальный OE-поиск и карточки LYNXauto для колодок, амортизаторов и тормозных шлангов.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
+  groups_missing_in_metadata:
+  - brake_discs
   regression_groups:
   - brake_discs
   - brake_hoses
@@ -1088,21 +1094,22 @@ sources:
   - brake_discs
   - shock_absorbers
   - radiators
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
-  enabled_by_code_default: false
-  metadata_key: null
-  metadata_status_historical: null
-  metadata_note_historical: null
-  live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
+  registered_in_code: true
+  adapter_path: app/sources/ganz.py
+  code_groups:
   - brake_pads
   - brake_discs
   - shock_absorbers
   - radiators
+  enabled_by_code_default: false
+  metadata_key: ganz
+  metadata_status_historical: implemented
+  metadata_note_historical: Точный OE-поиск и карточка GANZ подтверждают колодки, диски, амортизаторы и основные радиаторы;
+    масляные радиаторы и детали кузова исключаются.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
+  groups_missing_in_metadata: []
   regression_groups:
   - brake_discs
   - brake_pads
@@ -1160,8 +1167,8 @@ sources:
   enabled_by_code_default: false
   metadata_key: bilstein
   metadata_status_historical: planned
-  metadata_note_historical: Витрина дилера на платформе ABCP (поиск по коду детали в магазине), каталога кроссов
-    производителя нет.
+  metadata_note_historical: 'Проверено в W2: витрина дилера на платформе ABCP ищет собственные коды; публичного OE-каталога
+    производителя нет.'
   live_verified_at: null
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
@@ -1190,7 +1197,8 @@ sources:
   enabled_by_code_default: false
   metadata_key: sachs
   metadata_status_historical: planned
-  metadata_note_historical: null
+  metadata_note_historical: 'Проверено в W2: публичная страница бренда ведёт в отдельный ZF-каталог, но не даёт стабильного
+    API точного OE-поиска.'
   live_verified_at: null
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
@@ -1219,7 +1227,7 @@ sources:
   enabled_by_code_default: false
   metadata_key: boge
   metadata_status_historical: planned
-  metadata_note_historical: Поиск магазина по ОЕ-номерам ничего не находит — индексируются только свои артикулы.
+  metadata_note_historical: 'Проверено в W2: поиск магазина по OE-номерам ничего не находит — индексируются только свои артикулы.'
   live_verified_at: null
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
@@ -1248,7 +1256,7 @@ sources:
   enabled_by_code_default: false
   metadata_key: koni
   metadata_status_historical: planned
-  metadata_note_historical: Поиск по сайту ОЕ-номера не индексирует — находит только артикулы KONI.
+  metadata_note_historical: 'Проверено в W2: поиск по сайту OE-номера не индексирует — находит только артикулы KONI.'
   live_verified_at: null
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
@@ -1281,8 +1289,8 @@ sources:
   enabled_by_code_default: true
   metadata_key: hola
   metadata_status_historical: implemented
-  metadata_note_historical: 'В таблице заказчика указан в амортизаторах, но каталог у бренда шире: колодки, диски
-    и шланги тоже есть.'
+  metadata_note_historical: 'В таблице заказчика указан в амортизаторах, но каталог у бренда шире: колодки, диски и шланги
+    тоже есть.'
   live_verified_at: null
   readiness: needs_revalidation
   next_action: audit_existing_adapter
@@ -1312,14 +1320,14 @@ sources:
   adapter_path: null
   code_groups: []
   enabled_by_code_default: false
-  metadata_key: null
-  metadata_status_historical: null
-  metadata_note_historical: null
-  live_verified_at: null
+  metadata_key: monroe
+  metadata_status_historical: blocked
+  metadata_note_historical: 'Проверено в W2: у Monroe есть reverse-OE API, но сервер отдаёт неполную TLS-цепочку; стандартные
+    проверяющие клиенты отклоняют соединение. Источник не включён до исправления сертификата на стороне Monroe.'
+  live_verified_at: '2026-09-22'
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
-  - shock_absorbers
+  groups_missing_in_metadata: []
   regression_groups:
   - shock_absorbers
   required_test_suites:
@@ -1338,18 +1346,18 @@ sources:
   - 36
   requested_groups:
   - shock_absorbers
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
-  enabled_by_code_default: false
-  metadata_key: null
-  metadata_status_historical: null
-  metadata_note_historical: null
-  live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
+  registered_in_code: true
+  adapter_path: app/sources/febest.py
+  code_groups:
   - shock_absorbers
+  enabled_by_code_default: false
+  metadata_key: febest
+  metadata_status_historical: implemented
+  metadata_note_historical: Публичный точный OE-поиск FEBEST; в выдачу попадают только амортизаторы.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
+  groups_missing_in_metadata: []
   regression_groups:
   - shock_absorbers
   required_test_suites:
@@ -1368,18 +1376,18 @@ sources:
   - 37
   requested_groups:
   - shock_absorbers
-  registered_in_code: false
-  adapter_path: null
-  code_groups: []
-  enabled_by_code_default: false
-  metadata_key: null
-  metadata_status_historical: null
-  metadata_note_historical: null
-  live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
-  groups_missing_in_metadata:
+  registered_in_code: true
+  adapter_path: app/sources/torr.py
+  code_groups:
   - shock_absorbers
+  enabled_by_code_default: false
+  metadata_key: torr
+  metadata_status_historical: implemented
+  metadata_note_historical: Официальный OE-поиск и таблица кросс-номеров амортизаторов TORR.
+  live_verified_at: null
+  readiness: needs_revalidation
+  next_action: audit_existing_adapter_and_complete_acceptance_gates
+  groups_missing_in_metadata: []
   regression_groups:
   - shock_absorbers
   required_test_suites:
@@ -1493,9 +1501,10 @@ sources:
   code_groups: []
   enabled_by_code_default: false
   metadata_key: nrf
-  metadata_status_historical: blocked
-  metadata_note_historical: 'Витрина B2B: список найденных товаров скрыт от гостя, нужен аккаунт дилера.'
-  live_verified_at: null
+  metadata_status_historical: planned
+  metadata_note_historical: 22.09.2026 публичный официальный OE-поиск вернул гостю товарные результаты для 8200735038. Нужны
+    адаптер, независимые эталоны и проверка карточек до включения.
+  live_verified_at: '2026-09-22'
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
   groups_missing_in_metadata: []
@@ -1523,8 +1532,9 @@ sources:
   enabled_by_code_default: false
   metadata_key: ava
   metadata_status_historical: blocked
-  metadata_note_historical: Домен не открывается (404 от фронтенда).
-  live_verified_at: null
+  metadata_note_historical: 22.09.2026 стандартная TLS-проверка отклоняет неполную цепочку сертификата AVA; проверка сертификата
+    не отключается.
+  live_verified_at: '2026-09-22'
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
   groups_missing_in_metadata: []
@@ -1552,8 +1562,9 @@ sources:
   enabled_by_code_default: false
   metadata_key: patron
   metadata_status_historical: blocked
-  metadata_note_historical: Сайт отвечает 503 (балансировщик не отдаёт бэкенд).
-  live_verified_at: null
+  metadata_note_historical: 22.09.2026 официальный сайт отвечает HTTP 403 для серверного клиента; источник выключен, обход
+    защиты не применяется.
+  live_verified_at: '2026-09-22'
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
   groups_missing_in_metadata: []
@@ -1611,9 +1622,9 @@ sources:
   enabled_by_code_default: false
   metadata_key: stellox
   metadata_status_historical: planned
-  metadata_note_historical: 'Каталог без поиска по ОЕ: номера видны только в карточке товара, обратного поиска сайт
-    не даёт.'
-  live_verified_at: null
+  metadata_note_historical: 22.09.2026 публичная страница каталога доступна, но подтверждённый точный обратный OE-поиск не
+    найден; требуется отдельное discovery.
+  live_verified_at: '2026-09-22'
   readiness: discovery_required
   next_action: discover_access_and_cross_reference_contract
   groups_missing_in_metadata: []

@@ -80,25 +80,43 @@ class TorrSource(BaseSource):
                 return SourceResult(self.key, SourceStatus.BLOCKED, url=str(response.url),
                                     message=f"HTTP {response.status_code}",
                                     elapsed_ms=self.elapsed(started))
-            paths = self.product_paths(response.text)
+            if response.status_code >= 400:
+                return SourceResult(self.key, SourceStatus.ERROR, url=str(response.url),
+                                    message=f"HTTP {response.status_code}", elapsed_ms=self.elapsed(started))
+            all_paths = self.product_paths(response.text)
+            truncated = len(all_paths) > self.settings.max_products_per_oe
+            paths = all_paths[:self.settings.max_products_per_oe]
             if not paths:
                 return SourceResult(self.key, SourceStatus.NOT_FOUND, url=search_url,
                                     message="номер не найден в каталоге TORR",
                                     elapsed_ms=self.elapsed(started))
             products, crosses = [], []
-            for path, product in paths[:self.settings.max_products_per_oe]:
+            failed_checks = 0
+            for path, product in paths:
                 page_url = BASE + path
                 try:
                     page = await client.get(page_url)
                 except Exception:
+                    failed_checks += 1
                     continue
-                if page.status_code >= 400 or not self.is_shock(page.text):
+                if page.status_code >= 400:
+                    failed_checks += 1
+                    continue
+                if not self.is_shock(page.text):
                     continue
                 products.append(product)
                 crosses.extend(self.make_cross("TORR", product, product=product,
                                                url=page_url, kind=KIND_AFTERMARKET))
                 crosses.extend(self.parse_crosses(page.text, product=product, url=page_url))
-        return SourceResult(self.key, SourceStatus.OK if crosses else SourceStatus.NOT_FOUND,
+        if not crosses and failed_checks == len(paths):
+            return SourceResult(self.key, SourceStatus.ERROR, url=search_url,
+                                message="не удалось проверить карточки TORR",
+                                elapsed_ms=self.elapsed(started))
+        incomplete = failed_checks > 0 or truncated
+        return SourceResult(self.key, SourceStatus.PARTIAL if crosses and incomplete else (
+                                SourceStatus.OK if crosses else SourceStatus.NOT_FOUND),
                             products=products, crosses=crosses, url=search_url,
-                            message=None if crosses else "карточки TORR не являются амортизаторами",
+                            message=(f"не проверено карточек: {failed_checks}; выдача ограничена: {truncated}"
+                                     if incomplete else None) if crosses else
+                                    "карточки TORR не являются амортизаторами",
                             elapsed_ms=self.elapsed(started))

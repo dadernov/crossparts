@@ -1,0 +1,1809 @@
+[
+  {
+    "source": "brembo",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "P 30 122"
+    ],
+    "rows": 107,
+    "message": null,
+    "sample": [
+      {
+        "brand": "BREMBO",
+        "number": "P 30 122",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "GEELY",
+        "number": "1014031279",
+        "kind": "oem"
+      },
+      {
+        "brand": "GEOMETRY",
+        "number": "1014031279",
+        "kind": "oem"
+      },
+      {
+        "brand": "GEELY",
+        "number": "4048034500",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101C7A15",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.226,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "sbparts",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "BP11537"
+    ],
+    "rows": 78,
+    "message": null,
+    "sample": [
+      {
+        "brand": "SB NAGAMOCHI",
+        "number": "BP11537",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "BENDIX AUS",
+        "number": "DB2240",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "BENDIX AUS",
+        "number": "DB2272",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "FMSI",
+        "number": "D1543-8751",
+        "kind": "standard"
+      },
+      {
+        "brand": "FMSI",
+        "number": "D1593-8806",
+        "kind": "standard"
+      }
+    ],
+    "seconds": 3.124,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "brembo",
+    "group": "brake_discs",
+    "oe": "1K0615301AA",
+    "status": "ok",
+    "products": [
+      "09.9772.11",
+      "09.9772.75",
+      "09.9772.1X",
+      "09.9772.1S"
+    ],
+    "rows": 304,
+    "message": null,
+    "sample": [
+      {
+        "brand": "BREMBO",
+        "number": "09.9772.11",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "AUDI",
+        "number": "1K0615301AA",
+        "kind": "oem"
+      },
+      {
+        "brand": "SEAT",
+        "number": "1K0615301AA",
+        "kind": "oem"
+      },
+      {
+        "brand": "SKODA",
+        "number": "1K0615301AA",
+        "kind": "oem"
+      },
+      {
+        "brand": "SKODA (SVW)",
+        "number": "1K0615301AA",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.268,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "trialli",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "PP 0806CR",
+      "PF 0806CR",
+      "PP 0806",
+      "PF 0806",
+      "BK 084710"
+    ],
+    "rows": 35,
+    "message": null,
+    "sample": [
+      {
+        "brand": "TRIALLI",
+        "number": "PP 0806CR",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "OEM",
+        "number": "581011RA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "OEM",
+        "number": "581014LA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "OEM",
+        "number": "581011RA05",
+        "kind": "oem"
+      },
+      {
+        "brand": "OEM",
+        "number": "581011WA05",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 5.766,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "brembo",
+    "group": "brake_hoses",
+    "oe": "1K0611701K",
+    "status": "ok",
+    "products": [
+      "T 85 112"
+    ],
+    "rows": 82,
+    "message": null,
+    "sample": [
+      {
+        "brand": "BREMBO",
+        "number": "T 85 112",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "AUDI",
+        "number": "1K0611701",
+        "kind": "oem"
+      },
+      {
+        "brand": "SEAT",
+        "number": "1K0611701",
+        "kind": "oem"
+      },
+      {
+        "brand": "SKODA",
+        "number": "1K0611701",
+        "kind": "oem"
+      },
+      {
+        "brand": "VW",
+        "number": "1K0611701",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.159,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "sbparts",
+    "group": "brake_hoses",
+    "oe": "587312E000",
+    "status": "ok",
+    "products": [
+      "BH13001FL"
+    ],
+    "rows": 4,
+    "message": null,
+    "sample": [
+      {
+        "brand": "SB NAGAMOCHI",
+        "number": "BH13001FL",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58731-2E000",
+        "kind": "oem"
+      },
+      {
+        "brand": "KIA",
+        "number": "587312E000",
+        "kind": "oem"
+      },
+      {
+        "brand": "KIA",
+        "number": "58731-2E010",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 3.164,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "brembo",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "Код изделия недействителен",
+    "sample": [],
+    "seconds": 0.101,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "trialli",
+    "group": "shock_absorbers",
+    "oe": "553101G210",
+    "status": "ok",
+    "products": [
+      "AG 08531",
+      "AG 29037",
+      "AG 02066"
+    ],
+    "rows": 12,
+    "message": null,
+    "sample": [
+      {
+        "brand": "TRIALLI",
+        "number": "AG 08531",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "OEM",
+        "number": "553101G110",
+        "kind": "oem"
+      },
+      {
+        "brand": "OEM",
+        "number": "553101G210",
+        "kind": "oem"
+      },
+      {
+        "brand": "OEM",
+        "number": "553101G220",
+        "kind": "oem"
+      },
+      {
+        "brand": "TRIALLI",
+        "number": "AG 29037",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 4.017,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "nibkru",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "PN0537",
+      "PN0537S"
+    ],
+    "rows": 124,
+    "message": null,
+    "sample": [
+      {
+        "brand": "NIBK",
+        "number": "PN0537",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "GEELY",
+        "number": "106400172402",
+        "kind": "oem"
+      },
+      {
+        "brand": "KIA",
+        "number": "S581014LA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "KIA",
+        "number": "58101H9A10",
+        "kind": "oem"
+      },
+      {
+        "brand": "KIA",
+        "number": "58101C8A10",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 1.728,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "sbparts",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "артикул не найден в каталоге",
+    "sample": [],
+    "seconds": 3.002,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "trialli",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге TRIALLI",
+    "sample": [],
+    "seconds": 1.703,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "nibkru",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге Brixo",
+    "sample": [],
+    "seconds": 1.091,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "brixo",
+    "group": "radiators",
+    "oe": "8200735038",
+    "status": "ok",
+    "products": [
+      "3631-1002"
+    ],
+    "rows": 7,
+    "message": null,
+    "sample": [
+      {
+        "brand": "SAKURA",
+        "number": "3631-1002",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "DACIA",
+        "number": "8200735038",
+        "kind": "oem"
+      },
+      {
+        "brand": "RENAULT",
+        "number": "214104AA0A",
+        "kind": "oem"
+      },
+      {
+        "brand": "RENAULT",
+        "number": "214104453R",
+        "kind": "oem"
+      },
+      {
+        "brand": "LADA",
+        "number": "214104453R",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 1.333,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "luzar",
+    "group": "radiators",
+    "oe": "8200735038",
+    "status": "ok",
+    "products": [
+      "LRc 0908",
+      "LRc 09108",
+      "LRc 0938"
+    ],
+    "rows": 11,
+    "message": null,
+    "sample": [
+      {
+        "brand": "LUZAR",
+        "number": "LRC 0908",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "OEM",
+        "number": "8200735038",
+        "kind": "oem"
+      },
+      {
+        "brand": "OEM",
+        "number": "214104453R",
+        "kind": "oem"
+      },
+      {
+        "brand": "LUZAR",
+        "number": "LRC 09108",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "OEM",
+        "number": "8200735038",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 1.143,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "brixo",
+    "group": "radiators",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге Brixo",
+    "sample": [],
+    "seconds": 1.119,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "luzar",
+    "group": "radiators",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге LUZAR",
+    "sample": [],
+    "seconds": 0.841,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "kyb",
+    "group": "shock_absorbers",
+    "oe": "4851080378",
+    "status": "ok",
+    "products": [
+      "339267",
+      "NST5395R"
+    ],
+    "rows": 4,
+    "message": null,
+    "sample": [
+      {
+        "brand": "KYB",
+        "number": "339267",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "TOYOTA",
+        "number": "4851080378",
+        "kind": "oem"
+      },
+      {
+        "brand": "KYB",
+        "number": "NST5395R",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "TOYOTA",
+        "number": "4851080378",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.26,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "nissens",
+    "group": "radiators",
+    "oe": "8200735038",
+    "status": "ok",
+    "products": [
+      "637609"
+    ],
+    "rows": 3,
+    "message": null,
+    "sample": [
+      {
+        "brand": "NISSENS",
+        "number": "637609",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "OEM",
+        "number": "8200735038",
+        "kind": "oem"
+      },
+      {
+        "brand": "OEM",
+        "number": "8660003459",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 6.548,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "kyb",
+    "group": "shock_absorbers",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в кроссировке KYB",
+    "sample": [],
+    "seconds": 0.397,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "hola",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "BD836"
+    ],
+    "rows": 15,
+    "message": null,
+    "sample": [
+      {
+        "brand": "HOLA",
+        "number": "BD836",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "581011RA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "581011RA05",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "581011RA10",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "581014LA00",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 2.978,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "brannor",
+    "group": "brake_pads",
+    "oe": "8K0698451D",
+    "status": "ok",
+    "products": [
+      "BRP1386A"
+    ],
+    "rows": 15,
+    "message": null,
+    "sample": [
+      {
+        "brand": "BRANNOR",
+        "number": "BRP1386A",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "VAG",
+        "number": "8K0 098 601E",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "8K0 098 601F",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "8K0 098 601H",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "8K0 698 451",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 1.918,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "hola",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге HOLA",
+    "sample": [],
+    "seconds": 1.087,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "brannor",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге BRANNOR",
+    "sample": [],
+    "seconds": 1.883,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "hel",
+    "group": "brake_hoses",
+    "oe": "1K0611701",
+    "status": "ok",
+    "products": [
+      "VW-4-409"
+    ],
+    "rows": 3,
+    "message": null,
+    "sample": [
+      {
+        "brand": "HEL",
+        "number": "VW-4-409",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "OEM",
+        "number": "1K0611701K",
+        "kind": "oem"
+      },
+      {
+        "brand": "OEM",
+        "number": "1K0611775C",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 1.78,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "metaco",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "3000-410",
+      "3000-555",
+      "3000-587",
+      "3000-745",
+      "3000-746",
+      "3000-1131",
+      "3000-1131PRM"
+    ],
+    "rows": 1157,
+    "message": null,
+    "sample": [
+      {
+        "brand": "METACO",
+        "number": "3000-410",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "4U",
+        "number": "4U-BP-0017",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "4U",
+        "number": "4U-BP-0200",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "4U",
+        "number": "4UP04136",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "A-GRESSOR",
+        "number": "07AB0028",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 0.02,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "hel",
+    "group": "brake_hoses",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге HEL",
+    "sample": [],
+    "seconds": 1.707,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "metaco",
+    "group": "brake_discs",
+    "oe": "1K0615301AA",
+    "status": "ok",
+    "products": [
+      "3050-016"
+    ],
+    "rows": 17,
+    "message": null,
+    "sample": [
+      {
+        "brand": "METACO",
+        "number": "3050-016",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "AMD",
+        "number": "AMD.SPORT.BD5321",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "ATE",
+        "number": "24.0325-0158.1",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "BREMBO",
+        "number": "09.9772.1X",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "BREMBO",
+        "number": "09.9772.75",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 0.001,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "marshall",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "M2625349",
+      "M2625349P",
+      "M2625360"
+    ],
+    "rows": 129,
+    "message": null,
+    "sample": [
+      {
+        "brand": "MARSHALL",
+        "number": "M2625349",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "1360212006K",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "581011VA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "581011WA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101C7A00",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.002,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "metaco",
+    "group": "shock_absorbers",
+    "oe": "553101G210",
+    "status": "ok",
+    "products": [
+      "4820-052"
+    ],
+    "rows": 6,
+    "message": null,
+    "sample": [
+      {
+        "brand": "METACO",
+        "number": "4820-052",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI-KIA",
+        "number": "55310-1G010",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI-KIA",
+        "number": "55310-1G210",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI-KIA",
+        "number": "55310-1G220",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI-KIA",
+        "number": "55310-1G310",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.001,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "marshall",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": null,
+    "sample": [],
+    "seconds": 0.001,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "nissens",
+    "group": "radiators",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге Nissens",
+    "sample": [],
+    "seconds": 4.723,
+    "expectation": "not_found",
+    "passed": true,
+    "first_attempt": {
+      "status": "error",
+      "message": "ReadTimeout",
+      "seconds": 20.138
+    },
+    "retried": true
+  },
+  {
+    "source": "metaco",
+    "group": "radiators",
+    "oe": "8200735038",
+    "status": "ok",
+    "products": [
+      "8010-025"
+    ],
+    "rows": 8,
+    "message": null,
+    "sample": [
+      {
+        "brand": "METACO",
+        "number": "8010-025",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "NISSAN",
+        "number": "21400-00Q2M",
+        "kind": "oem"
+      },
+      {
+        "brand": "NISSAN",
+        "number": "21410-4AA0A",
+        "kind": "oem"
+      },
+      {
+        "brand": "NISSAN",
+        "number": "82007-35038",
+        "kind": "oem"
+      },
+      {
+        "brand": "RENAULT",
+        "number": "214104453R",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.001,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "lynxauto",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "BD-3636"
+    ],
+    "rows": 78,
+    "message": null,
+    "sample": [
+      {
+        "brand": "LYNXAUTO",
+        "number": "BD-3636",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI/KIA",
+        "number": "58101-C8A00",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI/KIA",
+        "number": "58101-C8A50",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI/KIA",
+        "number": "58101-H5A25",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI/KIA",
+        "number": "58101-H8A05",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.855,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "metaco",
+    "group": "brake_hoses",
+    "oe": "13399770",
+    "status": "ok",
+    "products": [
+      "3500-138"
+    ],
+    "rows": 13,
+    "message": null,
+    "sample": [
+      {
+        "brand": "METACO",
+        "number": "3500-138",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "ARIRANG",
+        "number": "ARG20-1149",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "BLUE PRINT",
+        "number": "ADG053312",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "DELPHI",
+        "number": "LH6873",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "DOMINANT",
+        "number": "OP05620173",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 0.001,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "masterkit",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "77AA515"
+    ],
+    "rows": 1,
+    "message": null,
+    "sample": [
+      {
+        "brand": "MASTERKIT",
+        "number": "77AA515",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 0.89,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "metaco",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": null,
+    "sample": [],
+    "seconds": 0.001,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "lynxauto",
+    "group": "shock_absorbers",
+    "oe": "553101G210",
+    "status": "ok",
+    "products": [
+      "G12750LR"
+    ],
+    "rows": 69,
+    "message": null,
+    "sample": [
+      {
+        "brand": "LYNXAUTO",
+        "number": "G12750LR",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI/KIA",
+        "number": "55307-Q0PA0",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI/KIA",
+        "number": "55310-1E150",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI/KIA",
+        "number": "55310-1G010",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI/KIA",
+        "number": "55310-1G110",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.879,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "masterkit",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге MasterKit",
+    "sample": [],
+    "seconds": 0.772,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "lynxauto",
+    "group": "brake_hoses",
+    "oe": "1K0611701K",
+    "status": "ok",
+    "products": [
+      "BL-3102"
+    ],
+    "rows": 40,
+    "message": null,
+    "sample": [
+      {
+        "brand": "LYNXAUTO",
+        "number": "BL-3102",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "VAG",
+        "number": "1K0 611 701",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "1K0 611 701 B",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "1K0 611 701 H",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "1K0 611 701 K",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.883,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "fap",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "FDP0372"
+    ],
+    "rows": 35,
+    "message": null,
+    "sample": [
+      {
+        "brand": "FAP",
+        "number": "FDP0372",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI-KIA",
+        "number": "581010UA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI-KIA",
+        "number": "581011RA01",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI-KIA",
+        "number": "581011RA10",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI-KIA",
+        "number": "581011VA00",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 1.778,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "ganz",
+    "group": "brake_pads",
+    "oe": "581011RA00",
+    "status": "ok",
+    "products": [
+      "GIJ09001C",
+      "GIJ09001"
+    ],
+    "rows": 2,
+    "message": null,
+    "sample": [
+      {
+        "brand": "GANZ",
+        "number": "GIJ09001C",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "GANZ",
+        "number": "GIJ09001",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 2.806,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "lynxauto",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге LYNXauto",
+    "sample": [],
+    "seconds": 0.68,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "fap",
+    "group": "brake_discs",
+    "oe": "1K0615301AA",
+    "status": "ok",
+    "products": [
+      "FP11619"
+    ],
+    "rows": 17,
+    "message": null,
+    "sample": [
+      {
+        "brand": "FAP",
+        "number": "FP11619",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "VAG",
+        "number": "1K0615301D",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "3CD615301",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "561615301B",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "5C0615301B",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 1.535,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "zimmermann",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "25348.180.1",
+      "25348.180.2"
+    ],
+    "rows": 55,
+    "message": null,
+    "sample": [
+      {
+        "brand": "ZIMMERMANN",
+        "number": "25348.180.1",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101-H8A53",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101-1RA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101-1RA05",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101-H9A10",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.057,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "ganz",
+    "group": "brake_discs",
+    "oe": "51712G4000",
+    "status": "ok",
+    "products": [
+      "GIJ10516S",
+      "GIJ10516"
+    ],
+    "rows": 2,
+    "message": null,
+    "sample": [
+      {
+        "brand": "GANZ",
+        "number": "GIJ10516S",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "GANZ",
+        "number": "GIJ10516",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 2.122,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "fap",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в выбранной группе FAP",
+    "sample": [],
+    "seconds": 1.441,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "zimmermann",
+    "group": "brake_discs",
+    "oe": "1K0615301AA",
+    "status": "ok",
+    "products": [
+      "100.3300.20",
+      "100.3300.52",
+      "100.3300.53"
+    ],
+    "rows": 90,
+    "message": null,
+    "sample": [
+      {
+        "brand": "ZIMMERMANN",
+        "number": "100.3300.20",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "FORD",
+        "number": "2 631 432",
+        "kind": "oem"
+      },
+      {
+        "brand": "FORD",
+        "number": "N3CZ-1125-C",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "5QM 615 301 A",
+        "kind": "oem"
+      },
+      {
+        "brand": "VAG",
+        "number": "1K0 615 301 AA",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.05,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "ganz",
+    "group": "shock_absorbers",
+    "oe": "8450033433",
+    "status": "ok",
+    "products": [
+      "GIK02971"
+    ],
+    "rows": 1,
+    "message": null,
+    "sample": [
+      {
+        "brand": "GANZ",
+        "number": "GIK02971",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 1.363,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "monaer",
+    "group": "brake_pads",
+    "oe": "050090800",
+    "status": "ok",
+    "products": [
+      "M4040",
+      "M4040-S"
+    ],
+    "rows": 2,
+    "message": null,
+    "sample": [
+      {
+        "brand": "MONAER",
+        "number": "M4040",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "MONAER",
+        "number": "M4040-S",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 0.001,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "zimmermann",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в выбранной группе Zimmermann",
+    "sample": [],
+    "seconds": 0.046,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "monaer",
+    "group": "brake_discs",
+    "oe": "128424899",
+    "status": "ok",
+    "products": [
+      "M61848"
+    ],
+    "rows": 1,
+    "message": null,
+    "sample": [
+      {
+        "brand": "MONAER",
+        "number": "M61848",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 0.001,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "ganz",
+    "group": "radiators",
+    "oe": "21903130000811",
+    "status": "ok",
+    "products": [
+      "GRF07006"
+    ],
+    "rows": 1,
+    "message": null,
+    "sample": [
+      {
+        "brand": "GANZ",
+        "number": "GRF07006",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 1.287,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "ate",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "13.0460-5548.2",
+      "13.0470-5548.2"
+    ],
+    "rows": 28,
+    "message": null,
+    "sample": [
+      {
+        "brand": "ATE",
+        "number": "13.0460-5548.2",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101-4LA00",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101-C8A60",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101-C8A10",
+        "kind": "oem"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "58101-1RA05",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.126,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "monaer",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": null,
+    "sample": [],
+    "seconds": 0.001,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "ate",
+    "group": "brake_discs",
+    "oe": "1K0615301AA",
+    "status": "ok",
+    "products": [
+      "24.0125-0158.1",
+      "24.0325-0158.1"
+    ],
+    "rows": 36,
+    "message": null,
+    "sample": [
+      {
+        "brand": "ATE",
+        "number": "24.0125-0158.1",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "AUDI",
+        "number": "5C0 615 301 E",
+        "kind": "oem"
+      },
+      {
+        "brand": "FORD",
+        "number": "2631432",
+        "kind": "oem"
+      },
+      {
+        "brand": "FORD",
+        "number": "VWN3CA-1125-BA",
+        "kind": "oem"
+      },
+      {
+        "brand": "SEAT",
+        "number": "1K0 615 301 AA",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.063,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "ganz",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге GANZ",
+    "sample": [],
+    "seconds": 1.13,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "ate",
+    "group": "brake_hoses",
+    "oe": "1K0611701K",
+    "status": "ok",
+    "products": [
+      "24.5143-0564.3"
+    ],
+    "rows": 17,
+    "message": null,
+    "sample": [
+      {
+        "brand": "ATE",
+        "number": "24.5143-0564.3",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "SEAT",
+        "number": "1K0 611 701",
+        "kind": "oem"
+      },
+      {
+        "brand": "SEAT",
+        "number": "1K0 611 701 B",
+        "kind": "oem"
+      },
+      {
+        "brand": "SEAT",
+        "number": "1K0 611 701 H",
+        "kind": "oem"
+      },
+      {
+        "brand": "SEAT",
+        "number": "1K0 611 701 K",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.052,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "febest",
+    "group": "shock_absorbers",
+    "oe": "553101G210",
+    "status": "ok",
+    "products": [
+      "2207G-006R",
+      "22651992R"
+    ],
+    "rows": 5,
+    "message": null,
+    "sample": [
+      {
+        "brand": "FEBEST",
+        "number": "2207G-006R",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "553101G210",
+        "kind": "oem"
+      },
+      {
+        "brand": "KIA",
+        "number": "55310-1G210",
+        "kind": "oem"
+      },
+      {
+        "brand": "FEBEST",
+        "number": "22651992R",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "HYUNDAI",
+        "number": "553101G210",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.921,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "torr",
+    "group": "shock_absorbers",
+    "oe": "553101G210",
+    "status": "ok",
+    "products": [
+      "DH1270"
+    ],
+    "rows": 39,
+    "message": null,
+    "sample": [
+      {
+        "brand": "TORR",
+        "number": "DH1270",
+        "kind": "aftermarket"
+      },
+      {
+        "brand": "ZEKKERT",
+        "number": "SG2792",
+        "kind": "oem"
+      },
+      {
+        "brand": "UNIO",
+        "number": "SAB10568",
+        "kind": "oem"
+      },
+      {
+        "brand": "TATSUMI",
+        "number": "TAA5105",
+        "kind": "oem"
+      },
+      {
+        "brand": "SUFIX",
+        "number": "SA1107",
+        "kind": "oem"
+      }
+    ],
+    "seconds": 0.662,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "ate",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в выбранной группе ATE",
+    "sample": [],
+    "seconds": 0.06,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "febest",
+    "group": "shock_absorbers",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден среди амортизаторов FEBEST",
+    "sample": [],
+    "seconds": 0.618,
+    "expectation": "not_found",
+    "passed": true
+  },
+  {
+    "source": "torr",
+    "group": "shock_absorbers",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге TORR",
+    "sample": [],
+    "seconds": 0.33,
+    "expectation": "not_found",
+    "passed": true
+  }
+]

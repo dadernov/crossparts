@@ -37,6 +37,22 @@ class _ErrorSource:
         return SourceResult(self.key, SourceStatus.ERROR, message="upstream unavailable")
 
 
+class _PartialSource:
+    key = "partial-fixture"
+
+    def __init__(self):
+        self.calls = 0
+
+    async def lookup(self, oe):
+        self.calls += 1
+        return SourceResult(
+            self.key,
+            SourceStatus.PARTIAL,
+            crosses=[Cross("TEST", f"PARTIAL-{oe}", "aftermarket", self.key)],
+            message="one card failed",
+        )
+
+
 class _Registry:
     def __init__(self, source):
         self.source = source
@@ -137,5 +153,29 @@ async def test_zero_failure_cooldown_does_not_suppress_retries(tmp_path):
     await aggregator.lookup("OE-ONE")
     await aggregator.lookup("OE-TWO")
 
+    assert source.calls == 2
+    await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_partial_result_is_explicit_and_never_cached(tmp_path):
+    engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path / 'partial.db'}")
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    sessions = async_sessionmaker(engine, expire_on_commit=False)
+    source = _PartialSource()
+    settings = type("Settings", (), {
+        "source_concurrency": 1,
+        "source_timeout": 1,
+        "source_failure_cooldown_seconds": 0,
+        "cache_ttl_hours": 168,
+        "circular_search_enabled": False,
+    })()
+    aggregator = Aggregator(settings, _Registry(source), sessions)
+
+    first = await aggregator.lookup("OE-123")
+    second = await aggregator.lookup("OE-123")
+
+    assert first["status"] == second["status"] == "partial"
     assert source.calls == 2
     await engine.dispose()

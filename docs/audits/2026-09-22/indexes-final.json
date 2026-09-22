@@ -1,0 +1,95 @@
+{
+  "metaco:brake_pads": {
+    "samples": 120,
+    "p50_ms": 7.08,
+    "p95_ms": 52.508,
+    "products": [
+      "3000-410",
+      "3000-555",
+      "3000-587",
+      "3000-745",
+      "3000-746",
+      "3000-1131",
+      "3000-1131PRM"
+    ],
+    "rows": 1157
+  },
+  "metaco:brake_discs": {
+    "samples": 120,
+    "p50_ms": 0.293,
+    "p95_ms": 0.503,
+    "products": [
+      "3050-016"
+    ],
+    "rows": 17
+  },
+  "metaco:shock_absorbers": {
+    "samples": 120,
+    "p50_ms": 0.165,
+    "p95_ms": 0.299,
+    "products": [
+      "4820-052"
+    ],
+    "rows": 6
+  },
+  "metaco:radiators": {
+    "samples": 120,
+    "p50_ms": 0.223,
+    "p95_ms": 0.337,
+    "products": [
+      "8010-025"
+    ],
+    "rows": 8
+  },
+  "metaco:brake_hoses": {
+    "samples": 120,
+    "p50_ms": 0.281,
+    "p95_ms": 0.412,
+    "products": [
+      "3500-138"
+    ],
+    "rows": 13
+  },
+  "marshall:brake_pads": {
+    "samples": 120,
+    "p50_ms": 0.735,
+    "p95_ms": 1.117,
+    "products": [
+      "M2625349",
+      "M2625349P",
+      "M2625360"
+    ],
+    "rows": 129
+  },
+  "monaer:brake_pads": {
+    "samples": 120,
+    "p50_ms": 0.11,
+    "p95_ms": 0.214,
+    "products": [
+      "M4040",
+      "M4040-S"
+    ],
+    "rows": 2
+  },
+  "monaer:brake_discs": {
+    "samples": 120,
+    "p50_ms": 0.108,
+    "p95_ms": 0.205,
+    "products": [
+      "M61848"
+    ],
+    "rows": 1
+  },
+  "metaco-w4.sqlite3": {
+    "integrity_check": "ok",
+    "sha256": "f003ae32e10d11900e5374e0c8cb88e2eb5cd82bb0ba5e4fc11d4b5308ee776f"
+  },
+  "monaer-w1.sqlite3": {
+    "integrity_check": "ok",
+    "sha256": "3a8e924e049b6ea84619251fa8707f355013080902a3407073cedfe59bfbeb4e"
+  },
+  "marshall-w1.sqlite3": {
+    "integrity_check": "ok",
+    "sha256": "52dd945fa6f3c7324a922fd3a6b6fe2b01faea4dcfc09d68fb654c7abc0baa0b"
+  }
+}

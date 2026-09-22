@@ -31,16 +31,15 @@ class AteSource(BaseSource):
     def article_group(article: object) -> str | None:
         if not isinstance(article, dict):
             return None
-        descriptions = " ".join(
-            str(row.get("genericArticleDescription", ""))
+        descriptions = {
+            str(row.get("genericArticleDescription", "")).strip().casefold()
             for row in article.get("genericArticles", []) if isinstance(row, dict)
-        ).casefold()
-        if "brake disc" in descriptions or "тормозной диск" in descriptions:
+        }
+        if descriptions & {"brake disc", "тормозной диск"}:
             return BRAKE_DISCS
-        if "brake hose" in descriptions or "тормозн" in descriptions and "шланг" in descriptions:
+        if descriptions & {"brake hose", "тормозной шланг"}:
             return BRAKE_HOSES
-        if (("brake pad" in descriptions and "disc brake" in descriptions)
-                or ("колодок" in descriptions and "тормозн" in descriptions)):
+        if descriptions & {"brake pad set, disc brake", "комплект тормозных колодок, дисковый тормоз"}:
             return BRAKE_PADS
         return None
 
@@ -80,8 +79,13 @@ class AteSource(BaseSource):
             if looks_blocked(response.status_code, response.text):
                 return SourceResult(self.key, SourceStatus.BLOCKED, message=f"HTTP {response.status_code}",
                                     elapsed_ms=self.elapsed(started), url=str(response.url))
+            if response.status_code >= 400:
+                return SourceResult(self.key, SourceStatus.ERROR, message=f"HTTP {response.status_code}",
+                                    elapsed_ms=self.elapsed(started), url=str(response.url))
             try:
                 payload = response.json()
+                if not isinstance(payload, dict) or not isinstance(payload.get("articles"), list):
+                    raise ValueError("invalid article response")
             except ValueError:
                 return SourceResult(self.key, SourceStatus.ERROR, message="ATE вернул не JSON",
                                     elapsed_ms=self.elapsed(started), url=str(response.url))

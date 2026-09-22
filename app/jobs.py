@@ -25,6 +25,8 @@ class JobRunner:
         self._queue: asyncio.Queue[str] = asyncio.Queue()
         self._workers: list[asyncio.Task] = []
         self._batch_locks: dict[str, asyncio.Lock] = {}
+        self._delayed_submissions: set[asyncio.Task] = set()
+        self._reserved_items: set[int] = set()
         self.pacer = TenantPacer(settings, session_factory)
 
     async def start(self) -> None:
@@ -35,7 +37,15 @@ class JobRunner:
     async def stop(self) -> None:
         for task in self._workers:
             task.cancel()
+        for task in self._delayed_submissions:
+            task.cancel()
+        if self._workers:
+            await asyncio.gather(*self._workers, return_exceptions=True)
+        if self._delayed_submissions:
+            await asyncio.gather(*self._delayed_submissions, return_exceptions=True)
         self._workers.clear()
+        self._delayed_submissions.clear()
+        self._reserved_items.clear()
 
     async def submit(self, job_id: str) -> None:
         await self._queue.put(job_id)
@@ -89,39 +99,69 @@ class JobRunner:
             sources = list(job.sources or [])
             tenant = job.tenant
             batch_id = job.batch_id if job.batch_role == "chunk" else None
-            pending = (
+            item = (
                 await session.execute(
                     select(JobItem).where(
                         JobItem.job_id == job_id,
-                        JobItem.status.in_(["pending", "error", "blocked"]),
+                        JobItem.status == "pending",
                     ).order_by(JobItem.position)
                 )
-            ).scalars().all()
-            todo = [(i.id, i.oe_number, i.group) for i in pending]
+            ).scalars().first()
 
-        for item_id, oe, group in todo:
-            await self.pacer.wait(tenant)
-            result = await self.aggregator.lookup(
-                oe, sources, group=group, tenant=tenant
-            )
-            async with self.session_factory() as session:
-                item = await session.get(JobItem, item_id)
-                if item is None:
-                    continue
-                item.crosses = result["crosses"]
-                item.source_reports = [
+        if item is None:
+            await self._finish_job(job_id, batch_id)
+            return
+
+        item_id, oe, group = item.id, item.oe_number, item.group
+        if item_id in self._reserved_items:
+            self._reserved_items.discard(item_id)
+        else:
+            delay = await self.pacer.reserve(tenant)
+            if delay > 0:
+                self._defer(job_id, item_id, delay)
+                return
+
+        result = await self.aggregator.lookup(
+            oe, sources, group=group, tenant=tenant
+        )
+        async with self.session_factory() as session:
+            current = await session.get(JobItem, item_id)
+            if current is not None and current.status == "pending":
+                current.crosses = result["crosses"]
+                current.source_reports = [
                     {k: v for k, v in r.items() if k != "crosses"} | {"crosses": r["crosses"]}
                     for r in result["sources"]
                 ]
-                item.status = result["status"]
+                current.status = result["status"]
                 await session.flush()
-                job = await session.get(Job, job_id)
-                job.done = await _completed_count(session, job_id)
-                await session.commit()
+            current_job = await session.get(Job, job_id)
+            if current_job is None:
+                return
+            current_job.done = await _completed_count(session, job_id)
+            remaining = current_job.done < current_job.total
+            await session.commit()
 
+        if remaining:
+            await self._queue.put(job_id)
+        else:
+            await self._finish_job(job_id, batch_id)
+
+    def _defer(self, job_id: str, item_id: int, delay: float) -> None:
+        """Return the worker immediately and queue an already reserved item later."""
+        async def submit_after() -> None:
+            await asyncio.sleep(delay)
+            self._reserved_items.add(item_id)
+            await self._queue.put(job_id)
+
+        task = asyncio.create_task(submit_after())
+        self._delayed_submissions.add(task)
+        task.add_done_callback(self._delayed_submissions.discard)
+
+    async def _finish_job(self, job_id: str, batch_id: str | None) -> None:
         async with self.session_factory() as session:
             job = await session.get(Job, job_id)
             if job is not None:
+                job.done = await _completed_count(session, job_id)
                 job.status = "done"
                 job.finished_at = utcnow()
                 await session.commit()

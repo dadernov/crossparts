@@ -44,7 +44,10 @@ class LynxautoSource(BaseSource):
             return SourceResult(self.key, SourceStatus.BLOCKED, message=f"HTTP {response.status_code}",
                                 elapsed_ms=self.elapsed(started), url=SEARCH)
         product = self.product_code(response.text)
-        if response.status_code >= 400 or product is None:
+        if response.status_code >= 400:
+            return SourceResult(self.key, SourceStatus.ERROR, message=f"HTTP {response.status_code}",
+                                elapsed_ms=self.elapsed(started), url=str(response.url))
+        if product is None:
             return SourceResult(self.key, SourceStatus.NOT_FOUND,
                                 message="номер не найден в каталоге LYNXauto",
                                 elapsed_ms=self.elapsed(started), url=str(response.url))
@@ -77,6 +80,8 @@ class LynxautoSource(BaseSource):
         document = HTMLParser(html)
         heading = document.css_first(".pcard-name h1")
         text = heading.text(strip=True).casefold() if heading is not None else ""
+        if any(word in text for word in ("опора", "пыльник", "отбойник", "креплен", "кронштейн", "ремкомплект", "подшипник")):
+            return None
         if "колодк" in text and "тормозн" in text:
             return BRAKE_PADS
         if "шланг" in text and "тормозн" in text:

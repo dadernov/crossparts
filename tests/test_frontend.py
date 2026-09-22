@@ -8,7 +8,7 @@ from app.groups import GROUPS
 
 
 @pytest.mark.parametrize('browser_name', ['chromium', 'webkit'])
-def test_frontend_states_and_layout(browser_name):
+def test_frontend_states_and_layout(browser_name, tmp_path):
     env = Environment(loader=FileSystemLoader('app/templates'), autoescape=True)
     attack = '<img src=x onerror="window.auditXss=1">'
     job = dict(id='test', filename='Колодки — сентябрь.xlsx', status='done', total=48, done=48,
@@ -108,12 +108,12 @@ def test_frontend_states_and_layout(browser_name):
         assert page.locator('#profile-dropdown').is_visible()
         page.locator('h1').click()
         assert page.locator('#profile-dropdown').is_hidden()
-        Path('output/workspace-site').mkdir(parents=True, exist_ok=True)
+        out = tmp_path
         for width in [320, 390, 768, 1024, 1440, 1920, 2560]:
             page.set_viewport_size({'width':width, 'height':1000})
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), width
             if width in [390, 1440] and browser_name == 'chromium':
-                page.screenshot(path=f'output/workspace-site/main-{width}.png', full_page=True)
+                page.screenshot(path=str(out / f'main-{width}.png'), full_page=True)
         page.set_viewport_size({'width':1440,'height':1000})
         content_box = page.locator('.content-grid').bounding_box()
         search_box = page.locator('.combined-search').bounding_box()
@@ -161,7 +161,7 @@ def test_frontend_states_and_layout(browser_name):
         assert page.evaluate("brandCell('UNKNOWN BRAND').innerText") == 'UNKNOWN BRAND'
         assert page.locator('#result-filter').bounding_box()['x'] < page.locator('#btn-export-lookup').bounding_box()['x']
         if browser_name == 'chromium':
-            page.screenshot(path='output/workspace-site/lookup-controls.png')
+            page.screenshot(path=str(out / 'lookup-controls.png'))
         assert calls['payload'] == {'oe':'58101H5A25','group':'brake_pads'}
         assert page.locator('#result-table th').all_text_contents() == ['№', 'Номер OE / OEM', 'Бренд', 'Номер аналога', 'Источник']
         # Searching numbers ignores catalogue separators, just like Excel export.
@@ -175,8 +175,8 @@ def test_frontend_states_and_layout(browser_name):
         assert page.locator('#result-rows tr').count() == 1
         assert page.locator('#result-rows code').inner_text() == 'PF0806CR'
         page.locator('#result-filter').fill('')
-        # Header menus exclude unchecked brands and any row containing an
-        # unchecked source; a new search resets both filters.
+        # Header menus exclude unchecked brands. For merged rows a source is
+        # hidden only when all provenance sources of that row are unchecked.
         page.locator('#brand-filter-trigger').click()
         assert page.locator('#brand-filter-menu').is_visible()
         page.locator('#brand-filter-menu label', has_text='NiBK').locator('input').uncheck()
@@ -187,7 +187,10 @@ def test_frontend_states_and_layout(browser_name):
         page.keyboard.press('Escape')
         page.locator('#source-filter-trigger').click()
         page.locator('#source-filter-menu label', has_text='metaco').locator('input').uncheck()
-        assert page.locator('#result-rows tr').count() == 2
+        assert page.locator('#result-rows tr').count() == 3
+        assert 'PF0806CR' in page.locator('#result-rows').inner_text()
+        page.locator('#source-filter-menu label', has_text='trialli').locator('input').uncheck()
+        assert page.locator('#result-rows tr').count() == 1
         assert 'PF0806CR' not in page.locator('#result-rows').inner_text()
         page.keyboard.press('Escape')
         lookup['crosses'] = [{**cross, 'number':f'PN{i:04d}'} for i in range(25)]
@@ -276,6 +279,12 @@ def test_frontend_states_and_layout(browser_name):
         page.wait_for_function('document.querySelector("#lookup-status").textContent.includes("Слишком много")')
         assert not page.locator('#btn-lookup').is_disabled()
         failures['lookup'] = False
+        lookup.update(status='partial', crosses=[cross], unique_numbers=['PN0537'],
+                      sources=[dict(source='brixo',status='partial')])
+        page.locator('#btn-lookup').click()
+        page.wait_for_function('document.querySelector("#result-summary").textContent.includes("Неполный результат")')
+        assert page.locator('#result-rows tr').count() == 1
+        assert 'Найдено частично' in page.locator('#source-reports').text_content()
         lookup.update(status='blocked', crosses=[], unique_numbers=[], sources=[dict(source='brixo',status='blocked')])
         page.locator('#btn-lookup').click()
         page.wait_for_function('document.querySelector("#result-summary").textContent.includes("проверить не удалось")')

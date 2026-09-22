@@ -76,8 +76,13 @@ class ZimmermannSource(BaseSource):
             if looks_blocked(response.status_code, response.text):
                 return SourceResult(self.key, SourceStatus.BLOCKED, message=f"HTTP {response.status_code}",
                                     elapsed_ms=self.elapsed(started), url=str(response.url))
+            if response.status_code >= 400:
+                return SourceResult(self.key, SourceStatus.ERROR, message=f"HTTP {response.status_code}",
+                                    elapsed_ms=self.elapsed(started), url=str(response.url))
             try:
                 payload = response.json()
+                if not isinstance(payload, dict) or not isinstance(payload.get("articles"), list):
+                    raise ValueError("invalid article response")
             except ValueError:
                 return SourceResult(self.key, SourceStatus.ERROR, message="Zimmermann вернул не JSON",
                                     elapsed_ms=self.elapsed(started), url=str(response.url))

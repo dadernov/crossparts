@@ -33,7 +33,7 @@ def test_public_content():
 
 
 @pytest.mark.parametrize('browser_name',['chromium','webkit'])
-def test_marketing_browser(browser_name):
+def test_marketing_browser(browser_name, tmp_path):
     pages = asyncio.run(public_pages())
     with sync_playwright() as p:
         browser = getattr(p,browser_name).launch()
@@ -63,7 +63,7 @@ def test_marketing_browser(browser_name):
             for href in page.locator('a[href^="/"]').evaluate_all('(els)=>els.map(e=>e.getAttribute("href").split("?")[0])'):
                 assert href in {'/', '/login'} or href in pages or href.startswith('/static/'),href
             if browser_name=='chromium':
-                out=Path('output/welcome-site');out.mkdir(exist_ok=True)
+                out=tmp_path
                 page.screenshot(path=str(out/(('welcome' if path=='/' else path[1:])+'.png')),full_page=True)
         page.goto('https://marketing.local/features')
         page.get_by_role('link',name='Категории',exact=True).click()

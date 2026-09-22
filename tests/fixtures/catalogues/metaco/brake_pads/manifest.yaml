@@ -2793,7 +2793,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '1014026444'
     number_key: '1014026444'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
@@ -2807,7 +2807,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '4048003200'
     number_key: '4048003200'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
@@ -2821,7 +2821,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '4048096300'
     number_key: '4048096300'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: GIRLING
@@ -2989,63 +2989,63 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-1RA01
     number_key: 581011RA01
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-1RA05
     number_key: 581011RA05
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-1UA10
     number_key: 581011UA10
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-1WA35
     number_key: 581011WA35
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-4LA00
     number_key: 581014LA00
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-BUA00
     number_key: 58101BUA00
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-C8A00
     number_key: 58101C8A00
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-C8A10
     number_key: 58101C8A10
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-C8A50
     number_key: 58101C8A50
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
@@ -3094,7 +3094,7 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: S58101-4LA00
     number_key: S581014LA00
-    kind: aftermarket
+    kind: oem
     source_product: 3000-410
     evidence_locator: official snapshot product closure
   - brand_raw: IBERIS
@@ -4571,7 +4571,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '1114000519'
     number_key: '1114000519'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-555
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
@@ -4585,7 +4585,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '4048059400'
     number_key: '4048059400'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-555
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
@@ -4704,42 +4704,42 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H5A25
     number_key: 58101H5A25
-    kind: aftermarket
+    kind: oem
     source_product: 3000-555
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A05
     number_key: 58101H8A05
-    kind: aftermarket
+    kind: oem
     source_product: 3000-555
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A53
     number_key: 58101H8A53
-    kind: aftermarket
+    kind: oem
     source_product: 3000-555
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A55
     number_key: 58101H8A55
-    kind: aftermarket
+    kind: oem
     source_product: 3000-555
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A58
     number_key: 58101H8A58
-    kind: aftermarket
+    kind: oem
     source_product: 3000-555
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H9A60
     number_key: 58101H9A60
-    kind: aftermarket
+    kind: oem
     source_product: 3000-555
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
@@ -5264,14 +5264,14 @@ cases:
     brand_canonical: GEELY
     number_raw: '1114000519'
     number_key: '1114000519'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-587
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
     brand_canonical: GEELY
     number_raw: '4048059400'
     number_key: '4048059400'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-587
     evidence_locator: official snapshot product closure
   - brand_raw: GIRLING
@@ -5320,42 +5320,42 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H5A25
     number_key: 58101H5A25
-    kind: aftermarket
+    kind: oem
     source_product: 3000-587
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A05
     number_key: 58101H8A05
-    kind: aftermarket
+    kind: oem
     source_product: 3000-587
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A53
     number_key: 58101H8A53
-    kind: aftermarket
+    kind: oem
     source_product: 3000-587
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A55
     number_key: 58101H8A55
-    kind: aftermarket
+    kind: oem
     source_product: 3000-587
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A58
     number_key: 58101H8A58
-    kind: aftermarket
+    kind: oem
     source_product: 3000-587
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H9A60
     number_key: 58101H9A60
-    kind: aftermarket
+    kind: oem
     source_product: 3000-587
     evidence_locator: official snapshot product closure
   - brand_raw: ICER
@@ -6538,7 +6538,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '1014026444'
     number_key: '1014026444'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
@@ -6552,7 +6552,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '4048003200'
     number_key: '4048003200'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
@@ -6566,7 +6566,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '4048096300'
     number_key: '4048096300'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: GIRLING
@@ -6734,63 +6734,63 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-1RA01
     number_key: 581011RA01
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-1RA05
     number_key: 581011RA05
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-1UA10
     number_key: 581011UA10
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-1WA35
     number_key: 581011WA35
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-4LA00
     number_key: 581014LA00
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-BUA00
     number_key: 58101BUA00
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-C8A00
     number_key: 58101C8A00
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-C8A10
     number_key: 58101C8A10
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-C8A50
     number_key: 58101C8A50
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
@@ -6839,7 +6839,7 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: S58101-4LA00
     number_key: S581014LA00
-    kind: aftermarket
+    kind: oem
     source_product: 3000-745
     evidence_locator: official snapshot product closure
   - brand_raw: IBERIS
@@ -8316,7 +8316,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '1114000519'
     number_key: '1114000519'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-746
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
@@ -8330,7 +8330,7 @@ cases:
     brand_canonical: GEELY
     number_raw: '4048059400'
     number_key: '4048059400'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-746
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
@@ -8449,42 +8449,42 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H5A25
     number_key: 58101H5A25
-    kind: aftermarket
+    kind: oem
     source_product: 3000-746
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A05
     number_key: 58101H8A05
-    kind: aftermarket
+    kind: oem
     source_product: 3000-746
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A53
     number_key: 58101H8A53
-    kind: aftermarket
+    kind: oem
     source_product: 3000-746
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A55
     number_key: 58101H8A55
-    kind: aftermarket
+    kind: oem
     source_product: 3000-746
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A58
     number_key: 58101H8A58
-    kind: aftermarket
+    kind: oem
     source_product: 3000-746
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H9A60
     number_key: 58101H9A60
-    kind: aftermarket
+    kind: oem
     source_product: 3000-746
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
@@ -9009,14 +9009,14 @@ cases:
     brand_canonical: GEELY
     number_raw: '1114000519'
     number_key: '1114000519'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
     brand_canonical: GEELY
     number_raw: '4048059400'
     number_key: '4048059400'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131
     evidence_locator: official snapshot product closure
   - brand_raw: GIRLING
@@ -9065,42 +9065,42 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H5A25
     number_key: 58101H5A25
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A05
     number_key: 58101H8A05
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A53
     number_key: 58101H8A53
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A55
     number_key: 58101H8A55
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A58
     number_key: 58101H8A58
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H9A60
     number_key: 58101H9A60
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131
     evidence_locator: official snapshot product closure
   - brand_raw: ICER
@@ -9618,14 +9618,14 @@ cases:
     brand_canonical: GEELY
     number_raw: '1114000519'
     number_key: '1114000519'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131PRM
     evidence_locator: official snapshot product closure
   - brand_raw: GEELY
     brand_canonical: GEELY
     number_raw: '4048059400'
     number_key: '4048059400'
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131PRM
     evidence_locator: official snapshot product closure
   - brand_raw: GIRLING
@@ -9674,42 +9674,42 @@ cases:
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H5A25
     number_key: 58101H5A25
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131PRM
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A05
     number_key: 58101H8A05
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131PRM
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A53
     number_key: 58101H8A53
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131PRM
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A55
     number_key: 58101H8A55
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131PRM
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H8A58
     number_key: 58101H8A58
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131PRM
     evidence_locator: official snapshot product closure
   - brand_raw: HYUNDAI-KIA
     brand_canonical: HYUNDAI-KIA
     number_raw: 58101-H9A60
     number_key: 58101H9A60
-    kind: aftermarket
+    kind: oem
     source_product: 3000-1131PRM
     evidence_locator: official snapshot product closure
   - brand_raw: ICER
@@ -10779,7 +10779,7 @@ cases:
     brand_canonical: TOYOTA
     number_raw: 04466-30281
     number_key: 0446630281
-    kind: aftermarket
+    kind: oem
     source_product: 3010-109
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
@@ -10793,21 +10793,21 @@ cases:
     brand_canonical: TOYOTA
     number_raw: 04466-30310
     number_key: '0446630310'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-109
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
     brand_canonical: TOYOTA
     number_raw: 04466-30311
     number_key: '0446630311'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-109
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
     brand_canonical: TOYOTA
     number_raw: 04466-30312
     number_key: '0446630312'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-109
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
@@ -10912,28 +10912,28 @@ cases:
     brand_canonical: TOYOTA
     number_raw: 04466-30281
     number_key: 0446630281
-    kind: aftermarket
+    kind: oem
     source_product: 3010-1046
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
     brand_canonical: TOYOTA
     number_raw: 04466-30310
     number_key: '0446630310'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-1046
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
     brand_canonical: TOYOTA
     number_raw: 04466-30311
     number_key: '0446630311'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-1046
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
     brand_canonical: TOYOTA
     number_raw: 04466-30312
     number_key: '0446630312'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-1046
     evidence_locator: official snapshot product closure
   - brand_raw: UNIO
@@ -11010,28 +11010,28 @@ cases:
     brand_canonical: TOYOTA
     number_raw: 04466-30281
     number_key: 0446630281
-    kind: aftermarket
+    kind: oem
     source_product: 3010-1046PRM
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
     brand_canonical: TOYOTA
     number_raw: 04466-30310
     number_key: '0446630310'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-1046PRM
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
     brand_canonical: TOYOTA
     number_raw: 04466-30311
     number_key: '0446630311'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-1046PRM
     evidence_locator: official snapshot product closure
   - brand_raw: TOYOTA
     brand_canonical: TOYOTA
     number_raw: 04466-30312
     number_key: '0446630312'
-    kind: aftermarket
+    kind: oem
     source_product: 3010-1046PRM
     evidence_locator: official snapshot product closure
   - brand_raw: UNIO

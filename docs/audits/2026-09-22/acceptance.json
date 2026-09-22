@@ -1,0 +1,592 @@
+{
+  "requirements": {
+    "positive": 12,
+    "negative": 4,
+    "ambiguous_or_partial": 4
+  },
+  "pairs": [
+    {
+      "source": "sbparts",
+      "group": "brake_pads",
+      "path": "tests/fixtures/catalogues/sbparts/brake_pads/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "sbparts",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "sbparts",
+      "group": "brake_hoses",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "brembo",
+      "group": "brake_pads",
+      "path": "tests/fixtures/catalogues/brembo/brake_pads/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "brembo",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "brembo",
+      "group": "brake_hoses",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "trialli",
+      "group": "brake_pads",
+      "path": "tests/fixtures/catalogues/trialli/brake_pads/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "trialli",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "trialli",
+      "group": "brake_hoses",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "trialli",
+      "group": "shock_absorbers",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "brixo",
+      "group": "radiators",
+      "path": "tests/fixtures/catalogues/brixo/radiators/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "nibkru",
+      "group": "brake_pads",
+      "path": "tests/fixtures/catalogues/nibkru/brake_pads/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "nibkru",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "luzar",
+      "group": "radiators",
+      "path": "tests/fixtures/catalogues/luzar/radiators/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "nissens",
+      "group": "radiators",
+      "path": "tests/fixtures/catalogues/nissens/radiators/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 1,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "kyb",
+      "group": "shock_absorbers",
+      "path": "tests/fixtures/catalogues/kyb/shock_absorbers/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "hola",
+      "group": "brake_pads",
+      "path": "tests/fixtures/catalogues/hola/brake_pads/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "hola",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "hola",
+      "group": "brake_hoses",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "hola",
+      "group": "shock_absorbers",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "brannor",
+      "group": "brake_pads",
+      "path": "tests/fixtures/catalogues/brannor/brake_pads/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "brannor",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "hel",
+      "group": "brake_hoses",
+      "path": "tests/fixtures/catalogues/hel/brake_hoses/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "jnbk",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "jnbk",
+      "group": "brake_discs",
+      "path": "tests/fixtures/catalogues/jnbk/brake_discs/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "mintex",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "mintex",
+      "group": "brake_discs",
+      "path": "tests/fixtures/catalogues/mintex/brake_discs/manifest.yaml",
+      "positive": 0,
+      "negative": 0,
+      "ambiguous_or_partial": 0,
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "metaco",
+      "group": "brake_pads",
+      "path": "tests/fixtures/catalogues/metaco/brake_pads/manifest.yaml",
+      "positive": 12,
+      "negative": 4,
+      "ambiguous_or_partial": 4,
+      "gates": {
+        "positive": true,
+        "negative": true,
+        "ambiguous_or_partial": true
+      },
+      "accepted": true
+    },
+    {
+      "source": "metaco",
+      "group": "brake_discs",
+      "path": "tests/fixtures/catalogues/metaco/brake_discs/manifest.yaml",
+      "positive": 12,
+      "negative": 4,
+      "ambiguous_or_partial": 4,
+      "gates": {
+        "positive": true,
+        "negative": true,
+        "ambiguous_or_partial": true
+      },
+      "accepted": true
+    },
+    {
+      "source": "metaco",
+      "group": "shock_absorbers",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "metaco",
+      "group": "radiators",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "metaco",
+      "group": "brake_hoses",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "marshall",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "lynxauto",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "lynxauto",
+      "group": "shock_absorbers",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "lynxauto",
+      "group": "brake_hoses",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "masterkit",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "fap",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "fap",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "ganz",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "ganz",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "ganz",
+      "group": "shock_absorbers",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "ganz",
+      "group": "radiators",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "zimmermann",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "zimmermann",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "monaer",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "monaer",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "ate",
+      "group": "brake_pads",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "ate",
+      "group": "brake_discs",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "ate",
+      "group": "brake_hoses",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "febest",
+      "group": "shock_absorbers",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    },
+    {
+      "source": "torr",
+      "group": "shock_absorbers",
+      "gates": {
+        "positive": false,
+        "negative": false,
+        "ambiguous_or_partial": false
+      },
+      "accepted": false
+    }
+  ],
+  "accepted_pairs": 2,
+  "total_pairs": 52,
+  "ok": false
+}

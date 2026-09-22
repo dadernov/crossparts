@@ -73,13 +73,19 @@ class FapSource(BaseSource):
             if looks_blocked(response.status_code, response.text):
                 return SourceResult(self.key, SourceStatus.BLOCKED, message=f"HTTP {response.status_code}",
                                     elapsed_ms=self.elapsed(started), url=str(response.url))
+            if response.status_code >= 400:
+                return SourceResult(self.key, SourceStatus.ERROR, message=f"HTTP {response.status_code}",
+                                    elapsed_ms=self.elapsed(started), url=str(response.url))
             try:
                 rows = response.json()
+                if not isinstance(rows, list):
+                    raise ValueError("invalid product response")
             except ValueError:
                 return SourceResult(self.key, SourceStatus.ERROR, message="FAP вернул не JSON",
                                     elapsed_ms=self.elapsed(started), url=str(response.url))
-            selected = [row for row in rows if self.product_group(row) in allowed_groups]
-            selected = selected[:self.settings.max_products_per_oe]
+            all_selected = [row for row in rows if self.product_group(row) in allowed_groups]
+            truncated = len(all_selected) > self.settings.max_products_per_oe
+            selected = all_selected[:self.settings.max_products_per_oe]
             if not selected:
                 return SourceResult(self.key, SourceStatus.NOT_FOUND,
                                     message="номер не найден в выбранной группе FAP",
@@ -87,6 +93,7 @@ class FapSource(BaseSource):
 
             products: list[str] = []
             crosses = []
+            failed_refs = 0
             for row in selected:
                 product = self.product_code(row)
                 group = self.product_group(row)
@@ -98,13 +105,25 @@ class FapSource(BaseSource):
                                                url=product_url, kind=KIND_AFTERMARKET))
                 try:
                     refs = await client.get(product_url, params={"group": "Brake pad" if group == BRAKE_PADS else "Brake disc"})
-                    pairs = self.oe_pairs(refs.json()) if refs.status_code < 400 else []
+                    if refs.status_code >= 400:
+                        failed_refs += 1
+                        continue
+                    payload = refs.json()
+                    if not isinstance(payload, list):
+                        failed_refs += 1
+                        continue
+                    pairs = self.oe_pairs(payload)
                 except (Exception, ValueError):
-                    pairs = []
+                    failed_refs += 1
+                    continue
                 for brand, number in pairs:
                     crosses.extend(self.make_cross(brand, number, product=product,
                                                    url=product_url, kind=KIND_OEM))
 
-        return SourceResult(self.key, SourceStatus.OK if crosses else SourceStatus.NOT_FOUND,
+        incomplete = failed_refs > 0 or truncated
+        return SourceResult(self.key, SourceStatus.PARTIAL if crosses and incomplete else (
+                                SourceStatus.OK if crosses else SourceStatus.NOT_FOUND),
                             crosses=crosses, products=products,
+                            message=(f"не загружено таблиц OE: {failed_refs}; выдача ограничена: {truncated}"
+                                     if incomplete else None),
                             elapsed_ms=self.elapsed(started), url=endpoint)

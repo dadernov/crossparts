@@ -73,4 +73,4 @@ def test_coverage_reports_every_group():
     assert "TRIALLI" in cov[groups.BRAKE_HOSES]["implemented"]
     assert "NIBK" in cov[groups.BRAKE_PADS]["blocked"]
     assert "METACO" in cov[groups.RADIATORS]["implemented"]
-    assert cov[groups.RADIATORS]["total"] == 6
+    assert cov[groups.RADIATORS]["total"] == 7

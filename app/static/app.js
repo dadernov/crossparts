@@ -1,6 +1,6 @@
 const $ = (selector) => document.querySelector(selector);
 const KIND = {oem: 'OEM', aftermarket: 'Аналог', standard: 'Стандарт'};
-const STATUS = {ok: 'Найдено', not_found: 'Нет совпадений', blocked: 'Недоступен', error: 'Ошибка', no_sources: 'Нет каталогов', pending: 'В очереди', running: 'Обрабатывается', done: 'Завершено', failed: 'Ошибка задания'};
+const STATUS = {ok: 'Найдено', partial: 'Найдено частично', not_found: 'Нет совпадений', blocked: 'Недоступен', error: 'Ошибка', no_sources: 'Нет каталогов', pending: 'В очереди', running: 'Обрабатывается', done: 'Завершено', failed: 'Ошибка задания'};
 const state = {crosses: [], sources: new Map(), busy: false, uploading: false, jobsBusy: false, limit: 2, active: false, jobsJSON: '', file: null, mode: 'empty', selectedJob: null, jobVersion: '', viewRequest: 0, page: 1, excludedBrands: new Set(), excludedSources: new Set()};
 
 // All untrusted values are text nodes, including catalogue data and filenames.
@@ -289,8 +289,8 @@ $('#lookup-form').addEventListener('submit', async event => {
     const data = await api('/api/v1/lookup', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({oe, group})});
     if (request !== state.viewRequest) return;
     state.lookup = {oe: data.oe, group, groupTitle}; state.crosses = data.crosses; resetColumnFilters();
-    const answered = data.sources.filter(s => ['ok','not_found'].includes(s.status));
-    const unavailable = data.sources.filter(s => ['error','blocked'].includes(s.status));
+    const answered = data.sources.filter(s => ['ok','not_found','partial'].includes(s.status));
+    const unavailable = data.sources.filter(s => ['error','blocked','partial'].includes(s.status));
     let summary;
     if (data.status === 'no_sources' || !data.sources.length) summary = 'Для этой группы нет подключённых каталогов. Выберите другую группу.';
     else if (!answered.length) summary = 'Каталоги не ответили. Наличие аналогов проверить не удалось. Повторите поиск позже.';
@@ -299,7 +299,7 @@ $('#lookup-form').addEventListener('submit', async event => {
     else summary = '';
     $('#result-summary').textContent = summary;
     $('#result-query').textContent = `${data.oe} · ${groupTitle}`;
-    $('#source-reports').replaceChildren(...data.sources.map(source => el('span', `${sourceTitle(source.source).replace(/\s*\([^()]*\)\s*$/, '')}: ${STATUS[source.status] || source.status}`, `badge ${['error','blocked'].includes(source.status)?'warning':'neutral'}`)));
+    $('#source-reports').replaceChildren(...data.sources.map(source => el('span', `${sourceTitle(source.source).replace(/\s*\([^()]*\)\s*$/, '')}: ${STATUS[source.status] || source.status}`, `badge ${['error','blocked','partial'].includes(source.status)?'warning':'neutral'}`)));
     $('#source-summary').textContent = `Каталоги: ${answered.length} из ${data.sources.length}`;
     $('#source-details').hidden = !unavailable.length;
     // Keep the compact catalogue summary closed after search. The user can
@@ -315,7 +315,8 @@ function renderRows() {
   const canonicalQuery = canonicalNumber(query);
   const rows = state.crosses.filter(c => {
     if (state.excludedBrands.has(c.brand || '—')) return false;
-    if ((c.sources || []).some(source => state.excludedSources.has(source))) return false;
+    const rowSources = c.sources || [];
+    if (rowSources.length && rowSources.every(source => state.excludedSources.has(source))) return false;
     if (!query) return true;
     const oe = c.oe_number || state.lookup?.oe || '';
     const sources = (c.sources || []).map(sourceTitle).join(' ');

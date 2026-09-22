@@ -34,6 +34,22 @@ AFTERMARKET_BRANDS = {
 #: Industry standards rather than a manufacturer.
 STANDARD_BRANDS = {"FMSI", "WVA", "ECE", "SAE", "GG", "D"}
 
+# Vehicle manufacturers can also appear in a supplier's "replacement" file.
+# Their numbers remain OEM references regardless of the input filename.
+OEM_BRANDS = {
+    "ACURA", "ALFA ROMEO", "AUDI", "BAIC", "BMW", "BUICK", "BYD",
+    "CADILLAC", "CHANGAN", "CHERY", "CHEVROLET", "CHRYSLER", "CITROEN",
+    "CITROEN-PEUGEOT", "DACIA", "DAEWOO", "DAIHATSU", "DATSUN", "DODGE",
+    "FAW", "FIAT", "FORD", "GAZ", "GEELY", "GENESIS", "GM", "GREAT WALL",
+    "HAVAL", "HONDA", "HYUNDAI", "HYUNDAI-KIA", "INFINITI", "ISUZU",
+    "IVECO", "JAC", "JAGUAR", "JEEP", "KIA", "LADA", "LAND ROVER",
+    "LEXUS", "LIFAN", "LINCOLN", "MAN", "MAZDA", "MERCEDES BENZ",
+    "MERCEDES-BENZ", "MINI", "MITSUBISHI", "MOSKVICH", "NISSAN", "OPEL",
+    "PEUGEOT", "PORSCHE", "RENAULT", "ROVER", "SAAB", "SAIC", "SCANIA",
+    "SEAT", "SKODA", "SMART", "SSANGYONG", "SUBARU", "SUZUKI", "TOYOTA",
+    "UAZ", "VAG", "VAZ", "VOLKSWAGEN", "VOLVO", "VW", "ZAZ", "ZIL",
+}
+
 KIND_OEM = "oem"
 KIND_AFTERMARKET = "aftermarket"
 KIND_STANDARD = "standard"
@@ -66,6 +82,18 @@ def classify_brand(brand: str) -> str:
     if b in AFTERMARKET_BRANDS:
         return KIND_AFTERMARKET
     return KIND_OEM
+
+
+def classify_reference_brand(brand: str, fallback: str) -> str:
+    """Classify known brands while preserving unknown file semantics."""
+    canonical = clean_brand(brand)
+    if canonical in STANDARD_BRANDS:
+        return KIND_STANDARD
+    if canonical in OEM_BRANDS:
+        return KIND_OEM
+    if canonical in AFTERMARKET_BRANDS:
+        return KIND_AFTERMARKET
+    return fallback
 
 
 def looks_like_part_number(value: str) -> bool:

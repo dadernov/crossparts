@@ -18,12 +18,11 @@
       "key": "jnbk",
       "groups": [
         "brake_pads",
-        "brake_discs",
-        "brake_hoses"
+        "brake_discs"
       ],
       "url": "https://www.jnbk-brakes.com/catalogue/cars",
       "status": "blocked",
-      "note": "Закрыт для нашего IP (AWS WAF). Кроссы NiBK берём из каталога Brixo — источник brixo."
+      "note": "AWS WAF. Отдельный адаптер nibkru использует публичную базу NiBK/Brixo."
     },
     {
       "brand": "NIBK",
@@ -77,7 +76,8 @@
       "key": "ate",
       "groups": [
         "brake_pads",
-        "brake_discs"
+        "brake_discs",
+        "brake_hoses"
       ],
       "url": "https://www.ate-brakes.com/catalogues/online-catalogues/",
       "status": "implemented",
@@ -131,11 +131,13 @@
       "key": "ganz",
       "groups": [
         "brake_pads",
-        "brake_discs"
+        "brake_discs",
+        "shock_absorbers",
+        "radiators"
       ],
       "url": "https://ganz-parts.ru/catalog/",
       "status": "implemented",
-      "note": "Точный поиск и карточка GANZ подтверждают связь OE с артикулом."
+      "note": "Точный OE-поиск и карточка GANZ подтверждают колодки, диски, амортизаторы и основные радиаторы; масляные радиаторы и детали кузова исключаются."
     },
     {
       "brand": "MONAER",
@@ -288,7 +290,7 @@
       "note": "Радиаторы охлаждения, поиск по ОЕМ-номеру."
     },
     {
-      "brand": "SALURA",
+      "brand": "SAKURA",
       "key": "salura",
       "groups": [
         "radiators"
@@ -305,8 +307,8 @@
         "radiators"
       ],
       "url": "https://webshop.nrf.eu/",
-      "status": "blocked",
-      "note": "Повторно проверено в W3: публичный поиск принимает OE, но гостю не отдаёт карточки товара. Для подключения нужен дилерский доступ NRF."
+      "status": "planned",
+      "note": "22.09.2026 публичный официальный OE-поиск вернул гостю товарные результаты для 8200735038. Нужны адаптер, независимые эталоны и проверка карточек до включения."
     },
     {
       "brand": "AVA",
@@ -316,7 +318,7 @@
       ],
       "url": "https://ava-cooling.com/ru/",
       "status": "blocked",
-      "note": "Повторно проверено в W3: сайт открывается, но каталог — статичная форма подбора по автомобилю без работающего публичного OE-поиска."
+      "note": "22.09.2026 стандартная TLS-проверка отклоняет неполную цепочку сертификата AVA; проверка сертификата не отключается."
     },
     {
       "brand": "PATRON",
@@ -326,7 +328,7 @@
       ],
       "url": "https://patron.ru/",
       "status": "blocked",
-      "note": "Сайт отвечает 503 (балансировщик не отдаёт бэкенд)."
+      "note": "22.09.2026 официальный сайт отвечает HTTP 403 для серверного клиента; источник выключен, обход защиты не применяется."
     },
     {
       "brand": "HEL",
@@ -349,7 +351,7 @@
       ],
       "url": "https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/trw/",
       "status": "blocked",
-      "note": "Запрошен для колодок, дисков, амортизаторов и шлангов. Штатный ZF-каталог возвращает WAF 403 с сервера, а публичного branded TecDoc-каталога TRW нет; источник выключен."
+      "note": "22.09.2026 общий каталог ZF доступен, но стабильный точный OE-контракт с отдельной атрибуцией TRW не подтверждён; источник выключен до discovery и goldens."
     },
     {
       "brand": "STELLOX",
@@ -359,7 +361,17 @@
       ],
       "url": "https://ru.stellox.com/catalog/",
       "status": "planned",
-      "note": "Каталог без поиска по ОЕ: номера видны только в карточке товара, обратного поиска сайт не даёт."
+      "note": "22.09.2026 публичная страница каталога доступна, но подтверждённый точный обратный OE-поиск не найден; требуется отдельное discovery."
+    },
+    {
+      "brand": "MARSHALL",
+      "key": "marshall",
+      "groups": [
+        "brake_pads"
+      ],
+      "url": "https://cars.marshall.parts/shop/",
+      "status": "implemented",
+      "note": "Локальный индекс официального XLSX; подключение регулируется pilot_rules."
     }
   ]
 }

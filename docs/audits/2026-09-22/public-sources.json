@@ -1,0 +1,416 @@
+{
+  "sources": [
+    {
+      "key": "sbparts",
+      "title": "SB NAGAMOCHI (sbparts.ru)",
+      "homepage": "https://sbparts.ru/catalog/",
+      "verified": true,
+      "note": "Каталог кроссов SB NAGAMOCHI. Отдаёт бренд + номер аналога.",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски",
+        "Тормозные шланги"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "brembo",
+      "title": "Brembo (bremboparts.com)",
+      "homepage": "https://www.bremboparts.com/europe/ru",
+      "verified": true,
+      "note": "Официальный каталог Brembo: OE-номера + кроссы конкурентов.",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски",
+        "Тормозные шланги"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "trialli",
+      "title": "TRIALLI (trialli.ru)",
+      "homepage": "https://trialli.ru/catalogue/",
+      "verified": true,
+      "note": "Колодки, диски, шланги, амортизаторы. Отдаёт ОЕМ-номера по каждому артикулу.",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses",
+        "shock_absorbers"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски",
+        "Тормозные шланги",
+        "Амортизаторы"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "brixo",
+      "title": "Brixo: SAKURA (brixogroup.com)",
+      "homepage": "https://brixogroup.com/catalog",
+      "verified": true,
+      "note": "Радиаторы SAKURA из общей базы Brixo. Кроссы приходят сразу с брендами.",
+      "groups": [
+        "radiators"
+      ],
+      "group_titles": [
+        "Радиаторы охлаждения"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "nibkru",
+      "title": "NiBK (nibkbrakes.com)",
+      "homepage": "https://nibkbrakes.com/ru/catalog",
+      "verified": true,
+      "note": "Официальный каталог NiBK. Один поиск и максимум пять карточек на номер; дальше используется кэш.",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "luzar",
+      "title": "LUZAR (luzar.ru)",
+      "homepage": "https://luzar.ru/catalogue",
+      "verified": true,
+      "note": "Радиаторы охлаждения. Ищет по ОЕМ-номеру, отдаёт полный список ОЕМ карточки.",
+      "groups": [
+        "radiators"
+      ],
+      "group_titles": [
+        "Радиаторы охлаждения"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "nissens",
+      "title": "Nissens (catalogue.nissens.com)",
+      "homepage": "https://catalogue.nissens.com/Product",
+      "verified": true,
+      "note": "Радиаторы и система охлаждения. Поиск по ОЕ, ОЕМ-номера с карточки товара.",
+      "groups": [
+        "radiators"
+      ],
+      "group_titles": [
+        "Радиаторы охлаждения"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "kyb",
+      "title": "KYB (kyb.ru)",
+      "homepage": "https://kyb.ru/support/cross",
+      "verified": true,
+      "note": "Амортизаторы. Сервис кроссировки KYB: по ОЕ отдаёт артикулы KYB.",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "group_titles": [
+        "Амортизаторы"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "hola",
+      "title": "HOLA (hola-auto.ru)",
+      "homepage": "https://www.hola-auto.ru/production/shock-absorbers/",
+      "verified": true,
+      "note": "Колодки, диски, шланги, амортизаторы. Поиск по чужому номеру, ОЕМ с брендами.",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses",
+        "shock_absorbers"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски",
+        "Тормозные шланги",
+        "Амортизаторы"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "brannor",
+      "title": "BRANNOR (brannor.ru)",
+      "homepage": "https://brannor.ru/search-oem/",
+      "verified": true,
+      "note": "Колодки и диски. Поиск по ОЕ, на карточке список оригинальных номеров.",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "hel",
+      "title": "HEL Performance (helrussia.ru)",
+      "homepage": "https://helrussia.ru/",
+      "verified": true,
+      "note": "Армированные тормозные шланги. Оригинальные номера видны прямо в выдаче.",
+      "groups": [
+        "brake_hoses"
+      ],
+      "group_titles": [
+        "Тормозные шланги"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "jnbk",
+      "title": "NIBK / JNBK (jnbk-brakes.com)",
+      "homepage": "https://www.jnbk-brakes.com/catalogue/cars",
+      "verified": false,
+      "note": "Парсер написан по реальной разметке сайта и покрыт офлайн-тестами. Живой доступ закрыт AWS WAF для дата-центровых IP — задайте CP_PROXY_URL.",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски"
+      ],
+      "enabled_by_default": false
+    },
+    {
+      "key": "mintex",
+      "title": "Mintex (mintex.brakebook.com)",
+      "homepage": "https://mintex.brakebook.com/",
+      "verified": false,
+      "note": "Парсер написан по реальной разметке brakebook и покрыт офлайн-тестами. Живой доступ закрыт Cloudflare managed challenge — задайте CP_PROXY_URL.",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски"
+      ],
+      "enabled_by_default": false
+    },
+    {
+      "key": "metaco",
+      "title": "METACO",
+      "homepage": "https://metaco.parts/category",
+      "verified": true,
+      "note": "Локальный индекс из официальных OEM и cross-list CSV METACO: колодки, диски, амортизаторы подвески, основные радиаторы и тормозные шланги.",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "shock_absorbers",
+        "radiators",
+        "brake_hoses"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски",
+        "Амортизаторы",
+        "Радиаторы охлаждения",
+        "Тормозные шланги"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "marshall",
+      "title": "MARSHALL",
+      "homepage": "https://cars.marshall.parts/shop/",
+      "verified": true,
+      "note": "Тормозные колодки. Локальный индекс из публичного XLSX-каталога MARSHALL.",
+      "groups": [
+        "brake_pads"
+      ],
+      "group_titles": [
+        "Тормозные колодки"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "lynxauto",
+      "title": "LYNXauto",
+      "homepage": "https://lynxauto.info/",
+      "verified": true,
+      "note": "Колодки, амортизаторы и тормозные шланги. Официальный OE-поиск и карточки LYNXauto.",
+      "groups": [
+        "brake_pads",
+        "shock_absorbers",
+        "brake_hoses"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Амортизаторы",
+        "Тормозные шланги"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "masterkit",
+      "title": "MasterKit",
+      "homepage": "https://masterkit.it/production",
+      "verified": true,
+      "note": "Тормозные колодки. Публичный OE-поиск MasterKit с проверкой карточки товара.",
+      "groups": [
+        "brake_pads"
+      ],
+      "group_titles": [
+        "Тормозные колодки"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "fap",
+      "title": "FAP",
+      "homepage": "https://fapbrakes.ru/ru/catalogue",
+      "verified": true,
+      "note": "Колодки и тормозные диски. Публичный API FAP по OE-номеру.",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "ganz",
+      "title": "GANZ",
+      "homepage": "https://ganz-parts.ru/catalog/",
+      "verified": true,
+      "note": "Колодки и тормозные диски. Точный поиск и карточки GANZ по OE-номеру.",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "zimmermann",
+      "title": "ZIMMERMANN",
+      "homepage": "https://web.tecalliance.net/otto-zimmermann/ru/",
+      "verified": true,
+      "note": "Колодки и тормозные диски. Открытый фирменный TecDoc-каталог Zimmermann.",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "monaer",
+      "title": "MONAER",
+      "homepage": "https://monaer-russia.ru/catalog",
+      "verified": true,
+      "note": "Колодки и диски. Локальный индекс публичных карточек Monaer и их OE-номеров.",
+      "groups": [
+        "brake_pads",
+        "brake_discs"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "ate",
+      "title": "ATE",
+      "homepage": "https://web.tecalliance.net/ate/en/home?language=en&country=de&articleCountry=de",
+      "verified": true,
+      "note": "Колодки, тормозные диски и шланги. Открытый фирменный TecDoc-каталог ATE.",
+      "groups": [
+        "brake_pads",
+        "brake_discs",
+        "brake_hoses"
+      ],
+      "group_titles": [
+        "Тормозные колодки",
+        "Тормозные диски",
+        "Тормозные шланги"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "febest",
+      "title": "FEBEST",
+      "homepage": "https://catalog.febest.club",
+      "verified": true,
+      "note": "Амортизаторы. Публичный точный OE-поиск FEBEST с подтверждёнными аналогами.",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "group_titles": [
+        "Амортизаторы"
+      ],
+      "enabled_by_default": true
+    },
+    {
+      "key": "torr",
+      "title": "TORR",
+      "homepage": "https://controltorr.de/ru/catalog",
+      "verified": true,
+      "note": "Амортизаторы. Официальный серверный OE-поиск и таблица кросс-номеров TORR.",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "group_titles": [
+        "Амортизаторы"
+      ],
+      "enabled_by_default": true
+    }
+  ],
+  "default": [
+    "sbparts",
+    "brembo",
+    "trialli",
+    "brixo",
+    "nibkru",
+    "luzar",
+    "nissens",
+    "kyb",
+    "hola",
+    "brannor",
+    "hel",
+    "metaco",
+    "marshall",
+    "lynxauto",
+    "masterkit",
+    "fap",
+    "ganz",
+    "zimmermann",
+    "monaer",
+    "ate",
+    "febest",
+    "torr"
+  ]
+}

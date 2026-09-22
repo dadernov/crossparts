@@ -1,0 +1,71 @@
+version: 1
+scope:
+  from_inclusive: 9cb4c5d
+  through: 113f98f
+  commits: 34
+  purpose: Проверка расширения каталогов и регрессий всех коммитов диапазона
+safety:
+  detached_worktree: /tmp/crossparts-audit-113f98f
+  database: temporary_only
+  production: read_only_health_and_configuration
+  no_restart: true
+  no_commit: true
+  upstream_concurrency: 3
+  upstream_per_source_delay_seconds: 3
+stages:
+- id: baseline
+  checks:
+  - full_offline_pytest
+  - chromium_and_webkit
+  - inventory_workbook
+  - original_live_tests
+- id: review
+  checks:
+  - every_commit_diff
+  - auth_trial_upload
+  - history_tenant_isolation
+  - excel_customer_sku
+  - pagination_filters
+  - cache_coalescing_cooldown
+  - batch_pacing
+  - deployment
+- id: suppliers
+  checks:
+  - all_enabled_sources_positive_smoke
+  - new_source_groups
+  - impossible_number_negative
+  - immutable_local_indexes
+  - timings
+  - ungrouped_routing
+  - metadata_consistency
+  limitation: Smoke-проверки не заменяют полную эталонную выборку из плана расширения.
+- id: regression
+  checks:
+  - http_errors_not_not_found
+  - reject_unrelated_product_types
+  - test_artifacts_outside_repository
+  - full_suite_after_fixes
+- id: report
+  checks:
+  - per_commit_review_index
+  - evidence_json
+  - unresolved_failures
+  - remaining_release_gates
+acceptance:
+- Нет обращения тестов к клиентской БД и изменений запущенного сервиса.
+- Каждый провал фиксируется отдельно; blocked/error не считаются успешным отсутствием
+  товара.
+- Исправления подтверждаются регрессионными тестами.
+- Закрытие волн не подтверждается без выполнения всех quality gates исходного плана.
+result:
+  status: corrected_with_release_gates
+  report: docs/audits/2026-09-22/README.md
+  offline_passed: 262
+  live_existing_passed: 10
+  source_matrix_passed: 62
+  source_matrix_total: 62
+  golden_pairs_accepted: 2
+  golden_pairs_total: 52
+  runtime_restarted: false
+  static_asset_served_from_worktree: true
+  committed: false

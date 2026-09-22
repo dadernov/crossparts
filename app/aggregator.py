@@ -154,7 +154,8 @@ class Aggregator:
             self._remember_source_failure(source.key, result)
         else:
             self._source_failures.pop(source.key, None)
-        # Only cache deterministic answers; blocks and errors should be retried.
+        # Only cache complete deterministic answers. A partial answer must be
+        # retried because one or more product-card requests failed.
         if use_cache and result.status in (SourceStatus.OK, SourceStatus.NOT_FOUND):
             await self._cache_put(cache_source, key, result)
         return result
@@ -257,7 +258,16 @@ class Aggregator:
         ]
 
         status = "not_found"
-        if any(r.status is SourceStatus.OK for r in results):
+        has_rows = bool(crosses)
+        incomplete = any(
+            r.status in (SourceStatus.PARTIAL, SourceStatus.ERROR, SourceStatus.BLOCKED)
+            for r in results
+        )
+        if has_rows and incomplete:
+            status = "partial"
+        elif any(r.status is SourceStatus.PARTIAL for r in results):
+            status = "partial"
+        elif any(r.status is SourceStatus.OK for r in results):
             status = "ok"
         elif any(r.status is SourceStatus.BLOCKED for r in results) and not any(
             r.status is SourceStatus.NOT_FOUND for r in results

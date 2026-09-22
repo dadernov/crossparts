@@ -49,8 +49,14 @@ class MasterkitSource(BaseSource):
     @staticmethod
     def is_brake_pad(html: str) -> bool:
         document = HTMLParser(html)
-        text = document.text(separator=" ", strip=True).casefold()
-        return "тормозн" in text and "колодк" in text
+        # Site navigation mentions pads on unrelated product pages too.
+        # Use the explicit product-group property, not whole-page text.
+        for row in document.css(".partsInfoPropertiesRow"):
+            label = row.css_first(".partsInfoPropertiesRowProperty")
+            if label is not None and label.text(strip=True).casefold().rstrip(":") == "товарная группа":
+                values = row.css("span")
+                return len(values) >= 2 and values[-1].text(strip=True).casefold() == "тормозные колодки"
+        return False
 
     async def lookup(self, oe: str) -> SourceResult:
         started = self.timer()
@@ -75,7 +81,9 @@ class MasterkitSource(BaseSource):
             except ValueError:
                 return SourceResult(self.key, SourceStatus.ERROR, message="MasterKit вернул не JSON",
                                     elapsed_ms=self.elapsed(started), url=str(response.url))
-            articles = self.products(payload)[:self.settings.max_products_per_oe]
+            all_articles = self.products(payload)
+            truncated = len(all_articles) > self.settings.max_products_per_oe
+            articles = all_articles[:self.settings.max_products_per_oe]
             if not articles:
                 return SourceResult(self.key, SourceStatus.NOT_FOUND,
                                     message="номер не найден в каталоге MasterKit",
@@ -93,7 +101,10 @@ class MasterkitSource(BaseSource):
                 except Exception:
                     failed_checks += 1
                     continue
-                if page.status_code >= 400 or not self.is_brake_pad(page.text):
+                if page.status_code >= 400:
+                    failed_checks += 1
+                    continue
+                if not self.is_brake_pad(page.text):
                     continue
                 products.append(article)
                 crosses.extend(self.make_cross("MasterKit", article, product=article,
@@ -103,9 +114,14 @@ class MasterkitSource(BaseSource):
             return SourceResult(self.key, SourceStatus.ERROR,
                                 message="не удалось проверить карточку MasterKit",
                                 elapsed_ms=self.elapsed(started), url=SEARCH)
+        incomplete = failed_checks > 0 or truncated
         return SourceResult(
-            self.key, SourceStatus.OK if crosses else SourceStatus.NOT_FOUND,
+            self.key, SourceStatus.PARTIAL if crosses and incomplete else (
+                SourceStatus.OK if crosses else SourceStatus.NOT_FOUND
+            ),
             crosses=crosses, products=products,
-            message=None if crosses else "номер не относится к тормозным колодкам MasterKit",
+            message=(f"не проверено карточек: {failed_checks}; выдача ограничена: {truncated}"
+                     if incomplete else None) if crosses else
+                    "номер не относится к тормозным колодкам MasterKit",
             elapsed_ms=self.elapsed(started), url=SEARCH,
         )

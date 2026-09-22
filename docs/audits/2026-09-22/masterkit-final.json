@@ -1,0 +1,36 @@
+[
+  {
+    "source": "masterkit",
+    "group": "brake_pads",
+    "oe": "58101H5A25",
+    "status": "ok",
+    "products": [
+      "77AA515"
+    ],
+    "rows": 1,
+    "message": null,
+    "sample": [
+      {
+        "brand": "MASTERKIT",
+        "number": "77AA515",
+        "kind": "aftermarket"
+      }
+    ],
+    "seconds": 1.078,
+    "expectation": "ok",
+    "passed": true
+  },
+  {
+    "source": "masterkit",
+    "group": "brake_pads",
+    "oe": "ZZCPAUDITNONEXISTENT999999",
+    "status": "not_found",
+    "products": [],
+    "rows": 0,
+    "message": "номер не найден в каталоге MasterKit",
+    "sample": [],
+    "seconds": 0.716,
+    "expectation": "not_found",
+    "passed": true
+  }
+]

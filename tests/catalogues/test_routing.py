@@ -98,6 +98,30 @@ def test_candidate_visibility_exposes_only_allowed_groups():
     assert metaco["enabled_by_default"] is True
 
 
+def test_local_snapshot_hash_changes_candidate_cache_namespace(tmp_path):
+    index = tmp_path / "metaco.sqlite3"
+    index.write_bytes(b"snapshot-one")
+    rules = {"metaco": {
+        "groups": [BRAKE_PADS], "tenants": ["pilot-account"], "default": True,
+    }}
+    settings = Settings(
+        _env_file=None,
+        enabled_sources="",
+        browser_fallback=False,
+        metaco_index_path=str(index),
+        pilot_rules=json.dumps(rules),
+    )
+    first_registry = SourceRegistry(settings)
+    first = first_registry.get("metaco", group=BRAKE_PADS, tenant="pilot-account")
+    assert first is not None and "@" in first.cache_key
+
+    index.write_bytes(b"snapshot-two")
+    second_registry = SourceRegistry(settings)
+    second = second_registry.get("metaco", group=BRAKE_PADS, tenant="pilot-account")
+    assert second is not None
+    assert first.cache_key != second.cache_key
+
+
 def test_wildcard_rule_enables_candidate_for_every_resolved_tenant():
     registry = _registry({
         "metaco": {
@@ -284,6 +308,7 @@ async def test_excel_job_preserves_pilot_tenant_and_gates_each_row(tmp_path, mon
         {'oe_number': '1K0615301AA', 'group': BRAKE_DISCS},
         {'oe_number': '1K0615301AA', 'group': BRAKE_PADS},
     ], None, 'pilot-account', 'pilot.xlsx')
+    await runner._run_job(created.id)
     await runner._run_job(created.id)
     async with sessions() as session:
         job = await session.get(Job, created.id)

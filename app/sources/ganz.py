@@ -5,7 +5,7 @@ from urllib.parse import quote, urljoin
 
 from selectolax.parser import HTMLParser
 
-from ..groups import BRAKE_DISCS, BRAKE_PADS
+from ..groups import BRAKE_DISCS, BRAKE_PADS, RADIATORS, SHOCK_ABSORBERS
 from ..normalize import KIND_AFTERMARKET, clean_number, number_key
 from .antibot import looks_blocked
 from .base import BaseSource, SourceResult, SourceStatus
@@ -21,8 +21,8 @@ class GanzSource(BaseSource):
     title = "GANZ"
     homepage = BASE + "/catalog/"
     verified = True
-    groups = (BRAKE_PADS, BRAKE_DISCS)
-    note = "Колодки и тормозные диски. Точный поиск и карточки GANZ по OE-номеру."
+    groups = (BRAKE_PADS, BRAKE_DISCS, SHOCK_ABSORBERS, RADIATORS)
+    note = "Колодки, диски, амортизаторы и основные радиаторы; точный OE-поиск подтверждается карточкой GANZ."
 
     @staticmethod
     def product_urls(html: str) -> list[str]:
@@ -51,6 +51,14 @@ class GanzSource(BaseSource):
             group = BRAKE_PADS
         elif "диск" in text and "тормозн" in text:
             group = BRAKE_DISCS
+        elif "амортизатор" in text and not any(
+            word in text for word in ("багаж", "капот", "двер")
+        ):
+            group = SHOCK_ABSORBERS
+        elif "радиатор охлаждения" in text and not any(
+            word in text for word in ("масл", "акпп", "кондиционер", "отоп")
+        ):
+            group = RADIATORS
         original = values.get("оригинальный номер", "")
         originals = {number_key(value) for value in original.replace(",", " ").split() if value}
         return clean_number(values.get("артикул", "")), group, originals
@@ -70,7 +78,9 @@ class GanzSource(BaseSource):
             if response.status_code >= 400:
                 return SourceResult(self.key, SourceStatus.ERROR, message=f"HTTP {response.status_code}",
                                     elapsed_ms=self.elapsed(started), url=str(response.url))
-            urls = self.product_urls(response.text)[:self.settings.max_products_per_oe]
+            all_urls = self.product_urls(response.text)
+            truncated = len(all_urls) > self.settings.max_products_per_oe
+            urls = all_urls[:self.settings.max_products_per_oe]
             if not urls:
                 return SourceResult(self.key, SourceStatus.NOT_FOUND,
                                     message="номер не найден в каталоге GANZ",
@@ -78,14 +88,17 @@ class GanzSource(BaseSource):
 
             products: list[str] = []
             crosses = []
+            failed_checks = 0
             query_key = number_key(oe)
             for path in urls:
                 product_url = urljoin(BASE, path)
                 try:
                     page = await client.get(product_url)
                 except Exception:
+                    failed_checks += 1
                     continue
                 if page.status_code >= 400:
+                    failed_checks += 1
                     continue
                 article, group, original_numbers = self.product_data(page.text)
                 # The result page is exact, but the product card is the second
@@ -98,9 +111,20 @@ class GanzSource(BaseSource):
                     crosses.extend(self.make_cross("GANZ", article, product=article,
                                                    url=str(page.url), kind=KIND_AFTERMARKET))
 
+        if not crosses and failed_checks == len(urls):
+            return SourceResult(
+                self.key, SourceStatus.ERROR,
+                message="не удалось проверить карточки GANZ",
+                elapsed_ms=self.elapsed(started), url=SEARCH,
+            )
+        incomplete = failed_checks > 0 or truncated
         return SourceResult(
-            self.key, SourceStatus.OK if crosses else SourceStatus.NOT_FOUND,
+            self.key, SourceStatus.PARTIAL if crosses and incomplete else (
+                SourceStatus.OK if crosses else SourceStatus.NOT_FOUND
+            ),
             crosses=crosses, products=products,
-            message=None if crosses else "нет подтверждённого GANZ-аналога в выбранной группе",
+            message=(f"не проверено карточек: {failed_checks}; выдача ограничена: {truncated}"
+                     if incomplete else None) if crosses else
+                    "нет подтверждённого GANZ-аналога в выбранной группе",
             elapsed_ms=self.elapsed(started), url=SEARCH,
         )

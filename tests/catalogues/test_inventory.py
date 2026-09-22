@@ -14,8 +14,7 @@ def test_workbook_inventory_and_registered_adapters_are_in_sync():
         "brands": 33,
         "literal_urls": 36,
         "logical_sources": 34,
-        "registered_adapters": 13,
-        "missing_adapters": 21,
+        "registered_adapters": 24,
+        "missing_adapters": 10,
         "requested_source_group_pairs": 64,
     }
-

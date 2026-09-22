@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import time
+import hashlib
 from dataclasses import dataclass, field
 from enum import Enum
+from pathlib import Path
 
 from ..normalize import (
     classify_brand,
@@ -16,6 +18,7 @@ from ..normalize import (
 
 class SourceStatus(str, Enum):
     OK = "ok"
+    PARTIAL = "partial"
     NOT_FOUND = "not_found"
     BLOCKED = "blocked"
     ERROR = "error"
@@ -101,6 +104,11 @@ class BaseSource:
 
     async def lookup(self, oe: str) -> SourceResult:  # pragma: no cover - interface
         raise NotImplementedError
+
+    @property
+    def cache_version(self) -> str:
+        """Version component for cache keys backed by immutable snapshots."""
+        return ""
 
     # -- helpers shared by adapters -------------------------------------
 
@@ -200,3 +208,17 @@ class BaseSource:
     @staticmethod
     def elapsed(started: float) -> int:
         return int((time.monotonic() - started) * 1000)
+
+
+def file_snapshot_version(path: str | Path | None) -> str:
+    """Return a stable short hash for a configured immutable catalogue file."""
+    if not path:
+        return ""
+    snapshot = Path(path)
+    if not snapshot.is_file():
+        return "missing"
+    digest = hashlib.sha256()
+    with snapshot.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()[:16]
