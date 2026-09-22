@@ -5,7 +5,7 @@
 # Поднимает локальный SOCKS5 и пробрасывает его на сервер, где сервис берёт
 # его как CP_PROXY_URL=socks5://127.0.0.1:1081
 #
-#   SERVER=mrb-cross-search-test.duckdns.org ./tunnel.sh
+#   SERVER=mrb-crossparts.ru ./tunnel.sh
 set -euo pipefail
 
 SERVER="${SERVER:?укажите SERVER=хост.сервера}"

@@ -34,6 +34,11 @@ class Job(Base):
     error: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     finished_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Large customer uploads are split into sequential, downloadable jobs.
+    # The summary job is created only after every chunk has completed.
+    batch_id: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    batch_role: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    batch_order: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     items: Mapped[list["JobItem"]] = relationship(
         back_populates="job", cascade="all, delete-orphan", order_by="JobItem.position"
@@ -88,3 +93,17 @@ class Account(Base):
     # A trial and a paid account have independent limits.
     queries_limit: Mapped[int] = mapped_column(Integer, default=1000)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class TenantDailyUsage(Base):
+    """Persistent per-tenant pacing cursor for one UTC calendar day."""
+
+    __tablename__ = "tenant_daily_usage"
+
+    key: Mapped[str] = mapped_column(String(80), primary_key=True)
+    tenant: Mapped[str] = mapped_column(String(64), index=True)
+    day: Mapped[str] = mapped_column(String(10), index=True)
+    count: Mapped[int] = mapped_column(Integer, default=0)
+    next_allowed_at: Mapped[dt.datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )

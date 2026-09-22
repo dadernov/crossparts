@@ -46,7 +46,7 @@ echo 'restrict,port-forwarding ssh-ed25519 AAAA... home-pc' \
 ## Шаг 3. Туннель
 
 ```bash
-SERVER=mrb-cross-search-test.duckdns.org ./tunnel.sh
+SERVER=mrb-crossparts.ru ./tunnel.sh
 ```
 
 Скрипт сам поднимает SOCKS5, держит соединение и переподключается при обрывах
@@ -95,7 +95,7 @@ python3 scripts/check_proxy.py socks5://127.0.0.1:1081
    microsocks -i 127.0.0.1 -p 1080 &
    ssh -N -i ~/.ssh/crossparts_tunnel \
        -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 \
-       -R 127.0.0.1:1081:127.0.0.1:1080 tunnel@mrb-cross-search-test.duckdns.org
+       -R 127.0.0.1:1081:127.0.0.1:1080 tunnel@mrb-crossparts.ru
    ```
 4. Чтобы Android не убивал Termux: `termux-wake-lock`, плюс отключить
    оптимизацию батареи для Termux в настройках.
@@ -113,7 +113,7 @@ OpenSSH встроен в Windows 10/11, отдельный SOCKS-сервер �
 ```powershell
 ssh -N -i $env:USERPROFILE\.ssh\crossparts_tunnel `
     -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 `
-    -R 127.0.0.1:1081:127.0.0.1:1080 tunnel@mrb-cross-search-test.duckdns.org
+    -R 127.0.0.1:1081:127.0.0.1:1080 tunnel@mrb-crossparts.ru
 ```
 
 Автозапуск — через «Планировщик заданий», триггер «При входе в систему».

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import datetime as dt
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
@@ -16,7 +17,7 @@ from .config import get_settings
 from .db import SessionLocal, init_db
 from .excel import build_template, build_workbook, read_input
 from .jobs import JobRunner
-from .models import Job, JobItem, utcnow
+from .models import Job, JobItem, new_id, utcnow
 from .marketing import context as marketing_context
 from .quota import quota_status, reserve_queries
 from .schemas import JobCreate, JobOut, LookupExportRequest, LookupRequest
@@ -251,27 +252,62 @@ async def _create_job(items, sources, tenant, filename) -> JobOut:
         raise HTTPException(400, "Не выбран ни один известный источник")
     limit = settings.trial_requests if is_guest_tenant(tenant) else settings.requests_per_account
     await reserve_queries(SessionLocal, tenant, len(items), limit)
+    chunk_size = settings.job_chunk_size_for(tenant)
+    if chunk_size and len(items) > chunk_size:
+        return await _create_split_jobs(items, chosen, tenant, filename, chunk_size)
     async with SessionLocal() as session:
         job = Job(tenant=tenant, sources=chosen, total=len(items), filename=filename)
         session.add(job)
         await session.flush()
-        for pos, item in enumerate(items):
-            raw = item.get("group_raw") or item.get("group") or ""
-            session.add(
-                JobItem(
-                    job_id=job.id,
-                    position=pos,
-                    our_sku=item.get("our_sku", ""),
-                    part_name=item.get("part_name", ""),
-                    oe_number=item["oe_number"],
-                    group=item.get("group") or product_groups.resolve(raw),
-                    group_raw=raw or None,
-                )
-            )
+        _add_job_items(session, job.id, items)
         await session.commit()
         out = _job_out(job)
     await runner.submit(out.id)
     return out
+
+
+async def _create_split_jobs(items, chosen, tenant, filename, chunk_size) -> JobOut:
+    chunks = [items[pos:pos + chunk_size] for pos in range(0, len(items), chunk_size)]
+    batch_id = new_id()
+    base_name = filename or "Задание из API"
+    created = utcnow()
+    jobs = {}
+    async with SessionLocal() as session:
+        # Insert in reverse display order: part 1 is initially the newest entry.
+        for index in reversed(range(len(chunks))):
+            chunk = chunks[index]
+            job = Job(
+                tenant=tenant,
+                sources=chosen,
+                total=len(chunk),
+                filename=f"{base_name} · часть {index + 1}/{len(chunks)}"[:255],
+                created_at=created + dt.timedelta(microseconds=len(chunks) - index),
+                batch_id=batch_id,
+                batch_role="chunk",
+                batch_order=index,
+            )
+            session.add(job)
+            await session.flush()
+            _add_job_items(session, job.id, chunk, position_offset=index * chunk_size)
+            jobs[index] = job
+        await session.commit()
+        first = _job_out(jobs[0])
+    await runner.submit(first.id)
+    return first
+
+
+def _add_job_items(session, job_id, items, position_offset=0) -> None:
+    for pos, item in enumerate(items, start=position_offset):
+        raw = item.get("group_raw") or item.get("group") or ""
+        session.add(JobItem(
+            job_id=job_id,
+            position=pos,
+            our_sku=item.get("our_sku", ""),
+            part_name=item.get("part_name", ""),
+            oe_number=item["oe_number"],
+            group=item.get("group") or product_groups.resolve(raw),
+            group_raw=raw or None,
+        ))
 
 
 @app.get("/api/v1/jobs", response_model=list[JobOut])

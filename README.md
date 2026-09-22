@@ -363,6 +363,11 @@ app/
 | `CP_BROWSER_FALLBACK` | `true` | проходить Cloudflare-challenge браузером и переиспользовать cookies |
 | `CP_SOURCE_TIMEOUT` | `45` | таймаут одного источника, сек |
 | `CP_JOB_CONCURRENCY` | `4` | параллельных заданий |
+| `CP_JOB_CHUNK_SIZES` | `gerat:50,admin:10` | размер отдельных заданий для крупных загрузок по аккаунтам |
+| `CP_PACED_TENANTS` | `gerat` | аккаунты с глобальным суточным темпом обработки |
+| `CP_PACED_DAILY_FAST_LIMIT` | `330` | число первых позиций в суточном быстром окне |
+| `CP_PACED_FAST_WINDOW_SECONDS` | `14400` | время распределения первых 330 позиций (4 часа) |
+| `CP_PACED_SLOW_INTERVAL_SECONDS` | `1200` | интервал после быстрого окна (20 минут на позицию) |
 | `CP_SOURCE_CONCURRENCY` | `2` | параллельных запросов к одному источнику |
 | `CP_CACHE_TTL_HOURS` | `168` | время жизни кэша |
 | `CP_MAX_PRODUCTS_PER_OE` | `5` | сколько товаров источника разбирать на один OE |
@@ -385,7 +390,7 @@ python3 scripts/compare_with_reference.py
 
 ## 7. Боевой стенд
 
-Сервис развёрнут и доступен по адресу **<https://mrb-cross-search-test.duckdns.org/>**
+Сервис развёрнут и доступен по адресу **<https://mrb-crossparts.ru/>**
 (HTTP автоматически редиректит на HTTPS).
 
 | Компонент | Что делает |
@@ -393,20 +398,16 @@ python3 scripts/compare_with_reference.py
 | `crossparts.service` | uvicorn на `127.0.0.1:8000`, автозапуск и авто-рестарт |
 | nginx | реверс-прокси на 80/443, TLS, rate limit, приём xlsx до 20 МБ |
 | Let's Encrypt | сертификат на домен, продление через штатный `certbot.timer` |
-| `duckdns.timer` | раз в 15 минут обновляет A-запись, если сменится IP машины |
 
 Конфиги лежат в [`deploy/`](deploy/) — это копии того, что реально стоит в системе:
 
 ```
 deploy/crossparts.service      → /etc/systemd/system/
-deploy/duckdns.service|.timer  → /etc/systemd/system/
-deploy/duckdns-update.sh       → скрипт обновления DNS
 deploy/nginx-crossparts.conf   → /etc/nginx/sites-available/crossparts
 deploy/nginx-limits.conf       → /etc/nginx/conf.d/crossparts-limits.conf
 deploy/nginx-proxy-snippet.conf→ /etc/nginx/snippets/crossparts-proxy.conf
 ```
 
-Токен DuckDNS хранится в `deploy/duckdns.env` (права `600`, в git не попадает).
 Настройки боевого запуска — в `.env.production` (тоже вне git).
 
 ### Эксплуатация

@@ -19,9 +19,8 @@ class Settings(BaseSettings):
 
     # "key:tenant,key2:tenant2". Empty string disables authentication (dev mode).
     api_keys: str = "demo-key:Demo"
-    # Клиентские учётные записи для MVP: "login:password,login2:password2".
-    # Учётные записи выдаются администратором. Тестовая: 0 / 0.
-    users: str = "0:0"
+    # Optional bootstrap accounts: "login:password,login2:password2".
+    users: str = ""
     session_secret: str = "change-this-crossparts-session-secret"
     # Лимит именно поисковых позиций (один OE-номер = одна позиция), на аккаунт.
     requests_per_account: int = 1000
@@ -29,6 +28,13 @@ class Settings(BaseSettings):
     trial_requests: int = 10
     source_timeout: int = 45
     job_concurrency: int = 4
+    # Large uploads are exposed as sequential downloadable jobs. The final
+    # combined job is added to history after all chunks finish.
+    job_chunk_sizes: str = "gerat:50,admin:10"
+    paced_tenants: str = "gerat"
+    paced_daily_fast_limit: int = Field(default=330, ge=1, le=100000)
+    paced_fast_window_seconds: int = Field(default=14400, ge=1, le=86400)
+    paced_slow_interval_seconds: int = Field(default=1200, ge=1, le=86400)
     source_concurrency: int = 2
     # Pause a failing upstream after one blocked/error response so every new
     # number does not wait for the same timeout again.
@@ -108,6 +114,31 @@ class Settings(BaseSettings):
     @property
     def default_sources(self) -> list[str]:
         return [s.strip() for s in self.enabled_sources.split(",") if s.strip()]
+
+    @property
+    def job_chunk_size_map(self) -> dict[str, int]:
+        out = {}
+        for chunk in self.job_chunk_sizes.split(","):
+            tenant, sep, raw_size = chunk.strip().partition(":")
+            if not tenant or not sep:
+                continue
+            try:
+                size = int(raw_size)
+            except ValueError:
+                continue
+            if size > 0:
+                out[tenant.strip().lower()] = size
+        return out
+
+    def job_chunk_size_for(self, tenant: str) -> int:
+        return self.job_chunk_size_map.get(tenant.lower(), 0)
+
+    @property
+    def paced_tenant_keys(self) -> set[str]:
+        return {value.strip().lower() for value in self.paced_tenants.split(",") if value.strip()}
+
+    def pace_enabled_for(self, tenant: str) -> bool:
+        return tenant.lower() in self.paced_tenant_keys
 
     @property
     def pilot_rule_map(self) -> dict[str, dict]:

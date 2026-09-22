@@ -39,6 +39,17 @@ async def init_db() -> None:
                     "ALTER TABLE accounts ADD COLUMN queries_limit INTEGER NOT NULL "
                     f"DEFAULT {max(1, _settings.requests_per_account)}"
                 )
+            job_columns = (await conn.exec_driver_sql("PRAGMA table_info(jobs)")).all()
+            job_column_names = {column[1] for column in job_columns}
+            if "batch_id" not in job_column_names:
+                await conn.exec_driver_sql("ALTER TABLE jobs ADD COLUMN batch_id VARCHAR(32)")
+            if "batch_role" not in job_column_names:
+                await conn.exec_driver_sql("ALTER TABLE jobs ADD COLUMN batch_role VARCHAR(16)")
+            if "batch_order" not in job_column_names:
+                await conn.exec_driver_sql("ALTER TABLE jobs ADD COLUMN batch_order INTEGER")
+            await conn.exec_driver_sql(
+                "CREATE INDEX IF NOT EXISTS ix_jobs_batch_id ON jobs (batch_id)"
+            )
     async with SessionLocal() as session:
         for username, password in _settings.user_map.items():
             if await session.get(Account, username) is None:

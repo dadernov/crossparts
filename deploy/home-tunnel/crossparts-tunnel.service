@@ -7,7 +7,7 @@ Description=CrossParts: обратный туннель домашнего ин�
 After=network-online.target
 
 [Service]
-Environment=SERVER=mrb-cross-search-test.duckdns.org
+Environment=SERVER=mrb-crossparts.ru
 Environment=SSH_USER=tunnel
 ExecStart=%h/crossparts-tunnel/tunnel.sh
 Restart=always
