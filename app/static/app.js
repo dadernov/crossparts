@@ -84,7 +84,7 @@ const GROUP_EXAMPLES = {
   brake_hoses: ['Шланги', '1K0611701K'], shock_absorbers: ['Амортизаторы', '4851080378'],
   radiators: ['Радиаторы', '8200735038'],
 };
-const SOURCE_LOGOS = {sbparts:'sbparts.svg', brembo:'brembo.svg', trialli:'trialli.svg', brixo:'brixo.svg', luzar:'luzar.svg', nissens:'nissens.svg', kyb:'kyb.png', hola:'hola.svg', brannor:'brannor.svg', hel:'hel.png', metaco:'metaco.svg', marshall:'marshall.svg', lynxauto:'lynxauto.svg', masterkit:'masterkit.svg', fap:'fap.svg', ganz:'ganz.svg', zimmermann:'zimmermann.png', monaer:'monaer.png', ate:'ate.png'};
+const SOURCE_LOGOS = {sbparts:'sbparts.svg', brembo:'brembo.svg', trialli:'trialli.svg', brixo:'brixo.svg', luzar:'luzar.svg', nissens:'nissens.svg', kyb:'kyb.png', hola:'hola.svg', brannor:'brannor.svg', hel:'hel.png', metaco:'metaco.svg', marshall:'marshall.svg', lynxauto:'lynxauto.svg', masterkit:'masterkit.svg', fap:'fap.svg', ganz:'ganz.svg', zimmermann:'zimmermann.png', monaer:'monaer.png', ate:'ate.png', febest:'febest.svg', torr:'torr.png'};
 const RESULT_BRAND_LOGOS = {
   'ABS':'abs', 'AKEBONO':'akebono', 'ALFA ROMEO':'alfa-romeo', 'APEC':'apec',
   'ASTON MARTIN':'aston-martin', 'ATE':'ate', 'AUDI':'audi', 'BENDIX':'bendix', 'BENTLEY':'bentley',

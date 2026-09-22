@@ -21,6 +21,8 @@ BRAND_ASSETS = {
     'zimmermann': ('ZIMMERMANN', 'zimmermann.png'),
     'monaer': ('MONAER', 'monaer.png'),
     'ate': ('ATE', 'ate.png'),
+    'febest': ('FEBEST', 'febest.svg'),
+    'torr': ('TORR', 'torr.png'),
 }
 CATEGORY_COPY = {
     'brake_pads': ('Тормозные колодки', 'Аналоги дисковых тормозных колодок по оригинальному номеру. Для проверки позиции клиента и пополнения ассортимента.', '58101H5A25', 'pads'),

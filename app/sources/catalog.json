@@ -188,7 +188,7 @@
       ],
       "url": "https://www.bilstein.ru/",
       "status": "planned",
-      "note": "Витрина дилера на платформе ABCP (поиск по коду детали в магазине), каталога кроссов производителя нет."
+      "note": "Проверено в W2: витрина дилера на платформе ABCP ищет собственные коды; публичного OE-каталога производителя нет."
     },
     {
       "brand": "SACHS",
@@ -197,7 +197,8 @@
         "shock_absorbers"
       ],
       "url": "https://aftermarket.zf.com/cy/aftermarket-portal/our-brands/sachs/",
-      "status": "planned"
+      "status": "planned",
+      "note": "Проверено в W2: публичная страница бренда ведёт в отдельный ZF-каталог, но не даёт стабильного API точного OE-поиска."
     },
     {
       "brand": "BOGE",
@@ -207,7 +208,7 @@
       ],
       "url": "http://boge.com.ru/catalog/",
       "status": "planned",
-      "note": "Поиск магазина по ОЕ-номерам ничего не находит — индексируются только свои артикулы."
+      "note": "Проверено в W2: поиск магазина по OE-номерам ничего не находит — индексируются только свои артикулы."
     },
     {
       "brand": "KONI",
@@ -217,7 +218,37 @@
       ],
       "url": "https://koni.ru/",
       "status": "planned",
-      "note": "Поиск по сайту ОЕ-номера не индексирует — находит только артикулы KONI."
+      "note": "Проверено в W2: поиск по сайту OE-номера не индексирует — находит только артикулы KONI."
+    },
+    {
+      "brand": "FEBEST",
+      "key": "febest",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "url": "https://catalog.febest.club/",
+      "status": "implemented",
+      "note": "Публичный точный OE-поиск FEBEST; в выдачу попадают только амортизаторы."
+    },
+    {
+      "brand": "TORR",
+      "key": "torr",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "url": "https://controltorr.de/catalog",
+      "status": "implemented",
+      "note": "Официальный OE-поиск и таблица кросс-номеров амортизаторов TORR."
+    },
+    {
+      "brand": "Monroe",
+      "key": "monroe",
+      "groups": [
+        "shock_absorbers"
+      ],
+      "url": "https://www.monroe.com/ru-ru/find-my-part.html",
+      "status": "planned",
+      "note": "Проверено в W2: каталог подбирает по автомобилю (марка, модель, двигатель), прямого OE-поиска нет."
     },
     {
       "brand": "HOLA",
