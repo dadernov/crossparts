@@ -203,7 +203,7 @@ async def test_disabled_candidate_runs_only_for_configured_pilot_path(tmp_path):
 
 
 @pytest.mark.asyncio
-async def test_same_number_in_two_groups_does_not_leak_or_use_shared_cache():
+async def test_same_number_in_two_groups_uses_separate_cache_namespaces():
     import asyncio
     from app.sources.metaco import MetacoIndex, MetacoRow
 
@@ -217,11 +217,15 @@ async def test_same_number_in_two_groups_does_not_leak_or_use_shared_cache():
         MetacoRow('METACO', 'DISC-456', 'TEST', 'COMMON123',
                   'Диск тормозной', BRAKE_DISCS, 'oem'),
     ])
-    # No session factory: attempting shared cache access would fail this test.
+    pads_source = registry.resolve(['metaco'], BRAKE_PADS, tenant='pilot-account')[0]
+    discs_source = registry.resolve(['metaco'], BRAKE_DISCS, tenant='pilot-account')[0]
+    assert pads_source.cache_key == 'metaco:brake_pads'
+    assert discs_source.cache_key == 'metaco:brake_discs'
+    # The detailed cache behaviour is tested against SQLite in the cache suite.
     aggregator = Aggregator(registry.settings, registry, None)
     pads, discs = await asyncio.gather(*(
         aggregator.lookup('COMMON123', ['metaco'], group=group,
-                          tenant='pilot-account', use_cache=True)
+                          tenant='pilot-account', use_cache=False)
         for group in (BRAKE_PADS, BRAKE_DISCS)
     ))
     assert pads['sources'][0]['products'] == ['PAD-123']

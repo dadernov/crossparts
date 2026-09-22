@@ -36,6 +36,7 @@ class HelSource(BaseSource):
     async def lookup(self, oe: str) -> SourceResult:
         started = self.timer()
         async with build_client(self.settings, proxy=self.proxy,
+                                timeout=min(self.settings.source_timeout, 10),
                                 base_headers={"Referer": BASE}) as client:
             try:
                 found = await client.get(SEARCH, params={"route": "product/search",

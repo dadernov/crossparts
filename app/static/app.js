@@ -300,7 +300,10 @@ $('#lookup-form').addEventListener('submit', async event => {
     $('#result-query').textContent = `${data.oe} · ${groupTitle}`;
     $('#source-reports').replaceChildren(...data.sources.map(source => el('span', `${sourceTitle(source.source).replace(/\s*\([^()]*\)\s*$/, '')}: ${STATUS[source.status] || source.status}`, `badge ${['error','blocked'].includes(source.status)?'warning':'neutral'}`)));
     $('#source-summary').textContent = `Каталоги: ${answered.length} из ${data.sources.length}`;
-    $('#source-details').hidden = !unavailable.length; $('#source-details').open = Boolean(unavailable.length);
+    $('#source-details').hidden = !unavailable.length;
+    // Keep the compact catalogue summary closed after search. The user can
+    // expand diagnostics when needed; errors must not open a large overlay.
+    $('#source-details').open = false;
     $('#btn-export-lookup').hidden = !data.crosses.length; $('#export-format').hidden = !data.crosses.length;
     renderRows(); loadQuota(); refreshJobs(); notice('#lookup-status');
   } catch (error) { if (request === state.viewRequest) { notice('#lookup-status', error.message, true); $('#result-summary').textContent = error.message; } }

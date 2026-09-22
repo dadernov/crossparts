@@ -26,6 +26,17 @@ class _Source:
         )
 
 
+class _ErrorSource:
+    key = "error-fixture"
+
+    def __init__(self):
+        self.calls = 0
+
+    async def lookup(self, oe):
+        self.calls += 1
+        return SourceResult(self.key, SourceStatus.ERROR, message="upstream unavailable")
+
+
 class _Registry:
     def __init__(self, source):
         self.source = source
@@ -79,4 +90,52 @@ async def test_cache_bypass_remains_an_explicit_fresh_lookup(tmp_path):
     ))
 
     assert source.calls == 5
+    await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_failing_source_is_short_circuited_for_other_numbers(tmp_path):
+    engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path / 'failure.db'}")
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    sessions = async_sessionmaker(engine, expire_on_commit=False)
+    source = _ErrorSource()
+    settings = type("Settings", (), {
+        "source_concurrency": 1,
+        "source_timeout": 1,
+        "source_failure_cooldown_seconds": 300,
+        "cache_ttl_hours": 168,
+        "circular_search_enabled": False,
+    })()
+    aggregator = Aggregator(settings, _Registry(source), sessions)
+
+    first = await aggregator.lookup("OE-ONE")
+    second = await aggregator.lookup("OE-TWO")
+
+    assert first["status"] == second["status"] == "error"
+    assert source.calls == 1
+    assert second["sources"][0]["elapsed_ms"] == 0
+    await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_zero_failure_cooldown_does_not_suppress_retries(tmp_path):
+    engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path / 'no-cooldown.db'}")
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    sessions = async_sessionmaker(engine, expire_on_commit=False)
+    source = _ErrorSource()
+    settings = type("Settings", (), {
+        "source_concurrency": 1,
+        "source_timeout": 1,
+        "source_failure_cooldown_seconds": 0,
+        "cache_ttl_hours": 168,
+        "circular_search_enabled": False,
+    })()
+    aggregator = Aggregator(settings, _Registry(source), sessions)
+
+    await aggregator.lookup("OE-ONE")
+    await aggregator.lookup("OE-TWO")
+
+    assert source.calls == 2
     await engine.dispose()

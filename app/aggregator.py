@@ -25,6 +25,9 @@ class Aggregator:
         self._lookup_locks: weakref.WeakValueDictionary[
             tuple[str, str], asyncio.Lock
         ] = weakref.WeakValueDictionary()
+        # One unavailable upstream must not add the same timeout to every new
+        # part number. This is deliberately process-local and short-lived.
+        self._source_failures: dict[str, tuple[float, SourceResult]] = {}
 
     async def lookup(self, oe: str, source_keys: list[str] | None = None,
                      *, use_cache: bool = True, group: str | None = None,
@@ -105,37 +108,72 @@ class Aggregator:
 
     async def _run_source(self, source, oe: str, use_cache: bool) -> SourceResult:
         use_cache = use_cache and getattr(source, "cache_enabled", True)
+        cache_source = getattr(source, "cache_key", source.key)
         key = number_key(oe)
         if use_cache:
-            cached = await self._cache_get(source.key, key)
+            cached = await self._cache_get(cache_source, key)
             if cached is not None:
                 return cached
-        lock = self._lookup_lock_for(source.key, key) if use_cache else None
+        failure = self._active_source_failure(source.key)
+        if failure is not None:
+            return failure
+        lock = self._lookup_lock_for(cache_source, key) if use_cache else None
         if lock is None:
-            return await self._lookup_and_cache(source, oe, key, use_cache=False)
+            return await self._lookup_and_cache(
+                source, oe, key, cache_source=cache_source, use_cache=False
+            )
         async with lock:
             # Another coroutine may have filled the cache while this one was
             # waiting for the same source+number lock.
-            cached = await self._cache_get(source.key, key)
+            cached = await self._cache_get(cache_source, key)
             if cached is not None:
                 return cached
-            return await self._lookup_and_cache(source, oe, key, use_cache=True)
+            return await self._lookup_and_cache(
+                source, oe, key, cache_source=cache_source, use_cache=True
+            )
 
     async def _lookup_and_cache(self, source, oe: str, key: str,
-                                *, use_cache: bool) -> SourceResult:
+                                *, cache_source: str, use_cache: bool) -> SourceResult:
         async with self._gate_for(source.key):
+            failure = self._active_source_failure(source.key)
+            if failure is not None:
+                return failure
             try:
                 result = await asyncio.wait_for(
                     source.lookup(oe), timeout=self.settings.source_timeout + 15
                 )
             except asyncio.TimeoutError:
-                return SourceResult(source.key, SourceStatus.ERROR, message="таймаут источника")
+                result = SourceResult(
+                    source.key, SourceStatus.ERROR, message="таймаут источника"
+                )
             except Exception as exc:
-                return SourceResult(source.key, SourceStatus.ERROR, message=str(exc)[:300])
+                result = SourceResult(
+                    source.key, SourceStatus.ERROR, message=str(exc)[:300]
+                )
+        if result.status in (SourceStatus.ERROR, SourceStatus.BLOCKED):
+            self._remember_source_failure(source.key, result)
+        else:
+            self._source_failures.pop(source.key, None)
         # Only cache deterministic answers; blocks and errors should be retried.
         if use_cache and result.status in (SourceStatus.OK, SourceStatus.NOT_FOUND):
-            await self._cache_put(source.key, key, result)
+            await self._cache_put(cache_source, key, result)
         return result
+
+    def _remember_source_failure(self, source: str, result: SourceResult) -> None:
+        cooldown = getattr(self.settings, "source_failure_cooldown_seconds", 300)
+        if cooldown > 0:
+            until = asyncio.get_running_loop().time() + cooldown
+            self._source_failures[source] = (until, result)
+
+    def _active_source_failure(self, source: str) -> SourceResult | None:
+        stored = self._source_failures.get(source)
+        if stored is None:
+            return None
+        until, result = stored
+        if asyncio.get_running_loop().time() >= until:
+            self._source_failures.pop(source, None)
+            return None
+        return replace(result, elapsed_ms=0)
 
     def _lookup_lock_for(self, source: str, oe_key: str) -> asyncio.Lock:
         key = (source, oe_key)

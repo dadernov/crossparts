@@ -281,9 +281,6 @@ class MetacoSource(BaseSource):
     title = "METACO"
     homepage = "https://metaco.parts/category"
     verified = False
-    # Local indexed lookup is cheap; never reuse shared HTTP cache entries
-    # across group scopes or immutable snapshot versions.
-    cache_enabled = False
     groups = (BRAKE_PADS, BRAKE_DISCS)
     note = "Pilot W1: локальный индекс из официальных OEM и cross-list CSV; выключен."
 

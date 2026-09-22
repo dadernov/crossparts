@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     source_timeout: int = 45
     job_concurrency: int = 4
     source_concurrency: int = 2
+    # Pause a failing upstream after one blocked/error response so every new
+    # number does not wait for the same timeout again.
+    source_failure_cooldown_seconds: int = Field(default=300, ge=0, le=3600)
     cache_ttl_hours: int = 168
     max_products_per_oe: int = 5
     # Hidden, opt-in second pass through catalogues that returned not_found.

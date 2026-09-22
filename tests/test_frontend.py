@@ -252,7 +252,7 @@ def test_frontend_states_and_layout(browser_name):
         lookup.update(status='blocked', crosses=[], unique_numbers=[], sources=[dict(source='brixo',status='blocked')])
         page.locator('#btn-lookup').click()
         page.wait_for_function('document.querySelector("#result-summary").textContent.includes("проверить не удалось")')
-        assert page.locator('#source-details').get_attribute('open') is not None
+        assert page.locator('#source-details').get_attribute('open') is None
         assert page.locator('#btn-export-lookup').is_hidden()
         lookup.update(status='ok', crosses=[{**cross,'brand':attack}], unique_numbers=['PN0537'], sources=[dict(source='brixo',status='ok')])
         page.locator('#btn-lookup').click()
