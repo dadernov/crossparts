@@ -963,15 +963,24 @@ sources:
   - radiators
   - brake_hoses
   registered_in_code: false
-  adapter_path: null
-  code_groups: []
+  adapter_path: app/sources/metaco.py
+  code_groups:
+  - brake_pads
+  - brake_discs
   enabled_by_code_default: false
   metadata_key: null
   metadata_status_historical: null
   metadata_note_historical: null
-  live_verified_at: null
-  readiness: discovery_required
-  next_action: discover_access_and_cross_reference_contract
+  live_verified_at: '2026-09-22'
+  readiness: offline_passed_not_release_ready
+  next_action: expand_reviewed_golden_then_stage_disabled_adapter
+  verified_entry_url: https://metaco.parts/content/downloads
+  access_mode: official_public_csv_snapshots_compiled_to_local_sqlite
+  discovery_evidence:
+  - "OEM CSV: 4,794,078 bytes, sha256 ec8f4d5c0fbabdce0b03afaf6b6844217701e4a6c0acf958c085010ad8b4e526"
+  - "Replacement CSV: 10,566,715 bytes, sha256 bfb63a14a1dc8b12a1311dc551b02da8316b093f78960f8b37b29a38a6ba1ee2"
+  - "W1 index: 41,779 rows; 34,396 pads and 7,383 discs; no HTTP during lookup."
+  - "Pilot adapter and exact fixture manifests exist but are not in SourceRegistry.BUILTIN or defaults."
   groups_missing_in_metadata:
   - brake_pads
   - brake_discs

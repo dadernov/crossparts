@@ -52,6 +52,9 @@ class Settings(BaseSettings):
     enabled_sources: str = (
         "sbparts,brembo,trialli,nibkru,brixo,luzar,nissens,kyb,hola,brannor,hel"
     )
+    # Immutable index built from reviewed snapshots on the official METACO
+    # download page.  An empty path keeps the unregistered W1 adapter inert.
+    metaco_index_path: str = ""
 
     @property
     def api_key_map(self) -> dict[str, str]:

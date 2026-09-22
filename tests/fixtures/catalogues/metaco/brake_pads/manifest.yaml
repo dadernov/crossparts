@@ -1,0 +1,38 @@
+schema_version: 1
+source: metaco
+group: brake_pads
+captured_at: '2026-09-22'
+source_url: https://metaco.parts/content/downloads
+completeness_scope: "Точный полный результат внутри двух приложенных CSV-срезов для товара 3000-555; это pilot fixture, не полный каталог."
+reviewed_by: codex
+review_evidence: "Официальные CSV производителя; строки товара и ссылки на загрузку сверены независимо от адаптера."
+fixtures:
+  oem.csv: 9fba62ee68b4b41292c4740b360bfeb21aeb8dbdff81a47c0eaeac2c1565e345
+  replacements.csv: 414a11bc1debd2a830b08ef0e0d4f144e1c5b73bcbbf490d7ae5fe8b045ca22b
+cases:
+  - case_id: metaco-pads-positive-001
+    query_raw: 58101H5A25
+    query_key: 58101H5A25
+    expected_status: ok
+    expected_products: [3000-555]
+    expected_pairs:
+      - {brand_raw: METACO, brand_canonical: METACO, number_raw: 3000-555, number_key: '3000555', kind: aftermarket, source_product: 3000-555, evidence_locator: replacements.csv}
+      - {brand_raw: HYUNDAI-KIA, brand_canonical: HYUNDAI-KIA, number_raw: 58101-1RA05, number_key: 581011RA05, kind: oem, source_product: 3000-555, evidence_locator: oem.csv:2}
+      - {brand_raw: HYUNDAI-KIA, brand_canonical: HYUNDAI-KIA, number_raw: 58101-4LA00, number_key: 581014LA00, kind: oem, source_product: 3000-555, evidence_locator: oem.csv:3}
+      - {brand_raw: GEELY, brand_canonical: GEELY, number_raw: '1014026444', number_key: '1014026444', kind: oem, source_product: 3000-555, evidence_locator: oem.csv:4}
+      - {brand_raw: BREMBO, brand_canonical: BREMBO, number_raw: P30098, number_key: P30098, kind: aftermarket, source_product: 3000-555, evidence_locator: replacements.csv:1}
+      - {brand_raw: HYUNDAI-KIA, brand_canonical: HYUNDAI-KIA, number_raw: 58101-H5A25, number_key: 58101H5A25, kind: aftermarket, source_product: 3000-555, evidence_locator: replacements.csv:2}
+      - {brand_raw: LYNXAUTO, brand_canonical: LYNXAUTO, number_raw: BD-3636, number_key: BD3636, kind: aftermarket, source_product: 3000-555, evidence_locator: replacements.csv:3}
+      - {brand_raw: MARSHALL, brand_canonical: MARSHALL, number_raw: M2625360, number_key: M2625360, kind: aftermarket, source_product: 3000-555, evidence_locator: replacements.csv:4}
+      - {brand_raw: NIBK, brand_canonical: NIBK, number_raw: PN8019, number_key: PN8019, kind: aftermarket, source_product: 3000-555, evidence_locator: replacements.csv:5}
+      - {brand_raw: SB NAGAMOCHI, brand_canonical: SB NAGAMOCHI, number_raw: BP11007, number_key: BP11007, kind: aftermarket, source_product: 3000-555, evidence_locator: replacements.csv:6}
+      - {brand_raw: TRW, brand_canonical: TRW, number_raw: GDB3630, number_key: GDB3630, kind: aftermarket, source_product: 3000-555, evidence_locator: replacements.csv:7}
+    forbidden_pairs: []
+  - case_id: metaco-pads-negative-001
+    query_raw: ZZ-NOT-A-REAL-NUMBER-987
+    query_key: ZZNOTAREALNUMBER987
+    expected_status: not_found
+    expected_products: []
+    expected_pairs: []
+    forbidden_pairs: []
+

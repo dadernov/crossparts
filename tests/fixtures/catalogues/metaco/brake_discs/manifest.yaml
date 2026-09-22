@@ -1,0 +1,44 @@
+schema_version: 1
+source: metaco
+group: brake_discs
+captured_at: '2026-09-22'
+source_url: https://metaco.parts/content/downloads
+completeness_scope: "Точный полный результат внутри двух приложенных CSV-срезов для товара 3050-016; это pilot fixture, не полный каталог."
+reviewed_by: codex
+review_evidence: "Официальные CSV производителя; строки товара и ссылки на загрузку сверены независимо от адаптера."
+fixtures:
+  oem.csv: 21bd1981863e40d9b72a89e7ff50547ee1adf6bf68be17ab06de348ac35085d2
+  replacements.csv: cc8793aa9267fd606075b2ddaac27623cff1dd118df8afa870991b41280fd4c8
+cases:
+  - case_id: metaco-discs-positive-001
+    query_raw: 1K0 615 301-AA
+    query_key: 1K0615301AA
+    expected_status: ok
+    expected_products: [3050-016]
+    expected_pairs:
+      - {brand_raw: METACO, brand_canonical: METACO, number_raw: 3050-016, number_key: '3050016', kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 1K0615301AA, number_key: 1K0615301AA, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:2}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: JZW615301H, number_key: JZW615301H, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:3}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: '561615301', number_key: '561615301', kind: oem, source_product: 3050-016, evidence_locator: oem.csv:4}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 561615301A, number_key: 561615301A, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:5}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 5C0615301B, number_key: 5C0615301B, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:6}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 5Q0615301F, number_key: 5Q0615301F, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:7}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 5QM615301A, number_key: 5QM615301A, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:8}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: 3CD615301, number_key: 3CD615301, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:9}
+      - {brand_raw: VAG, brand_canonical: VAG, number_raw: L1KD615301D, number_key: L1KD615301D, kind: oem, source_product: 3050-016, evidence_locator: oem.csv:10}
+      - {brand_raw: AMD, brand_canonical: AMD, number_raw: AMD.SPORT.BD5321, number_key: AMDSPORTBD5321, kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:1}
+      - {brand_raw: ATE, brand_canonical: ATE, number_raw: 24.0325-0158.1, number_key: '24032501581', kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:2}
+      - {brand_raw: BREMBO, brand_canonical: BREMBO, number_raw: 09.9772.1X, number_key: 0997721X, kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:3}
+      - {brand_raw: BREMBO, brand_canonical: BREMBO, number_raw: 09.9772.75, number_key: '09977275', kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:4}
+      - {brand_raw: NIBK, brand_canonical: NIBK, number_raw: RN1377DSET, number_key: RN1377DSET, kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:5}
+      - {brand_raw: TRW, brand_canonical: TRW, number_raw: DF4464, number_key: DF4464, kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:6}
+      - {brand_raw: ZIMMERMANN, brand_canonical: ZIMMERMANN, number_raw: 100.3300.52, number_key: '100330052', kind: aftermarket, source_product: 3050-016, evidence_locator: replacements.csv:7}
+    forbidden_pairs: []
+  - case_id: metaco-discs-negative-001
+    query_raw: ZZ-NOT-A-REAL-DISC-987
+    query_key: ZZNOTAREALDISC987
+    expected_status: not_found
+    expected_products: []
+    expected_pairs: []
+    forbidden_pairs: []
+
