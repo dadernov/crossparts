@@ -107,6 +107,10 @@ def test_suspension_shock_rows_do_not_mix_with_brake_rows():
         ("METACO", "4820-052", KIND_AFTERMARKET),
         ("HYUNDAI-KIA", "55310-1G210", KIND_OEM),
     }
+    own = next(row for row in crosses if row.brand == "METACO")
+    reference = next(row for row in crosses if row.brand == "HYUNDAI-KIA")
+    assert own.url == "https://metaco.parts/catalog/4820052"
+    assert reference.url.endswith("/content/downloads")
 
 
 def test_main_radiator_rows_do_not_mix_with_condensers_or_heaters():

@@ -440,6 +440,7 @@ def test_admin_can_request_trialli_fitment_for_a_shock_result():
         assert calls['fitment_export'] == calls['fitment']
         assert page.evaluate("fitmentGroupFor({brand:'TORR',url:'https://controltorr.de/catalog/DH1270'})") == 'shock_absorbers'
         assert page.evaluate("fitmentGroupFor({brand:'KYB',url:'https://kyb.ru/support/online-catalog-part-number'})") == 'shock_absorbers'
+        assert page.evaluate("fitmentGroupFor({brand:'METACO',number:'4800-004',sources:['metaco'],source_products:['4800-004'],url:'https://metaco.parts/content/downloads'})") == 'shock_absorbers'
         assert page.evaluate("fitmentGroupFor({brand:'SACHS',url:'https://example.test/part'})") is None
         page.locator('#fitment-close').click()
         assert page.locator('#fitment-panel').is_hidden()

@@ -159,13 +159,21 @@ class MetacoIndex:
                 if key in seen:
                     continue
                 seen.add(key)
+                is_own_product = (
+                    number_key(number) == number_key(first.own_article)
+                    and brand.casefold() == clean_brand(first.own_brand).casefold()
+                )
                 crosses.append(Cross(
                     brand=brand,
                     number=number,
                     kind=kind,
                     source="metaco",
                     source_product=first.own_article,
-                    url=DOWNLOADS_URL,
+                    url=(
+                        f"https://metaco.parts/catalog/"
+                        f"{number_key(first.own_article).lower()}"
+                        if is_own_product else DOWNLOADS_URL
+                    ),
                 ))
         return products, crosses
 

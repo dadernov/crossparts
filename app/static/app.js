@@ -393,7 +393,7 @@ function renderRows() {
     if (fitmentEnabled) {
       const action = el('td');
       const group = fitmentGroupFor(cross);
-      if (state.mode === 'lookup' && group) {
+      if (group) {
         const button = el('button', 'Показать', 'fitment-action'); button.type = 'button';
         button.setAttribute('aria-label', `Показать применяемость ${String(cross.brand || '').toUpperCase()} ${canonicalNumber(cross.number)}`);
         button.onclick = () => loadFitment(cross, button, group);
@@ -426,6 +426,10 @@ function fitmentGroupFor(cross) {
   const brand = String(cross.brand || '').trim().toUpperCase();
   if (!['TRIALLI', 'TORR', 'KYB', 'HOLA', 'METACO'].includes(brand)) return null;
   if (state.lookup?.group === 'shock_absorbers') return 'shock_absorbers';
+  if (brand === 'METACO' && (cross.sources || []).includes('metaco') &&
+      (cross.source_products || []).some(number => canonicalNumber(number) === canonicalNumber(cross.number))) {
+    return 'shock_absorbers';
+  }
   try {
     const url = new URL(cross.url);
     if (brand === 'TRIALLI' && url.hostname === 'trialli.ru' && url.pathname.startsWith('/catalogue/amortizatory-i-opory/amortizatory/')) return 'shock_absorbers';
