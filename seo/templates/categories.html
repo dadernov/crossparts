@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Категории автозапчастей для поиска кросс-номеров — CrossParts{% endblock %}
+{% block description %}Поиск кросс-номеров для тормозных колодок, дисков, шлангов, амортизаторов и радиаторов. Проверка одного номера и обработка списков Excel.{% endblock %}
+{% block canonical %}https://mrb-crossparts.ru/categories{% endblock %}
+{% block head %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Категории автозапчастей","url":"https://mrb-crossparts.ru/categories","isPartOf":{"@type":"WebSite","name":"CrossParts","url":"https://mrb-crossparts.ru/"}}</script>{% endblock %}
+{% block content %}
+<main id="main" class="page-shell">
+  <header class="hero narrow">
+    <p class="eyebrow">Поиск по категориям</p>
+    <h1>Категории<br>автозапчастей</h1>
+    <p class="lead">Выберите тип детали — CrossParts проверит оригинальный номер в каталогах, которые работают именно с этой категорией.</p>
+  </header>
+  <section class="category-grid" aria-label="Доступные категории">
+    <article class="card category-card"><div class="photo"><img src="/seo-assets/categories/pads.jpg" alt="Комплект тормозных колодок" width="720" height="480"></div><div class="card-body"><h2>Тормозные колодки</h2><p>Найдём номера замен по исходному OE / OEM и покажем каталоги, в которых обнаружена связь.</p><a class="arrow-link" href="/categories/brake-pads">Открыть категорию <span>→</span></a></div></article>
+    <article class="card category-card"><div class="photo"><img src="/seo-assets/categories/discs.png" alt="Тормозные диски" width="600" height="343" loading="lazy"></div><div class="card-body"><h2>Тормозные диски</h2><p>Соберём соответствия из подключённых источников и объединим повторяющиеся номера.</p><a class="arrow-link" href="/?group=brake_discs">Перейти в поиск <span>→</span></a></div></article>
+    <article class="card category-card"><div class="photo"><img src="/seo-assets/categories/hoses.png" alt="Тормозные шланги" width="600" height="343" loading="lazy"></div><div class="card-body"><h2>Тормозные шланги</h2><p>Покажем найденные кросс-номера, производителей и источники для дальнейшей проверки.</p><a class="arrow-link" href="/?group=brake_hoses">Перейти в поиск <span>→</span></a></div></article>
+    <article class="card category-card"><div class="photo"><img src="/seo-assets/categories/shocks.png" alt="Амортизаторы" width="600" height="343" loading="lazy"></div><div class="card-body"><h2>Амортизаторы</h2><p>Проверим оригинальный номер в профильных каталогах амортизаторов и деталей подвески.</p><a class="arrow-link" href="/?group=shock_absorbers">Перейти в поиск <span>→</span></a></div></article>
+    <article class="card category-card"><div class="photo"><img src="/seo-assets/categories/radiators.png" alt="Радиатор системы охлаждения" width="330" height="236" loading="lazy"></div><div class="card-body"><h2>Радиаторы охлаждения</h2><p>Сопоставим номера радиаторов разных производителей и сохраним ссылки на источники.</p><a class="arrow-link" href="/?group=radiators">Перейти в поиск <span>→</span></a></div></article>
+    <article class="card custom-card"><div class="plus">＋</div><h2>Нужна другая категория?</h2><p>Расскажите, с какими деталями и каталогами работает ваша команда. Оценим расширение покрытия под вашу задачу.</p><a class="button primary" href="/contacts">Обсудить категорию →</a></article>
+  </section>
+  <section class="card editorial intro-grid">
+    <div><p class="eyebrow">Принцип работы</p><h2>Как устроен поиск кросс-номеров</h2><p>Каталоги специализируются на разных группах деталей. Источник по радиаторам может ничего не знать о тормозных колодках, а каталог тормозной системы не поможет с амортизатором. Поэтому CrossParts подбирает набор источников с учётом категории и не смешивает заведомо лишние ответы.</p><p>Поиск начинается с оригинального номера детали. Сервис приводит его к единому формату, проверяет подключённые каталоги и собирает найденные связи в одну таблицу. Если одинаковый аналог встретился в нескольких источниках, источники сохраняются рядом с номером.</p></div>
+    <ol class="steps"><li><strong>Введите OE / OEM-номер</strong><span>Пробелы и дефисы не мешают проверке.</span></li><li><strong>Получите найденные кросс-номера</strong><span>В результате видны бренд, номер и источник.</span></li><li><strong>Сверьте применимость</strong><span>Перед заказом проверьте автомобиль по каталогу производителя.</span></li></ol>
+  </section>
+  <section class="split-copy">
+    <article class="card editorial"><h2>Один номер или целый список</h2><p>Для быстрой проверки достаточно ввести один артикул. Если нужно обработать закупочный список или ассортимент магазина, загрузите XLSX. CrossParts сохранит исходные номера и внутренние артикулы рядом с найденными вариантами, чтобы результат можно было вернуть в рабочую таблицу.</p><a class="arrow-link" href="/">Открыть рабочий поиск <span>→</span></a></article>
+    <article class="card editorial"><h2>Что означает найденный кросс</h2><p>Кросс показывает связь между номерами в проверенном каталоге. Он помогает найти кандидатов на замену, но не подтверждает применимость к конкретному автомобилю, наличие товара или цену. Эти параметры нужно проверять отдельно.</p><a class="arrow-link" href="/categories/brake-pads">Посмотреть пример категории <span>→</span></a></article>
+  </section>
+</main>
+{% endblock %}
+

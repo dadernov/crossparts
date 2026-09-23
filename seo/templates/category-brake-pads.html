@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Кросс-номера тормозных колодок по OE / OEM — CrossParts{% endblock %}
+{% block description %}Поиск аналогов тормозных колодок по оригинальному номеру. Проверка профильных каталогов, обработка XLSX и выгрузка результатов.{% endblock %}
+{% block canonical %}https://mrb-crossparts.ru/categories/brake-pads{% endblock %}
+{% block head %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Кросс-номера тормозных колодок","url":"https://mrb-crossparts.ru/categories/brake-pads","breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Категории","item":"https://mrb-crossparts.ru/categories"},{"@type":"ListItem","position":2,"name":"Тормозные колодки"}]}}</script>{% endblock %}
+{% block content %}
+<main id="main" class="page-shell">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Поиск</a><span>›</span><a href="/categories">Категории</a><span>›</span><span aria-current="page">Тормозные колодки</span></nav>
+  <section class="category-hero">
+    <div><p class="eyebrow">Тормозная система</p><h1>Тормозные колодки</h1><p class="lead">Проверьте оригинальный номер одной детали или загрузите список. CrossParts соберёт найденные аналоги из профильных каталогов в одну таблицу.</p></div>
+    <img src="/seo-assets/categories/pads.jpg" width="720" height="480" alt="Комплект дисковых тормозных колодок">
+  </section>
+  <form class="card search-box" action="/" method="get"><label for="oe">Поиск по OE / OEM-номеру</label><div><input id="oe" name="oe" placeholder="Например, 58101H5A25" minlength="2" required><input type="hidden" name="group" value="brake_pads"><button class="button primary" type="submit">Найти аналоги →</button></div><p>Введите номер с упаковки, из каталога или рабочей таблицы. Пробелы и дефисы можно оставить.</p></form>
+  <p class="source-line">Для колодок подключены профильные каталоги. Актуальный набор источников показывается в результате каждого поиска.</p>
+  <section class="feature-three">
+    <article class="card editorial"><div class="icon">▤</div><h2>Что вы получите</h2><p>В результате видны номер аналога, бренд и каталог, в котором найдено соответствие. Одинаковые номера объединяются без потери списка источников.</p></article>
+    <article class="card editorial"><div class="icon">↥</div><h2>Поиск списком</h2><p>Загрузите XLSX с исходными номерами. Если в файле есть ваш внутренний артикул, он сохранится рядом с найденными вариантами.</p></article>
+    <article class="card editorial"><div class="icon">✓</div><h2>Перед заказом</h2><p>Кросс-номер показывает связь в каталоге. Окончательную применимость колодок проверяйте по автомобилю и данным производителя.</p></article>
+  </section>
+  <section class="card editorial long-copy">
+    <h2>Как CrossParts проверяет номер тормозных колодок</h2>
+    <p>Один и тот же комплект колодок может встречаться с оригинальными номерами автопроизводителей, артикулами изготовителей тормозных компонентов и обозначениями отраслевых систем. Ручная проверка нескольких каталогов занимает время, а результаты приходится сводить самостоятельно.</p>
+    <p>CrossParts отправляет исходный номер в подключённые источники для тормозной системы и собирает прямые ответы. В таблице остаются бренд аналога, его номер и каталоги, подтвердившие связь. Если источник не ответил или не нашёл совпадение, это также отражается в статусе проверки.</p>
+    <p>Сервис не выбирает деталь вместо специалиста. Размеры, форму колодки, сторону установки, тип тормозной системы и применимость к конкретной комплектации нужно уточнять по карточке производителя или автомобилю. Такая последовательность отделяет поиск возможных замен от окончательного решения о заказе.</p>
+  </section>
+  <section class="split-copy">
+    <article class="card editorial"><h2>Когда удобен поиск одного номера</h2><p>Используйте его, когда нужно быстро ответить клиенту, проверить новую позицию поставщика или сравнить несколько вариантов. Результат можно отфильтровать и скачать в удобном формате.</p></article>
+    <article class="card editorial"><h2>Когда лучше загрузить Excel</h2><p>Пакетная обработка подходит для закупочных списков, сверки ассортимента и регулярной работы с большим числом позиций. История заданий остаётся в рабочем кабинете.</p></article>
+  </section>
+  <section class="card related"><div><p class="eyebrow">Проверенный пример</p><h2>Номер 58101H5A25</h2><p>Посмотрите сохранённый снимок найденных аналогов и источников, а затем при необходимости запустите новую проверку.</p></div><a class="button primary" href="/cross/58101-h5a25">Открыть карточку номера →</a></section>
+</main>
+{% endblock %}
+
