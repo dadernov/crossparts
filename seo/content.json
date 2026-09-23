@@ -1,0 +1,193 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-09-23",
+  "categories": [
+    {
+      "key": "brake_pads",
+      "slug": "brake-pads",
+      "name": "Тормозные колодки",
+      "eyebrow": "Тормозная система",
+      "description": "Поиск аналогов тормозных колодок по оригинальному номеру. Проверка профильных каталогов и обработка списков XLSX.",
+      "lead": "Проверьте оригинальный номер одной детали или загрузите список. CrossParts соберёт найденные аналоги из профильных каталогов в одну таблицу.",
+      "image": "pads.jpg",
+      "image_alt": "Комплект дисковых тормозных колодок",
+      "example": "58101H5A25",
+      "example_slug": "58101-h5a25",
+      "specifics": "Перед заказом колодок сравните форму и размеры, ось установки, тормозную систему и наличие датчика износа. Кросс-номер помогает найти кандидатов, но не заменяет проверку конкретной комплектации автомобиля.",
+      "workflow": "CrossParts проверяет номер в каталогах тормозной системы, объединяет одинаковые ответы и сохраняет рядом с каждым номером источники, подтвердившие связь.",
+      "batch": "Для закупочного списка или сверки ассортимента загрузите XLSX. Если в файле есть ваш внутренний артикул, он сохранится рядом с исходным номером и найденными вариантами.",
+      "sources": [
+        {"name": "SB Nagamochi", "url": "https://sbparts.ru/catalog/"},
+        {"name": "Brembo", "url": "https://www.bremboparts.com/europe/ru"},
+        {"name": "TRIALLI", "url": "https://trialli.ru/catalogue/"},
+        {"name": "HOLA", "url": "https://www.hola-auto.ru/"},
+        {"name": "BRANNOR", "url": "https://brannor.ru/search-oem/"}
+      ]
+    },
+    {
+      "key": "brake_discs",
+      "slug": "brake-discs",
+      "name": "Тормозные диски",
+      "eyebrow": "Тормозная система",
+      "description": "Кросс-номера тормозных дисков по OE / OEM: найденные соответствия, источники и проверенный пример.",
+      "lead": "Введите OE / OEM-номер тормозного диска — сервис соберёт прямые соответствия из подключённых каталогов и объединит повторяющиеся номера.",
+      "image": "discs.png",
+      "image_alt": "Тормозной диск",
+      "example": "128424899",
+      "example_slug": "128424899",
+      "specifics": "При выборе диска сверяют наружный диаметр, толщину нового диска и минимальную толщину, высоту, число крепёжных отверстий и диаметр ступицы. Также важно проверить исполнение: вентилируемый или сплошной диск.",
+      "workflow": "Поиск ограничивается источниками, работающими с тормозными дисками. В итоговой таблице видны бренд аналога, номер и каталог, где обнаружена прямая связь.",
+      "batch": "Пакетная обработка подходит для прайс-листов и закупочных заявок. Каждая строка сохраняет собственный исходный номер; категория не подменяет содержимое загруженного файла.",
+      "sources": [
+        {"name": "SB Nagamochi", "url": "https://sbparts.ru/catalog/"},
+        {"name": "Brembo", "url": "https://www.bremboparts.com/europe/ru"},
+        {"name": "TRIALLI", "url": "https://trialli.ru/catalogue/"},
+        {"name": "HOLA", "url": "https://www.hola-auto.ru/"},
+        {"name": "BRANNOR", "url": "https://brannor.ru/search-oem/"}
+      ]
+    },
+    {
+      "key": "brake_hoses",
+      "slug": "brake-hoses",
+      "name": "Тормозные шланги",
+      "eyebrow": "Тормозная гидравлика",
+      "description": "Поиск кросс-номеров тормозных шлангов по OE / OEM с источниками и проверенными соответствиями.",
+      "lead": "Найдите варианты тормозного шланга по исходному номеру и сразу увидьте, какой каталог подтвердил каждое соответствие.",
+      "image": "hoses.png",
+      "image_alt": "Тормозные шланги",
+      "example": "1K0611701K",
+      "example_slug": "1k0611701k",
+      "specifics": "Для тормозного шланга важны длина, резьба и тип обоих соединений, а также положение установки: передняя или задняя ось, левая или правая сторона. Эти параметры проверяют в карточке производителя перед заказом.",
+      "workflow": "CrossParts отправляет исходный номер только в каталоги, где заявлено покрытие тормозных шлангов, и показывает прямые ответы без строк похожих деталей.",
+      "batch": "XLSX удобен для обработки заявок магазина или сверки складской матрицы. Исходные строки остаются связаны с найденными номерами в выгрузке.",
+      "sources": [
+        {"name": "SB Nagamochi", "url": "https://sbparts.ru/catalog/"},
+        {"name": "Brembo", "url": "https://www.bremboparts.com/europe/ru"},
+        {"name": "TRIALLI", "url": "https://trialli.ru/catalogue/"},
+        {"name": "HOLA", "url": "https://www.hola-auto.ru/"},
+        {"name": "HEL Performance", "url": "https://helrussia.ru/"}
+      ]
+    },
+    {
+      "key": "shock_absorbers",
+      "slug": "shock-absorbers",
+      "name": "Амортизаторы",
+      "eyebrow": "Подвеска",
+      "description": "Кроссы и аналоги амортизаторов по оригинальному номеру: профильные каталоги, источники и проверенный пример.",
+      "lead": "Проверьте исходный номер амортизатора в профильных каталогах и получите одну таблицу найденных вариантов с источниками.",
+      "image": "shocks.png",
+      "image_alt": "Автомобильные амортизаторы",
+      "example": "553101G210",
+      "example_slug": "553101g210",
+      "specifics": "У амортизатора обязательно сверяют ось и сторону установки, верхнее и нижнее крепление, конструкцию стойки и тип подвески. Одинаковый кросс не доказывает применимость ко всем комплектациям автомобиля.",
+      "workflow": "Сервис проверяет исходный номер в каталогах подвески, нормализует написание артикулов и объединяет одинаковые варианты, не скрывая источники.",
+      "batch": "Списки XLSX помогают обрабатывать ассортимент и заявки поставщика. После входа можно скачать таблицу и сохранить связь с исходными строками.",
+      "sources": [
+        {"name": "TRIALLI", "url": "https://trialli.ru/catalogue/"},
+        {"name": "KYB", "url": "https://kyb.ru/support/cross"},
+        {"name": "HOLA", "url": "https://www.hola-auto.ru/production/shock-absorbers/"}
+      ]
+    },
+    {
+      "key": "radiators",
+      "slug": "radiators",
+      "name": "Радиаторы охлаждения",
+      "eyebrow": "Система охлаждения",
+      "description": "Кросс-номера радиаторов охлаждения по OE / OEM с указанием найденных аналогов и каталогов-источников.",
+      "lead": "Введите номер основного радиатора — CrossParts проверит профильные каталоги и покажет найденные соответствия без смешивания с другими теплообменниками.",
+      "image": "radiators.png",
+      "image_alt": "Радиатор системы охлаждения",
+      "example": "21903130000811",
+      "example_slug": "21903130000811",
+      "specifics": "Для радиатора сверяют размеры сердцевины, расположение и диаметр патрубков, крепления, а также комплектацию автомобиля: тип трансмиссии, кондиционер и дополнительные контуры охлаждения.",
+      "workflow": "Поиск выполняется по источникам радиаторов. Найденные номера выводятся с брендом и подтверждающим каталогом; масляные радиаторы, отопители и конденсеры не считаются основным радиатором без явного подтверждения.",
+      "batch": "Загрузка XLSX подходит для сверки большого списка радиаторов. Результат можно вернуть в рабочую таблицу вместе с исходными номерами.",
+      "sources": [
+        {"name": "Brixo / SAKURA", "url": "https://brixogroup.com/catalog"},
+        {"name": "LUZAR", "url": "https://luzar.ru/catalogue"},
+        {"name": "Nissens", "url": "https://catalogue.nissens.com/Product"}
+      ]
+    }
+  ],
+  "snapshots": [
+    {
+      "id": "pads-58101h5a25",
+      "slug": "58101-h5a25",
+      "group": "brake_pads",
+      "input_brand": "Hyundai",
+      "input_number": "58101H5A25",
+      "checked_at": "2026-09-22",
+      "checked_at_display": "22 сентября 2026",
+      "review": {"status": "reviewed", "reviewed_at": "2026-09-23", "identity_confirmed": true},
+      "rows": [
+        {"brand": "ATE", "number": "13.0460-5548.2", "source": "ATE", "source_url": "https://web.tecalliance.net/ate/en/home?language=en&country=de&articleCountry=de"},
+        {"brand": "Brembo", "number": "P 30 122", "source": "Brembo", "source_url": "https://www.bremboparts.com/europe/ru"},
+        {"brand": "NiBK", "number": "PN0537", "source": "Brixo / NiBK", "source_url": "https://brixogroup.com/catalog"},
+        {"brand": "SB Nagamochi", "number": "BP11537", "source": "SB Parts", "source_url": "https://sbparts.ru/catalog/"},
+        {"brand": "TRIALLI", "number": "PF 0806CR", "source": "TRIALLI", "source_url": "https://trialli.ru/catalogue/"},
+        {"brand": "ZIMMERMANN", "number": "25348.180.1", "source": "ZIMMERMANN", "source_url": "https://web.tecalliance.net/otto-zimmermann/ru/"}
+      ]
+    },
+    {
+      "id": "discs-128424899",
+      "slug": "128424899",
+      "group": "brake_discs",
+      "input_brand": "Не указан в снимке",
+      "input_number": "128424899",
+      "checked_at": "2026-09-22",
+      "checked_at_display": "22 сентября 2026",
+      "review": {"status": "reviewed", "reviewed_at": "2026-09-23", "identity_confirmed": true},
+      "rows": [
+        {"brand": "MONAER", "number": "M61848", "source": "MONAER", "source_url": "https://monaer-russia.ru/catalog"}
+      ]
+    },
+    {
+      "id": "hoses-1k0611701k",
+      "slug": "1k0611701k",
+      "group": "brake_hoses",
+      "input_brand": "Volkswagen",
+      "input_number": "1K0611701K",
+      "checked_at": "2026-09-22",
+      "checked_at_display": "22 сентября 2026",
+      "review": {"status": "reviewed", "reviewed_at": "2026-09-23", "identity_confirmed": true},
+      "rows": [
+        {"brand": "ATE", "number": "24.5143-0564.3", "source": "ATE", "source_url": "https://web.tecalliance.net/ate/en/home?language=en&country=de&articleCountry=de"},
+        {"brand": "Brembo", "number": "T 85 112", "source": "Brembo", "source_url": "https://www.bremboparts.com/europe/en/catalogue/hydraulic/T_85_112"},
+        {"brand": "LYNXauto", "number": "BL-3102", "source": "LYNXauto", "source_url": "https://lynxauto.info/"}
+      ]
+    },
+    {
+      "id": "shocks-553101g210",
+      "slug": "553101g210",
+      "group": "shock_absorbers",
+      "input_brand": "Hyundai / Kia",
+      "input_number": "553101G210",
+      "checked_at": "2026-09-22",
+      "checked_at_display": "22 сентября 2026",
+      "review": {"status": "reviewed", "reviewed_at": "2026-09-23", "identity_confirmed": true},
+      "rows": [
+        {"brand": "FEBEST", "number": "2207G-006R", "source": "FEBEST", "source_url": "https://catalog.febest.club/api/v3/articles/strict-search?value=553101G210"},
+        {"brand": "FEBEST", "number": "22651992R", "source": "FEBEST", "source_url": "https://catalog.febest.club/api/v3/articles/strict-search?value=553101G210"},
+        {"brand": "LYNXauto", "number": "G12750LR", "source": "LYNXauto", "source_url": "https://lynxauto.info/"},
+        {"brand": "METACO", "number": "4820-052", "source": "METACO", "source_url": "https://metaco.parts/content/downloads"},
+        {"brand": "TORR", "number": "DH1270", "source": "TORR", "source_url": "https://controltorr.de/ru/catalog/DH1270"},
+        {"brand": "TRIALLI", "number": "AG 08531", "source": "TRIALLI", "source_url": "https://trialli.ru/catalogue/"},
+        {"brand": "TRIALLI", "number": "AG 29037", "source": "TRIALLI", "source_url": "https://trialli.ru/catalogue/"},
+        {"brand": "TRIALLI", "number": "AG 02066", "source": "TRIALLI", "source_url": "https://trialli.ru/catalogue/"}
+      ]
+    },
+    {
+      "id": "radiators-21903130000811",
+      "slug": "21903130000811",
+      "group": "radiators",
+      "input_brand": "Не указан в снимке",
+      "input_number": "21903130000811",
+      "checked_at": "2026-09-22",
+      "checked_at_display": "22 сентября 2026",
+      "review": {"status": "reviewed", "reviewed_at": "2026-09-23", "identity_confirmed": true},
+      "rows": [
+        {"brand": "GANZ", "number": "GRF07006", "source": "GANZ", "source_url": "https://ganz-parts.ru/catalog/"}
+      ]
+    }
+  ]
+}

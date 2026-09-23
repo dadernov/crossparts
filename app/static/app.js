@@ -84,6 +84,14 @@ const GROUP_EXAMPLES = {
   brake_hoses: ['Шланги', '1K0611701K'], shock_absorbers: ['Амортизаторы', '4851080378'],
   radiators: ['Радиаторы', '8200735038'],
 };
+const intentParams = new URLSearchParams(window.location.search);
+const intentNumber = (intentParams.get('oe') || '').trim();
+const allowedIntentGroups = new Set(Object.keys(GROUP_EXAMPLES));
+let pendingIntentGroup = allowedIntentGroups.has(intentParams.get('group')) ? intentParams.get('group') : '';
+const intentMode = intentParams.get('mode') === 'excel' ? 'excel' : 'single';
+if (intentNumber.length >= 2 && intentNumber.length <= 128 && !/[\u0000-\u001f\u007f]/.test(intentNumber)) {
+  $('#oe').value = intentNumber;
+}
 const SOURCE_LOGOS = {sbparts:'sbparts.svg', brembo:'brembo.svg', trialli:'trialli.svg', brixo:'brixo.svg', luzar:'luzar.svg', nissens:'nissens.svg', kyb:'kyb.png', hola:'hola.svg', brannor:'brannor.svg', hel:'hel.png', metaco:'metaco.svg', marshall:'marshall.svg', lynxauto:'lynxauto.svg', masterkit:'masterkit.svg', fap:'fap.svg', ganz:'ganz.svg', zimmermann:'zimmermann.png', monaer:'monaer.png', ate:'ate.png', febest:'febest.svg', torr:'torr.png'};
 const RESULT_BRAND_LOGOS = {
   'ABS':'abs', 'AKEBONO':'akebono', 'ALFA ROMEO':'alfa-romeo', 'APEC':'apec',
@@ -234,7 +242,7 @@ async function loadGroups() {
   try {
     const [coverage, sources] = await Promise.all([api('/api/v1/groups'), api('/api/v1/sources')]);
     state.sources = new Map(sources.sources.map(source => [source.key, source]));
-    const selected = $('#group').value;
+    const selected = $('#group').value || pendingIntentGroup;
     $('#group').replaceChildren(new Option('Все группы', ''));
     $('#group-choices').replaceChildren();
     for (const group of coverage.groups) {
@@ -246,6 +254,7 @@ async function loadGroups() {
     $('#catalogue-count').textContent = `Подключено: ${enabled.length}`;
     $('#group').value = selected;
     if ($('#group').selectedIndex < 0) $('#group').value = '';
+    pendingIntentGroup = '';
     syncExamples(); $('#group-choices').hidden = !$('#group-choices').children.length;
     $('#retry-groups').hidden = true;
     if (state.crosses.length) renderRows();
@@ -636,3 +645,9 @@ $('#collapse-jobs').onclick = () => { if (!state.jobsBusy) { state.limit = 2; re
 async function poll() { if (!document.hidden) await refreshJobs(); setTimeout(poll,state.active?5000:30000); }
 document.addEventListener('visibilitychange',() => { if (!document.hidden) refreshJobs(); });
 loadGroups(); loadQuota(); poll();
+if (intentMode === 'excel') {
+  requestAnimationFrame(() => {
+    $('#dropzone').scrollIntoView({block: 'center'});
+    $('#btn-upload').focus({preventScroll: true});
+  });
+}

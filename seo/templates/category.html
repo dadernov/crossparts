@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Кросс-номера {{ category.name|lower }} по OE / OEM — CrossParts{% endblock %}
+{% block description %}{{ category.description }}{% endblock %}
+{% block canonical %}https://mrb-crossparts.ru/categories/{{ category.slug }}{% endblock %}
+{% block head %}<script type="application/ld+json">{{ structured_data|tojson }}</script>{% endblock %}
+{% block content %}
+<main id="main" class="page-shell">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Поиск</a><span>›</span><a href="/categories">Категории</a><span>›</span><span aria-current="page">{{ category.name }}</span></nav>
+  <section class="category-hero">
+    <div><p class="eyebrow">{{ category.eyebrow }}</p><h1>{{ category.name }}</h1><p class="lead">{{ category.lead }}</p></div>
+    <img src="/seo-assets/categories/{{ category.image }}" width="720" height="480" alt="{{ category.image_alt }}">
+  </section>
+  <form class="card search-box" action="/" method="get"><label for="oe">Поиск по OE / OEM-номеру</label><div><input id="oe" name="oe" value="{{ category.example }}" minlength="2" maxlength="128" required><input type="hidden" name="group" value="{{ category.key }}"><button class="button primary" type="submit">Перейти к поиску →</button></div><p>Номер и категория будут заполнены в рабочем поиске. Проверка начнётся только после вашего подтверждения.</p></form>
+  <section class="card source-panel"><div><p class="eyebrow">Источники категории</p><h2>Подключённые каталоги</h2></div><ul class="source-list">{% for source in category.sources %}<li><a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.name }} ↗</a></li>{% endfor %}</ul><p>Набор доступных источников и их статус показываются перед актуальным поиском.</p></section>
+  <section class="feature-three">
+    <article class="card editorial"><div class="icon">⌕</div><h2>Как ищем</h2><p>{{ category.workflow }}</p></article>
+    <article class="card editorial"><div class="icon">✓</div><h2>Что проверить</h2><p>{{ category.specifics }}</p></article>
+    <article class="card editorial"><div class="icon">↥</div><h2>Поиск списком</h2><p>{{ category.batch }}</p><a class="arrow-link" href="/?mode=excel&amp;group={{ category.key }}">Перейти к XLSX <span>→</span></a></article>
+  </section>
+  <section class="card editorial long-copy">
+    <h2>Что означает найденное соответствие</h2>
+    <p>Строка в результате означает, что подключённый каталог напрямую связал исходный номер с артикулом указанного бренда. CrossParts сохраняет название источника и объединяет одинаковые номера, подтверждённые несколькими каталогами.</p>
+    <p>Такое соответствие — отправная точка для проверки, а не гарантия установки. Перед заказом сравните характеристики детали и подтвердите применимость по VIN или каталогу производителя автомобиля.</p>
+  </section>
+  <section class="card related"><div><p class="eyebrow">Проверенный пример</p><h2>Номер {{ category.example }}</h2><p>Откройте сохранённый снимок прямых соответствий с источниками и датой проверки.</p></div><a class="button primary" href="/cross/{{ category.example_slug }}">Открыть карточку номера →</a></section>
+  <section class="card editorial related-groups"><h2>Другие категории</h2><div>{% for item in related_categories %}<a href="/categories/{{ item.slug }}">{{ item.name }} <span>→</span></a>{% endfor %}</div></section>
+</main>
+{% endblock %}

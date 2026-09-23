@@ -68,19 +68,22 @@ def test_frontend_states_and_layout(browser_name, tmp_path):
                 calls['upload'] += 1
                 job.update(status='pending', done=0)
                 r.fulfill(json=job)
-            elif path == '/':
+            elif path.split('?', 1)[0] == '/':
                 r.fulfill(body=env.get_template('index.html').render(username='Алексей', is_trial=False,
                           settings=get_settings()), content_type='text/html')
             else:
                 r.fulfill(status=404, body='not found')
 
         page.route('**/*', route)
-        page.goto('http://audit.local/')
+        page.goto('http://audit.local/?oe=1K0611701K&group=brake_hoses')
         page.wait_for_function('document.querySelectorAll("#coverage .catalog-card").length === 10')
         page.wait_for_function('document.querySelectorAll("#jobs .job-row").length === 1')
         page.evaluate('document.fonts.ready')
         page.wait_for_function('document.querySelectorAll("#coverage img").length === 10 && [...document.querySelectorAll("#coverage img")].every(i => i.complete && i.naturalWidth > 0)')
         assert page.locator('#single-search').is_visible()
+        assert page.locator('#oe').input_value() == '1K0611701K'
+        assert page.locator('#group').input_value() == 'brake_hoses'
+        assert calls['lookup'] == 0
         assert page.locator('.result-variants, #variant2-rows').count() == 0
         assert page.locator('#result-table table').count() == 1
         assert page.locator('#coverage .catalog-card').count() == 10

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Кроссы и аналоги {{ snapshot.input_number }} — {{ category.name }} | CrossParts{% endblock %}
+{% block description %}Проверенные кросс-номера для {{ snapshot.input_number }}: {{ snapshot.rows|length }} найденных соответствий, источники и дата проверки.{% endblock %}
+{% block canonical %}https://mrb-crossparts.ru/cross/{{ snapshot.slug }}{% endblock %}
+{% block head %}<script type="application/ld+json">{{ structured_data|tojson }}</script>{% endblock %}
+{% block content %}
+<main id="main" class="page-shell">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Поиск</a><span>›</span><a href="/categories">Категории</a><span>›</span><a href="/categories/{{ category.slug }}">{{ category.name }}</a><span>›</span><span aria-current="page">{{ snapshot.input_number }}</span></nav>
+  <section class="number-hero">
+    <div><p class="eyebrow">Сохранённые данные каталогов</p><h1>Кроссы и аналоги<br><span>{{ snapshot.input_number }}</span></h1><p class="lead">Проверенный исходный номер в категории «{{ category.name|lower }}». Ниже опубликованы только прямые соответствия из отобранного снимка.</p><a class="button primary" href="/?oe={{ snapshot.input_number|urlencode }}&amp;group={{ category.key }}">Проверить актуальные кроссы →</a></div>
+    <div class="card number-summary"><img src="/seo-assets/categories/{{ category.image }}" width="720" height="480" alt="{{ category.image_alt }}"><dl><div><dt>Категория</dt><dd>{{ category.name }}</dd></div><div><dt>Исходный номер</dt><dd><code>{{ snapshot.input_number }}</code></dd></div><div><dt>Бренд номера</dt><dd>{{ snapshot.input_brand }}</dd></div><div><dt>Проверено</dt><dd><time datetime="{{ snapshot.checked_at }}">{{ snapshot.checked_at_display }}</time></dd></div></dl></div>
+  </section>
+  <section class="card results-card">
+    <div class="section-heading"><div><p class="eyebrow">Прямые совпадения</p><h2>Найденные кросс-номера</h2></div><span>{{ snapshot.rows|length }} {{ row_word }}</span></div>
+    <div class="table-wrap"><table><thead><tr><th scope="col">Бренд</th><th scope="col">Номер аналога</th><th scope="col">Источник</th></tr></thead><tbody>{% for row in snapshot.rows %}
+      <tr><td>{{ row.brand }}</td><td><code>{{ row.number }}</code></td><td><a class="source-link" href="{{ row.source_url }}" target="_blank" rel="noopener noreferrer">{{ row.source }} ↗</a></td></tr>{% endfor %}
+    </tbody></table></div>
+    <p class="data-note">Снимок отражает прямые ответы каталогов на {{ snapshot.checked_at_display }}. Это частичное покрытие: повторный поиск может показать обновлённый состав номеров и источников.</p>
+  </section>
+  <section class="split-copy">
+    <article class="card editorial"><h2>Как читать результат</h2><p>Каждая строка содержит бренд, артикул аналога и каталог, который подтвердил связь с исходным номером. Ссылка в колонке «Источник» ведёт на официальный каталог или страницу его публичных данных.</p><p>Одинаковое написание номера само по себе не считается доказательством: на страницу попадают только просмотренные прямые ответы.</p></article>
+    <article class="card editorial"><h2>Перед заказом</h2><p>{{ category.specifics }}</p><p>CrossParts не подтверждает наличие и цену и не выполняет VIN-подбор на этой странице.</p></article>
+  </section>
+  <section class="card related"><div><p class="eyebrow">Продолжить</p><h2>{{ category.name }}</h2><p>Посмотрите особенности категории или откройте рабочий поиск с уже заполненным номером.</p></div><div class="related-actions"><a class="button secondary" href="/categories/{{ category.slug }}">О категории</a><a class="button primary" href="/?oe={{ snapshot.input_number|urlencode }}&amp;group={{ category.key }}">Перейти в поиск →</a></div></section>
+</main>
+{% endblock %}
