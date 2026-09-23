@@ -3,7 +3,7 @@
   "plan_id": "vehicle-fitment-v1",
   "title": "Платный модуль применяемости автозапчастей",
   "language": "ru",
-  "status": "admin_pilot_validation",
+  "status": "admin_pilot_released",
   "created_at": "2026-09-23",
   "authorization": {
     "current_scope": "Реализация и выпуск admin-пилота разрешены пользователем 2026-09-23.",
@@ -528,7 +528,7 @@
       {
         "id": "F08",
         "title": "Проверить качество и нагрузку",
-        "status": "in_progress",
+        "status": "done",
         "depends_on": [
           "F07"
         ],
@@ -550,7 +550,8 @@
         ],
         "evidence": [
           "281 passed, 10 skipped",
-          "output/fitment-research/shock-absorbers-2026-09-23/multi-source-golden.json"
+          "output/fitment-research/shock-absorbers-2026-09-23/multi-source-golden.json",
+          "output/fitment-research/shock-absorbers-2026-09-23/fitment-release-report.json"
         ],
         "actual_changes": [
           "Golden-проверка: 7/7 живых карточек доступны, 214 строк; полный набор тестов прошёл."
@@ -559,7 +560,7 @@
       {
         "id": "F09",
         "title": "Пилот и выпуск",
-        "status": "in_progress",
+        "status": "done",
         "depends_on": [
           "F08"
         ],
@@ -579,7 +580,9 @@
           "Отчёт пилота"
         ],
         "evidence": [
-          "docs/runbooks/fitment-admin-pilot.md"
+          "docs/runbooks/fitment-admin-pilot.md",
+          "output/fitment-research/shock-absorbers-2026-09-23/fitment-release-report.json",
+          "production: crossparts.service active; admin-only smoke passed 2026-09-23"
         ],
         "actual_changes": [
           "Подготовлены entitlement flag, точный allowlist admin и runbook отключения/отката."

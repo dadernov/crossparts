@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "released_at": "2026-09-23",
+  "release_commit": "3443f8b",
+  "scope": {
+    "tenant": "admin",
+    "product_group": "shock_absorbers",
+    "sources": ["trialli", "torr", "kyb", "hola", "metaco"],
+    "max_parts_per_job": 100,
+    "cross_search_quota_charge": 0
+  },
+  "research": {
+    "live_cards": 7,
+    "live_cards_ok": 7,
+    "application_rows": 214,
+    "connected_sources_added": ["hola", "metaco"],
+    "connected_sources_rejected": {
+      "lynxauto": "No direct article-to-vehicle/year list on the reviewed exact product card.",
+      "febest": "No reproducible direct exact-article fitment relation was identified."
+    },
+    "coverage_claim": "Reviewed cards only; 100% catalogue coverage is not claimed."
+  },
+  "validation": {
+    "automated_tests": {"passed": 281, "skipped": 10, "failed": 0},
+    "production_service": "active",
+    "admin_ui": "Single and batch fitment controls present.",
+    "non_admin_accounts_checked": 61,
+    "non_admin_ui_hidden": true,
+    "non_admin_api_status": 403,
+    "guest_api_status": 403,
+    "feature_disable_status": 403,
+    "feature_reenabled_after_test": true,
+    "production_live_cards": {
+      "HOLA SH20-037G": 132,
+      "METACO 4800-013": 11
+    },
+    "production_batch": {
+      "parts": 2,
+      "status": "done",
+      "xlsx_bytes": 22727
+    },
+    "production_persistence": {
+      "parts": 2,
+      "records": 143,
+      "evidence": 143,
+      "jobs": 1
+    }
+  },
+  "quality_rule": "Only direct exact-product relations are confirmed. Every stored row has source evidence; restrictions are part of semantic identity.",
+  "rollback": "Disable admin:vehicle_fitment, then return to the previous commit and restart crossparts.service. Stored history can remain in place.",
+  "result": "admin_pilot_released"
+}
