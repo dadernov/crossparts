@@ -7,14 +7,14 @@
 <meta name="description" content="Проверенные аналоги по OEM-номерам. Каталоги ведущих производителей, обработка Excel и индивидуальные интеграции для вашей компании.">
 <link rel="icon" href="/static/favicon.svg?v=gerat-4" type="image/svg+xml">
 <link rel="stylesheet" href="/static/editorial-base.css?v=gerat-5">
-<link rel="stylesheet" href="/static/marketing.css?v=9">
+<link rel="stylesheet" href="/static/marketing.css?v=12">
 </head>
-<body class="marketing-page {% if page == 'home' %}marketing-home{% endif %}">
+<body class="marketing-page {% if page == 'home' %}marketing-home{% endif %}{% if page in ['pricing','contacts'] %} seo-public-match{% endif %}">
 <a class="skip-link" href="#main">К содержимому</a>
 <header class="site-header"><div class="header-inner">
 <a class="brand" href="/" aria-label="CrossParts — главная">Cross<span>Parts</span></a>
 <nav aria-label="Основная навигация">
-{% for key, href, label in [('features','/features','Возможности'),('categories','/categories','Категории'),('pricing','/pricing','Цены'),('integrations','/integrations','Интеграции'),('contacts','/contacts','Контакты')] %}
+{% for key, href, label in [('categories','/categories','Категории'),('pricing','/pricing','Цены'),('contacts','/contacts','Контакты')] %}
 <a href="{{ href }}"{% if page == key %} aria-current="page"{% endif %}>{{ label }}</a>
 {% endfor %}
 </nav>

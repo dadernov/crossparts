@@ -32,6 +32,15 @@ def test_public_content():
     assert len(set(pages.values())) == len(PATHS)
 
 
+def test_public_header_has_only_primary_sections():
+    pages = asyncio.run(public_pages())
+    for html in pages.values():
+        nav = html.split('<nav aria-label="Основная навигация">', 1)[1].split('</nav>', 1)[0]
+        assert [label in nav for label in ['Категории', 'Цены', 'Контакты']] == [True, True, True]
+        assert 'Возможности' not in nav
+        assert 'Интеграции' not in nav
+
+
 @pytest.mark.parametrize('browser_name',['chromium','webkit'])
 def test_marketing_browser(browser_name, tmp_path):
     pages = asyncio.run(public_pages())
