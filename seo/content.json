@@ -33,8 +33,8 @@
       "lead": "Введите OE / OEM-номер тормозного диска — сервис соберёт прямые соответствия из подключённых каталогов и объединит повторяющиеся номера.",
       "image": "discs.png",
       "image_alt": "Тормозной диск",
-      "example": "128424899",
-      "example_slug": "128424899",
+      "example": "1K0615301AA",
+      "example_slug": "1k0615301aa",
       "specifics": "При выборе диска сверяют наружный диаметр, толщину нового диска и минимальную толщину, высоту, число крепёжных отверстий и диаметр ступицы. Также важно проверить исполнение: вентилируемый или сплошной диск.",
       "workflow": "Поиск ограничивается источниками, работающими с тормозными дисками. В итоговой таблице видны бренд аналога, номер и каталог, где обнаружена прямая связь.",
       "batch": "Пакетная обработка подходит для прайс-листов и закупочных заявок. Каждая строка сохраняет собственный исходный номер; категория не подменяет содержимое загруженного файла.",
@@ -97,8 +97,8 @@
       "lead": "Введите номер основного радиатора — CrossParts проверит профильные каталоги и покажет найденные соответствия без смешивания с другими теплообменниками.",
       "image": "radiators.png",
       "image_alt": "Радиатор системы охлаждения",
-      "example": "21903130000811",
-      "example_slug": "21903130000811",
+      "example": "8200735038",
+      "example_slug": "8200735038",
       "specifics": "Для радиатора сверяют размеры сердцевины, расположение и диаметр патрубков, крепления, а также комплектацию автомобиля: тип трансмиссии, кондиционер и дополнительные контуры охлаждения.",
       "workflow": "Поиск выполняется по источникам радиаторов. Найденные номера выводятся с брендом и подтверждающим каталогом; масляные радиаторы, отопители и конденсеры не считаются основным радиатором без явного подтверждения.",
       "batch": "Загрузка XLSX подходит для сверки большого списка радиаторов. Результат можно вернуть в рабочую таблицу вместе с исходными номерами.",
@@ -129,16 +129,26 @@
       ]
     },
     {
-      "id": "discs-128424899",
-      "slug": "128424899",
+      "id": "discs-1k0615301aa",
+      "slug": "1k0615301aa",
       "group": "brake_discs",
-      "input_brand": "Не указан в снимке",
-      "input_number": "128424899",
+      "input_brand": "Volkswagen Group (VAG)",
+      "input_number": "1K0615301AA",
       "checked_at": "2026-09-22",
       "checked_at_display": "22 сентября 2026",
       "review": {"status": "reviewed", "reviewed_at": "2026-09-23", "identity_confirmed": true},
       "rows": [
-        {"brand": "MONAER", "number": "M61848", "source": "MONAER", "source_url": "https://monaer-russia.ru/catalog"}
+        {"brand": "ATE", "number": "24.0125-0158.1", "source": "ATE", "source_url": "https://web.tecalliance.net/ate/en/home?language=en&country=de&articleCountry=de"},
+        {"brand": "ATE", "number": "24.0325-0158.1", "source": "ATE", "source_url": "https://web.tecalliance.net/ate/en/home?language=en&country=de&articleCountry=de"},
+        {"brand": "Brembo", "number": "09.9772.11", "source": "Brembo", "source_url": "https://www.bremboparts.com/europe/ru"},
+        {"brand": "Brembo", "number": "09.9772.75", "source": "Brembo", "source_url": "https://www.bremboparts.com/europe/ru"},
+        {"brand": "Brembo", "number": "09.9772.1X", "source": "Brembo", "source_url": "https://www.bremboparts.com/europe/ru"},
+        {"brand": "Brembo", "number": "09.9772.1S", "source": "Brembo", "source_url": "https://www.bremboparts.com/europe/ru"},
+        {"brand": "FAP", "number": "FP11619", "source": "FAP", "source_url": "https://fapbrakes.ru/ru/catalogue"},
+        {"brand": "METACO", "number": "3050-016", "source": "METACO", "source_url": "https://metaco.parts/content/downloads"},
+        {"brand": "ZIMMERMANN", "number": "100.3300.20", "source": "ZIMMERMANN", "source_url": "https://web.tecalliance.net/otto-zimmermann/ru/"},
+        {"brand": "ZIMMERMANN", "number": "100.3300.52", "source": "ZIMMERMANN", "source_url": "https://web.tecalliance.net/otto-zimmermann/ru/"},
+        {"brand": "ZIMMERMANN", "number": "100.3300.53", "source": "ZIMMERMANN", "source_url": "https://web.tecalliance.net/otto-zimmermann/ru/"}
       ]
     },
     {
@@ -177,16 +187,21 @@
       ]
     },
     {
-      "id": "radiators-21903130000811",
-      "slug": "21903130000811",
+      "id": "radiators-8200735038",
+      "slug": "8200735038",
       "group": "radiators",
-      "input_brand": "Не указан в снимке",
-      "input_number": "21903130000811",
+      "input_brand": "Dacia",
+      "input_number": "8200735038",
       "checked_at": "2026-09-22",
       "checked_at_display": "22 сентября 2026",
       "review": {"status": "reviewed", "reviewed_at": "2026-09-23", "identity_confirmed": true},
       "rows": [
-        {"brand": "GANZ", "number": "GRF07006", "source": "GANZ", "source_url": "https://ganz-parts.ru/catalog/"}
+        {"brand": "LUZAR", "number": "LRc 0908", "source": "LUZAR", "source_url": "https://luzar.ru/catalogue"},
+        {"brand": "LUZAR", "number": "LRc 09108", "source": "LUZAR", "source_url": "https://luzar.ru/catalogue"},
+        {"brand": "LUZAR", "number": "LRc 0938", "source": "LUZAR", "source_url": "https://luzar.ru/catalogue"},
+        {"brand": "METACO", "number": "8010-025", "source": "METACO", "source_url": "https://metaco.parts/content/downloads"},
+        {"brand": "Nissens", "number": "637609", "source": "Nissens", "source_url": "https://catalogue.nissens.com/Product"},
+        {"brand": "SAKURA", "number": "3631-1002", "source": "Brixo / SAKURA", "source_url": "https://brixogroup.com/catalog"}
       ]
     }
   ]

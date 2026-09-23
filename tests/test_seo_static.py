@@ -46,8 +46,8 @@ def test_static_seo_build_is_valid_and_complete():
     assert "Built 11 pages" in result.stdout
     expected = {
         "categories.html", "brake-pads.html", "brake-discs.html", "brake-hoses.html",
-        "shock-absorbers.html", "radiators.html", "58101-h5a25.html", "128424899.html",
-        "1k0611701k.html", "553101g210.html", "21903130000811.html",
+        "shock-absorbers.html", "radiators.html", "58101-h5a25.html", "1k0615301aa.html",
+        "1k0611701k.html", "553101g210.html", "8200735038.html",
     }
     assert {path.name for path in PUBLIC.glob("*.html")} == expected
 
@@ -85,7 +85,8 @@ def test_published_rows_exist_in_reviewed_catalogue_audit():
         "ATE": "ate", "Brembo": "brembo", "Brixo / NiBK": "nibkru",
         "SB Parts": "sbparts", "TRIALLI": "trialli", "ZIMMERMANN": "zimmermann",
         "MONAER": "monaer", "LYNXauto": "lynxauto", "FEBEST": "febest",
-        "METACO": "metaco", "TORR": "torr", "GANZ": "ganz",
+        "METACO": "metaco", "TORR": "torr", "GANZ": "ganz", "FAP": "fap",
+        "LUZAR": "luzar", "Nissens": "nissens", "Brixo / SAKURA": "brixo",
     }
     audited = {
         (item["group"], item["oe"], item["source"]): set(item["products"])
