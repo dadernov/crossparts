@@ -8,23 +8,34 @@ from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
+from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from starlette.requests import Request
 
 from . import groups as product_groups
 from .aggregator import Aggregator
 from .config import get_settings
 from .db import SessionLocal, init_db
-from .excel import build_fitment_workbook, build_template, build_workbook, read_input
+from .excel import (
+    build_fitment_job_workbook, build_fitment_workbook, build_template, build_workbook, read_input,
+)
 from .fitment import FitmentService
+from .fitment_jobs import FitmentJobRunner
 from .jobs import JobRunner
-from .models import Job, JobItem, new_id, utcnow
+from .models import (
+    CacheEntry, FeatureEntitlement, FitmentEvidence, FitmentJob, FitmentPart, FitmentRecord,
+    Job, JobItem, new_id, utcnow,
+)
 from .marketing import context as marketing_context
 from .normalize import number_key
 from .quota import quota_status, reserve_queries
-from .schemas import FitmentLookupRequest, JobCreate, JobOut, LookupExportRequest, LookupRequest
+from .schemas import (
+    FitmentJobCreate, FitmentJobOut, FitmentLookupRequest, JobCreate, JobOut,
+    LookupExportRequest, LookupRequest,
+)
 from .security import (
-    authenticate, is_guest_tenant, require_admin_fitment, require_search_access, require_tenant,
+    authenticate, has_feature_access, is_guest_tenant, require_admin_fitment,
+    require_search_access, require_tenant,
 )
 from .session import SignedSessionMiddleware
 from .sources.registry import SourceRegistry
@@ -36,13 +47,16 @@ registry = SourceRegistry(settings)
 aggregator = Aggregator(settings, registry, SessionLocal)
 runner = JobRunner(settings, aggregator, SessionLocal)
 fitment = FitmentService(settings, SessionLocal)
+fitment_runner = FitmentJobRunner(fitment, SessionLocal)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     await runner.start()
+    await fitment_runner.start()
     yield
+    await fitment_runner.stop()
     await runner.stop()
     await registry.close()
 
@@ -71,16 +85,30 @@ def _job_out(job: Job) -> JobOut:
     )
 
 
+def _fitment_job_out(job: FitmentJob) -> FitmentJobOut:
+    return FitmentJobOut(
+        id=job.id, status=job.status, total=job.total,
+        processed_count=job.processed_count, results=list(job.results or []),
+        errors=list(job.errors or []), created_at=job.created_at.isoformat(),
+        finished_at=job.finished_at.isoformat() if job.finished_at else None,
+    )
+
+
 # --------------------------------------------------------------------- UI
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     username = request.session.get("username")
+    fitment_enabled = bool(
+        username == "admin"
+        and await has_feature_access(SessionLocal, username, "vehicle_fitment")
+    )
     return templates.TemplateResponse(
         request,
         "index.html", {"sources": registry.describe(username), "settings": settings,
                         "username": username, "is_guest": not username,
                         "trial_active": bool(request.session.get("trial_active")),
+                        "fitment_enabled": fitment_enabled,
                         "login_open": False, "login_error": None},
     )
 
@@ -260,6 +288,110 @@ async def fitment_export(
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
+
+@app.post("/api/v1/fitment/jobs", response_model=FitmentJobOut)
+async def create_fitment_job(
+    payload: FitmentJobCreate,
+    tenant: str = Depends(require_admin_fitment),
+):
+    """Queue an explicit batch; it never walks cross numbers automatically."""
+    async with SessionLocal() as session:
+        grant = await session.get(FeatureEntitlement, f"{tenant}:vehicle_fitment")
+    grant_limit = int((grant.limits or {}).get("max_parts_per_job", settings.fitment_max_parts_per_job))
+    max_parts = min(settings.fitment_max_parts_per_job, max(1, grant_limit))
+    if len(payload.parts) > max_parts:
+        raise HTTPException(400, f"В одном задании применяемости разрешено не более {max_parts} деталей")
+    if payload.idempotency_key:
+        async with SessionLocal() as session:
+            existing = (await session.execute(select(FitmentJob).where(
+                FitmentJob.tenant == tenant,
+                FitmentJob.idempotency_key == payload.idempotency_key,
+            ))).scalar_one_or_none()
+            if existing is not None:
+                return _fitment_job_out(existing)
+    parts, seen = [], set()
+    for raw in payload.parts:
+        brand = raw.brand.strip().upper()
+        group = product_groups.resolve(raw.group)
+        key = (brand, number_key(raw.number), group)
+        if group != product_groups.SHOCK_ABSORBERS:
+            raise HTTPException(400, "Пилот применяемости работает только для амортизаторов")
+        if brand not in fitment.supported_brands:
+            raise HTTPException(400, f"Источник применяемости {brand} не подключён")
+        if key not in seen:
+            seen.add(key); parts.append({"brand": brand, "number": raw.number, "group": group})
+    job = FitmentJob(
+        tenant=tenant, status="queued", idempotency_key=payload.idempotency_key,
+        requested_parts=parts, total=len(parts), processed_count=0,
+    )
+    async with SessionLocal() as session:
+        session.add(job)
+        try:
+            await session.commit()
+        except IntegrityError:
+            await session.rollback()
+            if not payload.idempotency_key:
+                raise
+            job = (await session.execute(select(FitmentJob).where(
+                FitmentJob.tenant == tenant,
+                FitmentJob.idempotency_key == payload.idempotency_key,
+            ))).scalar_one()
+            return _fitment_job_out(job)
+        await session.refresh(job)
+    await fitment_runner.submit(job.id)
+    return _fitment_job_out(job)
+
+
+@app.get("/api/v1/fitment/jobs/{job_id}", response_model=FitmentJobOut)
+async def get_fitment_job(job_id: str, tenant: str = Depends(require_admin_fitment)):
+    async with SessionLocal() as session:
+        job = await session.get(FitmentJob, job_id)
+    if job is None or job.tenant != tenant:
+        raise HTTPException(404, "Задание применяемости не найдено")
+    return _fitment_job_out(job)
+
+
+@app.post("/api/v1/fitment/jobs/{job_id}/cancel", response_model=FitmentJobOut)
+async def cancel_fitment_job(job_id: str, tenant: str = Depends(require_admin_fitment)):
+    async with SessionLocal() as session:
+        job = await session.get(FitmentJob, job_id)
+        if job is None or job.tenant != tenant:
+            raise HTTPException(404, "Задание применяемости не найдено")
+        if job.status in {"queued", "running"}:
+            job.cancel_requested = True
+            await session.commit(); await session.refresh(job)
+    return _fitment_job_out(job)
+
+
+@app.get("/api/v1/fitment/jobs/{job_id}/export.xlsx")
+async def export_fitment_job(job_id: str, tenant: str = Depends(require_admin_fitment)):
+    async with SessionLocal() as session:
+        job = await session.get(FitmentJob, job_id)
+    if job is None or job.tenant != tenant:
+        raise HTTPException(404, "Задание применяемости не найдено")
+    if job.status not in {"done", "partial", "failed"}:
+        raise HTTPException(409, "Задание ещё не завершено")
+    return Response(
+        content=build_fitment_job_workbook(list(job.results or [])),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="fitment-{job.id}.xlsx"'},
+    )
+
+
+@app.get("/api/v1/fitment/metrics")
+async def fitment_metrics(tenant: str = Depends(require_admin_fitment)):
+    async with SessionLocal() as session:
+        counts = {}
+        for name, model in (("parts", FitmentPart), ("records", FitmentRecord),
+                            ("evidence", FitmentEvidence), ("jobs", FitmentJob)):
+            counts[name] = (await session.execute(select(func.count()).select_from(model))).scalar_one()
+        cache_rows = (await session.execute(select(func.count()).select_from(CacheEntry).where(
+            CacheEntry.source.like("fitment:%")
+        ))).scalar_one()
+    return {**counts, "cache_entries": cache_rows,
+            "runtime_sources": fitment.metrics_snapshot(),
+            "supported_brands": list(fitment.supported_brands), "pilot_tenant": tenant}
 
 
 @app.post("/api/v1/jobs", response_model=JobOut)

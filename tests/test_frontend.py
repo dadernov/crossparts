@@ -410,6 +410,7 @@ def test_admin_can_request_trialli_fitment_for_a_shock_result():
                 request.fulfill(
                     body=env.get_template('index.html').render(
                         username='admin', is_guest=False, trial_active=False,
+                        fitment_enabled=True,
                         login_open=False, login_error=None, settings=get_settings(),
                     ),
                     content_type='text/html',

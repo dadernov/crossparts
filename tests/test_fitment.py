@@ -1,21 +1,29 @@
 from __future__ import annotations
 
 import io
+import datetime as dt
 from unittest.mock import AsyncMock
 
 import pytest
 from fastapi import HTTPException
 from openpyxl import load_workbook
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from app import main
 from app.config import Settings
 from app.fitment import FitmentService
+from app.fitment_jobs import FitmentJobRunner
 from app.excel import build_fitment_workbook
-from app.models import Base
-from app.schemas import FitmentLookupRequest
+from app.models import (
+    Base, FeatureEntitlement, FitmentEvidence, FitmentJob, FitmentPart, FitmentRecord,
+)
+from app.security import has_feature_access
+from app.schemas import FitmentJobCreate, FitmentJobPart, FitmentLookupRequest
 from app.sources.trialli_fitment import TrialliFitmentSource
 from app.sources.kyb_fitment import KybFitmentSource
+from app.sources.hola_fitment import HolaFitmentSource
+from app.sources.metaco_fitment import MetacoFitmentSource
 from app.sources.torr_fitment import TorrFitmentSource
 
 
@@ -76,6 +84,10 @@ async def test_fitment_service_caches_complete_answer(tmp_path):
     assert second["cached"] is True
     assert len(second["applications"]) == 2
     service.sources["TRIALLI"].lookup.assert_awaited_once()
+    async with sessions() as session:
+        assert (await session.execute(select(func.count()).select_from(FitmentPart))).scalar_one() == 1
+        assert (await session.execute(select(func.count()).select_from(FitmentRecord))).scalar_one() == 2
+        assert (await session.execute(select(func.count()).select_from(FitmentEvidence))).scalar_one() == 2
     await engine.dispose()
 
 
@@ -186,3 +198,120 @@ async def test_fitment_export_is_server_side_admin_only(monkeypatch):
     assert response.media_type.endswith("spreadsheetml.sheet")
     assert response.body.startswith(b"PK")
     lookup.assert_awaited_once_with("KYB", "333754")
+
+
+HOLA_CARD = """
+<div class="tabs__content-item" data-tabs-value="about"><table>
+<tr><td>Артикул</td><td>SH20-037G</td></tr><tr><td>Наименование</td><td>Амортизатор G'Ride</td></tr>
+<tr><td>Место установки</td><td>передняя ось</td></tr><tr><td>Сторона установки</td><td>левая / правая</td></tr>
+<tr><td>Исполнение</td><td>Амортизатор</td></tr></table></div>
+<div class="tabs__content-item" data-tabs-value="stock">
+ <div class="accordion__group"><div class="accordion__group-header">VW</div><div>
+  <div class="accordion__group"><div class="accordion__group-header accordion__group-header_darken">MULTIVAN V</div><div>
+   <table><tr data-id="5263"><td>VW MULTIVAN V 2.0 TDI 4motion</td><td>1968 см3</td><td>140 л.с.</td><td>103 кВт</td><td>09/09 - 08/15</td><td>CAAC, CCHA</td></tr>
+   <tr><td colspan="6"><table><tr><th>Ходовая часть</th><td>для усиленной подвески</td></tr></table></td></tr></table>
+  </div></div>
+ </div></div>
+</div>
+"""
+
+
+def test_hola_fitment_parser_keeps_months_engine_and_restrictions():
+    result = HolaFitmentSource.parse_page(HOLA_CARD, source_url="https://www.hola-auto.ru/card")
+    assert result is not None
+    row = result["applications"][0]
+    assert (row["make"], row["model"], row["engine_code"]) == ("VW", "MULTIVAN V", "CAAC, CCHA")
+    assert (row["year_from"], row["month_from"], row["year_to"], row["month_to"]) == (2009, 9, 2015, 8)
+    assert row["restrictions"] == ["Ходовая часть: для усиленной подвески"]
+
+
+METACO_CARD = """
+<span class="active-breadcumb">4800-013</span><h1>Амортизатор передний 4800-013</h1>
+<div class="characteristics-block"><div class="text-2"><span class="key">Тип</span><span class="val">Масляный</span></div></div>
+<div class="metaco-model-control">Audi <span class="secondary-text">2</span><ul class="metaco-model-list">
+<li>Audi 100 [C4]<span class="secondary-text"> 1991-1994 </span></li>
+<li>Audi A6 [C4]<span class="secondary-text"> 1994&gt; </span></li></ul></div>
+"""
+
+
+def test_metaco_fitment_parser_preserves_generation_and_open_year():
+    result = MetacoFitmentSource.parse_page(METACO_CARD, source_url="https://metaco.parts/catalog/4800013")
+    assert result is not None
+    assert result["damper_type"] == "Масляный"
+    assert result["applications"][0]["model"] == "100 [C4]"
+    assert result["applications"][0]["generation"] == "[C4]"
+    assert result["applications"][1]["end_is_open"] is True
+
+
+@pytest.mark.asyncio
+async def test_entitlement_expiry_is_enforced(tmp_path):
+    engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path / 'entitlements.db'}")
+    sessions = async_sessionmaker(engine, expire_on_commit=False)
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    async with sessions() as session:
+        session.add(FeatureEntitlement(key="admin:vehicle_fitment", tenant="admin",
+            feature_key="vehicle_fitment", enabled=True))
+        session.add(FeatureEntitlement(key="expired:vehicle_fitment", tenant="expired",
+            feature_key="vehicle_fitment", enabled=True,
+            expires_at=dt.datetime.now(dt.timezone.utc) - dt.timedelta(seconds=1)))
+        await session.commit()
+    assert await has_feature_access(sessions, "admin", "vehicle_fitment") is True
+    assert await has_feature_access(sessions, "expired", "vehicle_fitment") is False
+    assert await has_feature_access(sessions, "missing", "vehicle_fitment") is False
+    await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_fitment_job_runner_resumes_and_persists_partial_results(tmp_path):
+    engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path / 'jobs.db'}")
+    sessions = async_sessionmaker(engine, expire_on_commit=False)
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    service = type("Service", (), {})()
+    service.lookup = AsyncMock(side_effect=[
+        {"brand": "KYB", "number": "333754", "status": "ok", "applications": [{}]},
+        {"brand": "TORR", "number": "missing", "status": "not_found", "applications": []},
+    ])
+    async with sessions() as session:
+        job = FitmentJob(tenant="admin", status="queued", total=2,
+            requested_parts=[{"brand": "KYB", "number": "333754"},
+                             {"brand": "TORR", "number": "missing"}])
+        session.add(job); await session.commit(); job_id = job.id
+    runner = FitmentJobRunner(service, sessions); await runner.start(); await runner.submit(job_id)
+    await runner._queue.join(); await runner.stop()
+    async with sessions() as session:
+        stored = await session.get(FitmentJob, job_id)
+        assert stored.status == "partial"
+        assert stored.processed_count == 2
+        assert len(stored.results) == 2
+    await engine.dispose()
+
+
+@pytest.mark.asyncio
+async def test_fitment_job_api_is_idempotent_and_tenant_isolated(tmp_path, monkeypatch):
+    engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path / 'job-api.db'}")
+    sessions = async_sessionmaker(engine, expire_on_commit=False)
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    async with sessions() as session:
+        session.add(FeatureEntitlement(
+            key="admin:vehicle_fitment", tenant="admin", feature_key="vehicle_fitment",
+            enabled=True, limits={"max_parts_per_job": 10},
+        ))
+        await session.commit()
+    monkeypatch.setattr(main, "SessionLocal", sessions)
+    submit = AsyncMock()
+    monkeypatch.setattr(main.fitment_runner, "submit", submit)
+    payload = FitmentJobCreate(
+        idempotency_key="stable-key",
+        parts=[FitmentJobPart(brand="KYB", number="333754")],
+    )
+    first = await main.create_fitment_job(payload, tenant="admin")
+    repeated = await main.create_fitment_job(payload, tenant="admin")
+    assert repeated.id == first.id
+    submit.assert_awaited_once_with(first.id)
+    with pytest.raises(HTTPException) as hidden:
+        await main.get_fitment_job(first.id, tenant="another-user")
+    assert hidden.value.status_code == 404
+    await engine.dispose()

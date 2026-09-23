@@ -338,6 +338,9 @@ function renderRows() {
   });
   $('#result-count').textContent = state.crosses.length ? `${state.crosses.length} номеров` : '';
   $('#result-tools').hidden = !state.crosses.length; $('#result-table').hidden = false;
+  if ($('#fitment-batch')) {
+    $('#fitment-batch').hidden = !state.crosses.some(cross => fitmentGroupFor(cross));
+  }
   const totalPages = Math.max(1, Math.ceil(rows.length / 12));
   state.page = Math.max(1, Math.min(state.page, totalPages));
   const start = (state.page - 1) * 12;
@@ -414,19 +417,22 @@ function closeFitment(restoreFocus = false) {
   $('#fitment-status').textContent = '';
   fitmentPayload = null;
   if ($('#fitment-export')) $('#fitment-export').hidden = true;
+  if ($('#fitment-job-export')) { $('#fitment-job-export').hidden = true; $('#fitment-job-export').removeAttribute('href'); }
   if (restoreFocus && trigger?.isConnected) trigger.focus();
 }
 $('#fitment-close')?.addEventListener('click', () => closeFitment(true));
 
 function fitmentGroupFor(cross) {
   const brand = String(cross.brand || '').trim().toUpperCase();
-  if (!['TRIALLI', 'TORR', 'KYB'].includes(brand)) return null;
+  if (!['TRIALLI', 'TORR', 'KYB', 'HOLA', 'METACO'].includes(brand)) return null;
   if (state.lookup?.group === 'shock_absorbers') return 'shock_absorbers';
   try {
     const url = new URL(cross.url);
     if (brand === 'TRIALLI' && url.hostname === 'trialli.ru' && url.pathname.startsWith('/catalogue/amortizatory-i-opory/amortizatory/')) return 'shock_absorbers';
     if (brand === 'TORR' && url.hostname === 'controltorr.de' && url.pathname.includes('/catalog/')) return 'shock_absorbers';
     if (brand === 'KYB' && url.hostname === 'kyb.ru') return 'shock_absorbers';
+    if (brand === 'HOLA' && url.hostname === 'www.hola-auto.ru' && url.pathname.startsWith('/production/shock-absorbers/')) return 'shock_absorbers';
+    if (brand === 'METACO' && url.hostname === 'metaco.parts' && url.pathname.includes('/catalog/')) return 'shock_absorbers';
   } catch (_) { /* a result without an official product URL is not eligible */ }
   return null;
 }
@@ -468,12 +474,13 @@ async function loadFitment(cross, button, group) {
     }
     const table = el('table');
     const head = el('thead'); const headRow = el('tr');
-    ['Марка','Модель','Модификация','Двигатель','Мощность / объём','Годы'].forEach(title => { const cell = el('th', title); cell.scope = 'col'; headRow.append(cell); });
+    ['Марка','Модель','Модификация','Двигатель','Мощность / объём','Годы','Ограничения'].forEach(title => { const cell = el('th', title); cell.scope = 'col'; headRow.append(cell); });
     head.append(headRow); table.append(head);
     const body = el('tbody');
     for (const item of data.applications) {
       const row = el('tr');
-      row.append(el('td', item.make || '—'), el('td', item.model || '—'), el('td', item.modification || '—'), el('td', item.engine_code || '—'), el('td', [item.power_kw && `${item.power_kw} кВт`, item.power_hp && `${item.power_hp} лс`, item.engine_cc && `${item.engine_cc} см³`].filter(Boolean).join(' · ') || '—'), el('td', item.raw_period || '—'));
+      const model = [item.model, item.generation && !String(item.model || '').includes(item.generation) ? item.generation : ''].filter(Boolean).join(' ');
+      row.append(el('td', item.make || '—'), el('td', model || '—'), el('td', item.modification || '—'), el('td', item.engine_code || '—'), el('td', [item.power_kw && `${item.power_kw} кВт`, item.power_hp && `${item.power_hp} лс`, item.engine_cc && `${item.engine_cc} см³`].filter(Boolean).join(' · ') || '—'), el('td', item.raw_period || '—'), el('td', (item.restrictions || []).join(' · ') || item.info || '—'));
       body.append(row);
     }
     table.append(body); $('#fitment-table').append(table);
@@ -483,6 +490,72 @@ async function loadFitment(cross, button, group) {
     button.disabled = false;
   }
 }
+
+function batchFitmentParts() {
+  const parts = [], seen = new Set();
+  for (const cross of state.crosses) {
+    const group = fitmentGroupFor(cross);
+    const brand = String(cross.brand || '').trim().toUpperCase();
+    const number = canonicalNumber(cross.number);
+    const key = `${brand}:${number}:${group}`;
+    if (group && number && !seen.has(key)) {
+      seen.add(key); parts.push({brand, number:cross.number, group});
+    }
+    if (parts.length === 100) break;
+  }
+  return parts;
+}
+
+function renderFitmentJob(data) {
+  const table = el('table');
+  const head = el('thead'); const headRow = el('tr');
+  ['Бренд', 'Артикул', 'Статус', 'Строк применяемости', 'Сообщение'].forEach(title => {
+    const cell = el('th', title); cell.scope = 'col'; headRow.append(cell);
+  });
+  head.append(headRow); table.append(head);
+  const body = el('tbody');
+  for (const result of data.results || []) {
+    const row = el('tr');
+    row.append(el('td', result.brand || '—'), el('td', canonicalNumber(result.number) || '—'),
+      el('td', STATUS[result.status] || result.status || '—'),
+      el('td', String((result.applications || []).length)), el('td', result.message || '—'));
+    body.append(row);
+  }
+  table.append(body); $('#fitment-table').replaceChildren(table);
+}
+
+$('#fitment-batch')?.addEventListener('click', async event => {
+  const button = event.currentTarget; const parts = batchFitmentParts();
+  if (!parts.length) return;
+  const panel = $('#fitment-panel'); const request = ++fitmentRequest;
+  panel._trigger = button; panel.hidden = false; button.disabled = true;
+  $('#fitment-title').textContent = 'Применимость списка';
+  $('#fitment-label').textContent = 'АМОРТИЗАТОРЫ · ПАКЕТ';
+  $('#fitment-product').replaceChildren(); $('#fitment-table').replaceChildren();
+  $('#fitment-export').hidden = true; $('#fitment-job-export').hidden = true;
+  $('#fitment-status').textContent = `Ставим в очередь ${parts.length} деталей…`;
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  try {
+    let data = await api('/api/v1/fitment/jobs', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({parts, idempotency_key:`web-${crypto.randomUUID()}`}),
+    });
+    while (request === fitmentRequest && ['queued', 'running'].includes(data.status)) {
+      $('#fitment-status').textContent = `Обработано ${data.processed_count} из ${data.total}…`;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      data = await api(`/api/v1/fitment/jobs/${data.id}`);
+    }
+    if (request !== fitmentRequest) return;
+    renderFitmentJob(data);
+    const found = (data.results || []).filter(result => result.status === 'ok').length;
+    $('#fitment-status').textContent = `Обработано ${data.processed_count} из ${data.total} · найдено у ${found} деталей.`;
+    const download = $('#fitment-job-export');
+    download.href = `/api/v1/fitment/jobs/${data.id}/export.xlsx`;
+    download.download = `fitment-${data.id}.xlsx`; download.hidden = false;
+  } catch (error) {
+    if (request === fitmentRequest) $('#fitment-status').textContent = error.message;
+  } finally { button.disabled = false; }
+});
 
 $('#fitment-export')?.addEventListener('click', async event => {
   if (!fitmentPayload) return;

@@ -16,6 +16,28 @@ class FitmentLookupRequest(BaseModel):
     group: str = Field(..., description="Товарная группа найденной детали")
 
 
+class FitmentJobPart(BaseModel):
+    brand: str = Field(..., min_length=2, max_length=64)
+    number: str = Field(..., min_length=2, max_length=128)
+    group: str = Field(default="shock_absorbers")
+
+
+class FitmentJobCreate(BaseModel):
+    parts: list[FitmentJobPart] = Field(..., min_length=1, max_length=100)
+    idempotency_key: str | None = Field(default=None, min_length=8, max_length=128)
+
+
+class FitmentJobOut(BaseModel):
+    id: str
+    status: str
+    total: int
+    processed_count: int
+    results: list[dict]
+    errors: list[dict]
+    created_at: str
+    finished_at: str | None
+
+
 class LookupExportCross(BaseModel):
     brand: str = ""
     number: str = ""

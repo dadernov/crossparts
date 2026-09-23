@@ -40,6 +40,9 @@ class Settings(BaseSettings):
     # number does not wait for the same timeout again.
     source_failure_cooldown_seconds: int = Field(default=300, ge=0, le=3600)
     cache_ttl_hours: int = 168
+    fitment_not_found_ttl_hours: int = Field(default=24, ge=1, le=720)
+    fitment_retry_attempts: int = Field(default=2, ge=1, le=3)
+    fitment_max_parts_per_job: int = Field(default=100, ge=1, le=1000)
     max_products_per_oe: int = 5
     # Hidden, opt-in second pass through catalogues that returned not_found.
     circular_search_enabled: bool = False

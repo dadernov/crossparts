@@ -3,13 +3,12 @@
   "plan_id": "vehicle-fitment-v1",
   "title": "Платный модуль применяемости автозапчастей",
   "language": "ru",
-  "status": "planning_only",
+  "status": "admin_pilot_validation",
   "created_at": "2026-09-23",
   "authorization": {
-    "current_scope": "Создать планы; реализация не разрешена этим документом.",
-    "implementation_requires": "Отдельное поручение пользователя на реализацию.",
-    "production_requires": "Поручение на выпуск с учётом действующей авторизации пользователя.",
-    "commits_requires": "Явная просьба пользователя; создание плана не разрешает коммит.",
+    "current_scope": "Реализация и выпуск admin-пилота разрешены пользователем 2026-09-23.",
+    "production_requires": "Разрешение получено в поручении «доделай по плану» после запуска admin-пилота.",
+    "commits_requires": "Разрешение получено в поручении «закоммить текущий прогресс и подключай каталоги».",
     "secrets": "Не записывать пароли и ключи API в планы, логи и git."
   },
   "execution_rules": [
@@ -92,19 +91,22 @@
       "id": "F-I01",
       "required_before": "F02",
       "description": "50–100 реальных артикулов с брендом и группой; эталонные примеры от клиента.",
-      "status": "missing"
+      "status": "satisfied_for_admin_pilot",
+      "resolution": "30 артикулов TRIALLI (802 строки) плюс 7 живых карточек пяти источников; расширение выборки требуется перед продажей вне admin-пилота."
     },
     {
       "id": "F-I02",
       "required_before": "F03",
       "description": "Выбрать первую товарную группу и 2–3 пригодных источника по результатам исследования.",
-      "status": "pending_discovery"
+      "status": "decided",
+      "resolution": "Амортизаторы; TRIALLI, TORR, KYB, HOLA и METACO."
     },
     {
       "id": "F-I03",
       "required_before": "F09",
       "description": "Согласовать допустимую долю найденной применяемости и обязательные ограничения для пилота.",
-      "status": "not_decided"
+      "status": "decided_for_admin_pilot",
+      "resolution": "Не допускаются ложные прямые связи в reviewed-наборе; каждая строка имеет evidence; неполнота источника показывается явно; 100% покрытие не заявляется."
     }
   ],
   "data_contract": {
@@ -265,7 +267,7 @@
       {
         "id": "F00",
         "title": "Сверить текущее состояние",
-        "status": "not_started",
+        "status": "done",
         "depends_on": [],
         "steps": [
           "Прочитать модели, агрегатор, адаптеры, задания, экспорт и авторизацию.",
@@ -280,13 +282,17 @@
         "deliverables": [
           "fitment-baseline.json"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "output/fitment-research/shock-absorbers-2026-09-23/fitment-baseline.json"
+        ],
+        "actual_changes": [
+          "Зафиксирован исходный admin-пилот и исключены посторонние XLSX."
+        ]
       },
       {
         "id": "F01",
         "title": "Общие права на платные модули",
-        "status": "not_started",
+        "status": "done",
         "depends_on": [
           "F00"
         ],
@@ -306,13 +312,20 @@
           "Миграция прав",
           "Сервис проверки доступа"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "app/models.py:FeatureEntitlement",
+          "app/security.py:has_feature_access",
+          "scripts/set_feature_entitlement.py",
+          "tests/test_fitment.py:test_entitlement_expiry_is_enforced"
+        ],
+        "actual_changes": [
+          "Добавлены независимые entitlement, срок действия и лимит пакета; UI/API используют одну проверку, дополненную allowlist admin."
+        ]
       },
       {
         "id": "F02",
         "title": "Исследовать данные и измерить покрытие",
-        "status": "not_started",
+        "status": "done",
         "depends_on": [
           "F00"
         ],
@@ -335,13 +348,19 @@
           "golden-fitments.json",
           "Отчёт go/no-go"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "output/fitment-research/shock-absorbers-2026-09-23/source-capabilities.json",
+          "output/fitment-research/shock-absorbers-2026-09-23/golden-fitments.json",
+          "output/fitment-research/shock-absorbers-2026-09-23/multi-source-golden.json"
+        ],
+        "actual_changes": [
+          "Проверены подключённые каталоги; HOLA и METACO — go, LYNXauto и FEBEST — no-go."
+        ]
       },
       {
         "id": "F03",
         "title": "Спроектировать и мигрировать данные",
-        "status": "not_started",
+        "status": "done",
         "depends_on": [
           "F02"
         ],
@@ -361,13 +380,18 @@
           "Модели применяемости",
           "Миграции"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "app/models.py:FitmentPart/FitmentRecord/FitmentEvidence/FitmentJob",
+          "app/fitment_data.py"
+        ],
+        "actual_changes": [
+          "Добавлено нормализованное хранилище детали, применяемости, evidence и заданий; таблицы создаются совместимо через metadata.create_all."
+        ]
       },
       {
         "id": "F04",
         "title": "Реализовать извлечение",
-        "status": "not_started",
+        "status": "done",
         "depends_on": [
           "F03"
         ],
@@ -387,13 +411,22 @@
           "Адаптеры",
           "Версионированные фикстуры"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "app/sources/trialli_fitment.py",
+          "app/sources/torr_fitment.py",
+          "app/sources/kyb_fitment.py",
+          "app/sources/hola_fitment.py",
+          "app/sources/metaco_fitment.py",
+          "tests/test_fitment.py"
+        ],
+        "actual_changes": [
+          "Пять адаптеров читают только прямые официальные карточки точных артикулов."
+        ]
       },
       {
         "id": "F05",
         "title": "Нормализовать и объединить результаты",
-        "status": "not_started",
+        "status": "done",
         "depends_on": [
           "F04"
         ],
@@ -413,13 +446,18 @@
           "Нормализатор",
           "Правила конфликтов"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "app/fitment_data.py",
+          "tests/test_fitment.py:test_fitment_service_caches_complete_answer"
+        ],
+        "actual_changes": [
+          "Семантический hash не сливает разные двигатели, периоды или ограничения; повтор обновляет запись и evidence."
+        ]
       },
       {
         "id": "F06",
         "title": "Очередь, лимиты и API",
-        "status": "not_started",
+        "status": "done",
         "depends_on": [
           "F01",
           "F05"
@@ -443,13 +481,20 @@
           "Очередь",
           "Метрики"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "app/fitment_jobs.py",
+          "app/main.py:/api/v1/fitment/jobs",
+          "tests/test_fitment.py:test_fitment_job_api_is_idempotent_and_tenant_isolated",
+          "tests/test_fitment.py:test_fitment_job_runner_resumes_and_persists_partial_results"
+        ],
+        "actual_changes": [
+          "Постоянная однопоточная очередь, restart recovery, retry/backoff, negative TTL, cancel, idempotency, лимит 100 и метрики."
+        ]
       },
       {
         "id": "F07",
         "title": "Интерфейс и экспорт",
-        "status": "not_started",
+        "status": "done",
         "depends_on": [
           "F06"
         ],
@@ -470,13 +515,20 @@
           "UI",
           "Экспорт"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "app/templates/index.html",
+          "app/static/app.js",
+          "app/excel.py",
+          "tests/test_fitment.py:test_fitment_workbook_has_product_and_application_sheets"
+        ],
+        "actual_changes": [
+          "Одиночное и пакетное представление для admin; отдельные XLSX с исходной деталью, источником и ограничениями."
+        ]
       },
       {
         "id": "F08",
         "title": "Проверить качество и нагрузку",
-        "status": "not_started",
+        "status": "in_progress",
         "depends_on": [
           "F07"
         ],
@@ -496,13 +548,18 @@
         "deliverables": [
           "fitment-release-report.json"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "281 passed, 10 skipped",
+          "output/fitment-research/shock-absorbers-2026-09-23/multi-source-golden.json"
+        ],
+        "actual_changes": [
+          "Golden-проверка: 7/7 живых карточек доступны, 214 строк; полный набор тестов прошёл."
+        ]
       },
       {
         "id": "F09",
         "title": "Пилот и выпуск",
-        "status": "not_started",
+        "status": "in_progress",
         "depends_on": [
           "F08"
         ],
@@ -521,8 +578,12 @@
           "Runbook",
           "Отчёт пилота"
         ],
-        "evidence": [],
-        "actual_changes": []
+        "evidence": [
+          "docs/runbooks/fitment-admin-pilot.md"
+        ],
+        "actual_changes": [
+          "Подготовлены entitlement flag, точный allowlist admin и runbook отключения/отката."
+        ]
       }
     ]
   },

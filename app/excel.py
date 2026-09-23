@@ -186,27 +186,75 @@ def build_fitment_workbook(result: dict) -> bytes:
 
     fitment = wb.create_sheet("Применяемость")
     fitment.append([
-        "Бренд детали", "Артикул", "Марка автомобиля", "Модель", "Модификация",
-        "Двигатель", "Мощность, кВт", "Мощность, лс", "Объём, см³",
-        "Период выпуска", "Год с", "Год по", "Выпускается", "Примечание",
-        "Источник", "Карточка источника",
+        "Бренд детали", "Артикул", "Марка автомобиля", "Модель", "Поколение",
+        "Модификация", "Двигатель", "Мощность, кВт", "Мощность, лс", "Объём, см³",
+        "Период выпуска", "Год с", "Год по", "Месяц с", "Месяц по",
+        "Выпускается", "Кузов", "Трансмиссия", "Ось", "Ограничения",
+        "Статус проверки", "Источник", "Карточка источника",
     ])
     _style_header(fitment, {
-        1: 16, 2: 18, 3: 20, 4: 28, 5: 30, 6: 18, 7: 16, 8: 16,
-        9: 16, 10: 20, 11: 12, 12: 12, 13: 14, 14: 34, 15: 14, 16: 50,
+        1: 16, 2: 18, 3: 20, 4: 28, 5: 18, 6: 36, 7: 18, 8: 16,
+        9: 16, 10: 16, 11: 20, 12: 12, 13: 12, 14: 12, 15: 12, 16: 14,
+        17: 18, 18: 18, 19: 18, 20: 48, 21: 18, 22: 14, 23: 50,
     })
     for row in result.get("applications") or []:
         fitment.append([
             result.get("brand", ""), result.get("number", ""), row.get("make", ""),
-            row.get("model", ""), row.get("modification", ""), row.get("engine_code", ""),
-            row.get("power_kw", ""), row.get("power_hp", ""), row.get("engine_cc", ""),
-            row.get("raw_period", ""), row.get("year_from"), row.get("year_to"),
-            "Да" if row.get("end_is_open") else "Нет", row.get("info", ""),
+            row.get("model", ""), row.get("generation", ""), row.get("modification", ""),
+            row.get("engine_code", ""), row.get("power_kw", ""), row.get("power_hp", ""),
+            row.get("engine_cc", ""), row.get("raw_period", ""), row.get("year_from"),
+            row.get("year_to"), row.get("month_from"), row.get("month_to"),
+            "Да" if row.get("end_is_open") else "Нет", row.get("body", ""),
+            row.get("transmission", ""), row.get("axle", ""),
+            " | ".join(row.get("restrictions") or []), row.get("verification_status", ""),
             result.get("source", ""), result.get("source_url", ""),
         ])
     buf = io.BytesIO()
     wb.save(buf)
     return buf.getvalue()
+
+
+def build_fitment_job_workbook(results: list[dict]) -> bytes:
+    """Export a batch without losing source, part identity or restrictions."""
+    wb = Workbook()
+    summary = wb.active
+    summary.title = "Детали"
+    summary.append(["Бренд", "Артикул", "Группа", "Статус", "Название",
+                    "Строк применяемости", "Источник", "Карточка", "Сообщение"])
+    _style_header(summary, {1: 16, 2: 20, 3: 20, 4: 14, 5: 42, 6: 20, 7: 14, 8: 50, 9: 40})
+    applications = wb.create_sheet("Применяемость")
+    applications.append([
+        "Бренд детали", "Артикул", "Марка автомобиля", "Модель", "Поколение",
+        "Модификация", "Двигатель", "Мощность, кВт", "Мощность, лс",
+        "Объём, см³", "Период", "Год с", "Год по", "Месяц с", "Месяц по",
+        "Открытый период", "Кузов", "Трансмиссия", "Ось", "Ограничения",
+        "Статус проверки", "Источник", "Карточка",
+    ])
+    _style_header(applications, {i: 18 for i in range(1, 24)})
+    applications.column_dimensions["D"].width = 30
+    applications.column_dimensions["F"].width = 44
+    applications.column_dimensions["T"].width = 50
+    applications.column_dimensions["W"].width = 50
+    for result in results:
+        summary.append([
+            result.get("brand", ""), result.get("number", ""), result.get("group", ""),
+            result.get("status", ""), result.get("title", ""),
+            len(result.get("applications") or []), result.get("source", ""),
+            result.get("source_url", ""), result.get("message", ""),
+        ])
+        for row in result.get("applications") or []:
+            applications.append([
+                result.get("brand", ""), result.get("number", ""), row.get("make", ""),
+                row.get("model", ""), row.get("generation", ""), row.get("modification", ""),
+                row.get("engine_code", ""), row.get("power_kw", ""), row.get("power_hp", ""),
+                row.get("engine_cc", ""), row.get("raw_period", ""), row.get("year_from"),
+                row.get("year_to"), row.get("month_from"), row.get("month_to"),
+                "Да" if row.get("end_is_open") else "Нет", row.get("body", ""),
+                row.get("transmission", ""), row.get("axle", ""),
+                " | ".join(row.get("restrictions") or []), row.get("verification_status", ""),
+                result.get("source", ""), result.get("source_url", ""),
+            ])
+    buf = io.BytesIO(); wb.save(buf); return buf.getvalue()
 
 
 def _group_title(item: dict) -> str:

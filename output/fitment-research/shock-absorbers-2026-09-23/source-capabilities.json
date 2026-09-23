@@ -80,12 +80,84 @@
         "Карточки KYB содержат марку, модель и период, но не содержат двигатель и модификацию.",
         "Данные KYB не используются для подтверждения или копирования строк другого бренда."
       ]
+    },
+    {
+      "key": "hola",
+      "status": "ready_for_admin_pilot",
+      "official_entrypoint": "https://www.hola-auto.ru/production/shock-absorbers/",
+      "reviewed_example": "https://www.hola-auto.ru/production/shock-absorbers/SH20-037G/",
+      "lookup": "Прямая официальная карточка точного артикула.",
+      "fitment_fields": [
+        "make",
+        "model",
+        "modification",
+        "engine_code",
+        "engine_cc",
+        "power_kw",
+        "power_hp",
+        "month_year_period",
+        "restrictions"
+      ],
+      "implementation_decision": "Подключён в приоритете как уже используемый источник поиска. Строки берутся только из карточки точного артикула HOLA.",
+      "limitations": [
+        "Полная модификация сохраняется исходной строкой.",
+        "Ограничения подвески и оси нельзя отбрасывать при объединении."
+      ]
+    },
+    {
+      "key": "metaco",
+      "status": "ready_for_admin_pilot",
+      "official_entrypoint": "https://metaco.parts/category/shock_absorbers",
+      "reviewed_example": "https://metaco.parts/catalog/4800013",
+      "lookup": "Прямая официальная карточка точного артикула.",
+      "fitment_fields": [
+        "make",
+        "model",
+        "generation",
+        "year_from",
+        "year_to",
+        "open_period"
+      ],
+      "implementation_decision": "Подключён в приоритете как уже используемый источник поиска. Строки берутся только из карточки точного артикула METACO.",
+      "limitations": [
+        "Нет двигателя и модификации автомобиля.",
+        "Годы имеют меньшую детализацию, чем у HOLA и TORR."
+      ]
+    },
+    {
+      "key": "lynxauto",
+      "status": "no_go_for_fitment",
+      "official_entrypoint": "https://lynxauto.info/",
+      "reviewed_example": "https://lynxauto.info/index.php?route=product/product&product_id=25558",
+      "lookup": "Точная карточка содержит OE и аналоги.",
+      "fitment_fields": [],
+      "implementation_decision": "Не подключать к применяемости: на проверенной карточке нет прямого списка автомобилей и годов для артикула.",
+      "limitations": [
+        "Нельзя выводить применяемость из OE/аналогов транзитивно."
+      ]
+    },
+    {
+      "key": "febest",
+      "status": "no_go_for_fitment",
+      "official_entrypoint": "https://febest.de/",
+      "lookup": "Каталог связывает поиск с OEM и моделями, но прямой воспроизводимой связи точного артикула с автомобилями и годами не найдено.",
+      "fitment_fields": [],
+      "implementation_decision": "Не подключать до появления прямой карточки/API применяемости.",
+      "limitations": [
+        "Нельзя считать результаты соседнего поиска подтверждением применяемости детали."
+      ]
     }
   ],
   "decision": {
-    "pilot_sources": ["trialli", "torr", "kyb"],
+    "pilot_sources": [
+      "trialli",
+      "torr",
+      "kyb",
+      "hola",
+      "metaco"
+    ],
     "pilot_tenant": "admin",
-    "pilot_trigger": "Отдельное действие для конкретного результата TRIALLI, TORR или KYB в группе амортизаторов.",
+    "pilot_trigger": "Отдельное действие для точного результата поддерживаемого бренда в группе амортизаторов; пакет не более 100 явных деталей.",
     "not_allowed": [
       "Автоматически переносить применяемость TRIALLI на KYB, TORR или другой кросс.",
       "Запускать применяемость вместе с каждым обычным поиском.",

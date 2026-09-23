@@ -6,7 +6,7 @@ from collections.abc import AsyncIterator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from .config import get_settings
-from .models import Account, Base
+from .models import Account, Base, FeatureEntitlement
 from .security import hash_password
 
 _settings = get_settings()
@@ -55,6 +55,12 @@ async def init_db() -> None:
             if await session.get(Account, username) is None:
                 session.add(Account(username=username, password_hash=hash_password(password),
                                     queries_limit=_settings.requests_per_account))
+        entitlement_key = "admin:vehicle_fitment"
+        if await session.get(FeatureEntitlement, entitlement_key) is None:
+            session.add(FeatureEntitlement(
+                key=entitlement_key, tenant="admin", feature_key="vehicle_fitment",
+                enabled=True, limits={"max_parts_per_job": 100},
+            ))
         await session.commit()
 
 

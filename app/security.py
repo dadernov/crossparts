@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime as dt
 import hashlib
 import hmac
 import ipaddress
@@ -8,7 +9,7 @@ import os
 from fastapi import Depends, Header, HTTPException, Request, status
 from sqlalchemy import select
 
-from .models import Account
+from .models import Account, FeatureEntitlement, utcnow
 
 from .config import get_settings
 
@@ -85,13 +86,34 @@ async def require_search_access(
 
 
 async def require_admin_fitment(tenant: str = Depends(require_tenant)) -> str:
-    """Keep the fitment pilot unavailable to every tenant except admin."""
+    """Require both the paid-module right and the current admin pilot allowlist."""
     if tenant != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Модуль применяемости доступен только admin",
         )
+    from .db import SessionLocal
+    if not await has_feature_access(SessionLocal, tenant, "vehicle_fitment"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Модуль применяемости не подключён для аккаунта",
+        )
     return tenant
+
+
+async def has_feature_access(session_factory, tenant: str, feature_key: str) -> bool:
+    key = f"{tenant}:{feature_key}"
+    async with session_factory() as session:
+        grant = await session.get(FeatureEntitlement, key)
+    if grant is None or not grant.enabled:
+        return False
+    expires_at = grant.expires_at
+    if expires_at is not None:
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=dt.timezone.utc)
+        if expires_at <= utcnow():
+            return False
+    return True
 
 
 async def authenticate(session_factory, username: str, password: str) -> str | None:
