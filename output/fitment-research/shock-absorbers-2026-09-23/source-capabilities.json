@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "checked_at": "2026-09-23",
+  "product_group": "shock_absorbers",
+  "sources": [
+    {
+      "key": "trialli",
+      "status": "ready_for_admin_pilot",
+      "official_entrypoint": "https://trialli.ru/catalogue/amortizatory-i-opory/amortizatory/",
+      "lookup": "Серверный поиск по артикулу и серверная карточка товара.",
+      "fitment_fields": [
+        "make",
+        "model",
+        "modification",
+        "engine_code",
+        "power_hp",
+        "engine_cc",
+        "raw_period"
+      ],
+      "product_fields": [
+        "title",
+        "installation_position",
+        "damper_type",
+        "damper_kind",
+        "oem_numbers"
+      ],
+      "implementation_decision": "Первый источник. Применяемость привязывается только к точному артикулу TRIALLI.",
+      "limitations": [
+        "Сам TRIALLI называет применяемость справочной.",
+        "Период сохраняется исходным текстом; отсутствие конечного года нельзя считать открытым периодом без явного 'н.в.'.",
+        "Источник иногда содержит подозрительные значения, поэтому текст периода нельзя исправлять догадкой."
+      ]
+    },
+    {
+      "key": "torr",
+      "status": "ready_for_admin_pilot",
+      "official_entrypoint": "https://controltorr.de/ru/catalog",
+      "reviewed_example": "https://controltorr.de/catalog/DH1270",
+      "lookup": "Серверный OE-поиск и серверная карточка товара.",
+      "fitment_fields": [
+        "make",
+        "model",
+        "raw_period_with_month",
+        "modification",
+        "engine_code",
+        "engine_cc",
+        "power_kw_hp",
+        "info"
+      ],
+      "implementation_decision": "Подключён вторым источником. Применяемость читается только из первой таблицы точной карточки TORR; таблица кроссов не смешивается с автомобилями.",
+      "limitations": [
+        "Карточка и поля доступны на немецком языке.",
+        "Полные модель и модификация извлекаются из атрибута data-tooltip, потому что видимый текст сокращён.",
+        "Период вида YYYY-MM/- сохраняется дословно и отдельно помечается как открытый."
+      ]
+    },
+    {
+      "key": "kyb",
+      "status": "ready_for_admin_pilot",
+      "official_entrypoint": "https://kyb.ru/support/online-catalog-part-number",
+      "official_description": "https://kyb.ru/support/online-catalog",
+      "lookup": "Официальная карточка по артикулу через POST /api/2/by/partnumber.",
+      "fitment_fields": [
+        "make",
+        "model",
+        "startMonth",
+        "startYear",
+        "endMonth",
+        "endYear",
+        "part",
+        "series",
+        "type",
+        "installation_position",
+        "fixType"
+      ],
+      "implementation_decision": "Подключён третьим источником по подтверждённому endpoint карточки. Результат привязывается только к точному артикулу KYB.",
+      "limitations": [
+        "Онлайн-каталог помечен производителем как beta.",
+        "KYB рекомендует перепроверять результат по PDF-каталогам и OEM-кроссам.",
+        "Карточки KYB содержат марку, модель и период, но не содержат двигатель и модификацию.",
+        "Данные KYB не используются для подтверждения или копирования строк другого бренда."
+      ]
+    }
+  ],
+  "decision": {
+    "pilot_sources": ["trialli", "torr", "kyb"],
+    "pilot_tenant": "admin",
+    "pilot_trigger": "Отдельное действие для конкретного результата TRIALLI, TORR или KYB в группе амортизаторов.",
+    "not_allowed": [
+      "Автоматически переносить применяемость TRIALLI на KYB, TORR или другой кросс.",
+      "Запускать применяемость вместе с каждым обычным поиском.",
+      "Открывать endpoint другим аккаунтам."
+    ]
+  }
+}

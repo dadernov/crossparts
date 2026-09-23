@@ -15,13 +15,17 @@ from . import groups as product_groups
 from .aggregator import Aggregator
 from .config import get_settings
 from .db import SessionLocal, init_db
-from .excel import build_template, build_workbook, read_input
+from .excel import build_fitment_workbook, build_template, build_workbook, read_input
+from .fitment import FitmentService
 from .jobs import JobRunner
 from .models import Job, JobItem, new_id, utcnow
 from .marketing import context as marketing_context
+from .normalize import number_key
 from .quota import quota_status, reserve_queries
-from .schemas import JobCreate, JobOut, LookupExportRequest, LookupRequest
-from .security import authenticate, is_guest_tenant, require_search_access, require_tenant
+from .schemas import FitmentLookupRequest, JobCreate, JobOut, LookupExportRequest, LookupRequest
+from .security import (
+    authenticate, is_guest_tenant, require_admin_fitment, require_search_access, require_tenant,
+)
 from .session import SignedSessionMiddleware
 from .sources.registry import SourceRegistry
 
@@ -31,6 +35,7 @@ settings = get_settings()
 registry = SourceRegistry(settings)
 aggregator = Aggregator(settings, registry, SessionLocal)
 runner = JobRunner(settings, aggregator, SessionLocal)
+fitment = FitmentService(settings, SessionLocal)
 
 
 @asynccontextmanager
@@ -202,8 +207,6 @@ async def lookup(req: LookupRequest, tenant: str = Depends(require_search_access
 @app.post("/api/v1/lookup/export.xlsx")
 async def lookup_export(payload: LookupExportRequest, tenant: str = Depends(require_tenant)):
     """Export the result already shown for one OE lookup without running it again."""
-    from .normalize import number_key
-
     blob = build_workbook([{
         "our_sku": "",
         "oe_number": payload.oe_number,
@@ -216,6 +219,46 @@ async def lookup_export(payload: LookupExportRequest, tenant: str = Depends(requ
         content=blob,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f'attachment; filename="crosses-{filename}.xlsx"'},
+    )
+
+
+@app.post("/api/v1/fitment/lookup")
+async def fitment_lookup(
+    payload: FitmentLookupRequest,
+    tenant: str = Depends(require_admin_fitment),
+):
+    """Explicit pilot enrichment; the dependency and UI are admin-only."""
+    if tenant != "admin":
+        raise HTTPException(403, "Модуль применяемости доступен только admin")
+    if payload.group != product_groups.SHOCK_ABSORBERS:
+        raise HTTPException(400, "Пилот применяемости работает только для амортизаторов")
+    brand = payload.brand.strip().upper()
+    if brand not in fitment.supported_brands:
+        raise HTTPException(400, "Для этого бренда источник применяемости не подключён")
+    return await fitment.lookup(brand, payload.number)
+
+
+@app.post("/api/v1/fitment/export.xlsx")
+async def fitment_export(
+    payload: FitmentLookupRequest,
+    tenant: str = Depends(require_admin_fitment),
+):
+    """Download the same cached applicability card as a standalone workbook."""
+    if tenant != "admin":
+        raise HTTPException(403, "Модуль применяемости доступен только admin")
+    if payload.group != product_groups.SHOCK_ABSORBERS:
+        raise HTTPException(400, "Пилот применяемости работает только для амортизаторов")
+    brand = payload.brand.strip().upper()
+    if brand not in fitment.supported_brands:
+        raise HTTPException(400, "Для этого бренда источник применяемости не подключён")
+    result = await fitment.lookup(brand, payload.number)
+    if result["status"] != "ok":
+        raise HTTPException(404, result.get("message") or "Применяемость не найдена")
+    filename = f"fitment-{brand.lower()}-{number_key(payload.number)[:40]}.xlsx"
+    return Response(
+        content=build_fitment_workbook(result),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 
 

@@ -10,6 +10,12 @@ class LookupRequest(BaseModel):
                               description="Товарная группа: ключ или название из файла")
 
 
+class FitmentLookupRequest(BaseModel):
+    brand: str = Field(..., min_length=2, max_length=64)
+    number: str = Field(..., min_length=2, max_length=128)
+    group: str = Field(..., description="Товарная группа найденной детали")
+
+
 class LookupExportCross(BaseModel):
     brand: str = ""
     number: str = ""

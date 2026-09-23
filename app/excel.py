@@ -165,6 +165,50 @@ def build_workbook(items: list[dict], *, include_our_sku: bool = True) -> bytes:
     return buf.getvalue()
 
 
+def build_fitment_workbook(result: dict) -> bytes:
+    """Export one exact product card and all of its vehicle applications."""
+    wb = Workbook()
+    product = wb.active
+    product.title = "Деталь"
+    product.append(["Поле", "Значение"])
+    _style_header(product, {1: 28, 2: 80})
+    fields = (
+        ("Бренд", result.get("brand")), ("Артикул", result.get("number")),
+        ("Название", result.get("title")),
+        ("Сторона установки", result.get("installation_position")),
+        ("Тип амортизатора", result.get("damper_type")),
+        ("Исполнение / крепление", result.get("damper_kind")),
+        ("Источник", result.get("source")), ("Карточка источника", result.get("source_url")),
+        ("Проверено", result.get("checked_at")),
+    )
+    for label, value in fields:
+        product.append([label, value or ""])
+
+    fitment = wb.create_sheet("Применяемость")
+    fitment.append([
+        "Бренд детали", "Артикул", "Марка автомобиля", "Модель", "Модификация",
+        "Двигатель", "Мощность, кВт", "Мощность, лс", "Объём, см³",
+        "Период выпуска", "Год с", "Год по", "Выпускается", "Примечание",
+        "Источник", "Карточка источника",
+    ])
+    _style_header(fitment, {
+        1: 16, 2: 18, 3: 20, 4: 28, 5: 30, 6: 18, 7: 16, 8: 16,
+        9: 16, 10: 20, 11: 12, 12: 12, 13: 14, 14: 34, 15: 14, 16: 50,
+    })
+    for row in result.get("applications") or []:
+        fitment.append([
+            result.get("brand", ""), result.get("number", ""), row.get("make", ""),
+            row.get("model", ""), row.get("modification", ""), row.get("engine_code", ""),
+            row.get("power_kw", ""), row.get("power_hp", ""), row.get("engine_cc", ""),
+            row.get("raw_period", ""), row.get("year_from"), row.get("year_to"),
+            "Да" if row.get("end_is_open") else "Нет", row.get("info", ""),
+            result.get("source", ""), result.get("source_url", ""),
+        ])
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue()
+
+
 def _group_title(item: dict) -> str:
     """Показываем распознанную группу, а нераспознанную — как прислали."""
     key = item.get("group")

@@ -36,6 +36,9 @@ const profileToggle = $('#profile-toggle');
 const profileDropdown = $('#profile-dropdown');
 const account = document.querySelector('.account');
 const trialRequired = document.body.dataset.guest === 'true' && document.body.dataset.trialActive !== 'true';
+const fitmentEnabled = document.body.dataset.fitmentEnabled === 'true';
+let fitmentRequest = 0;
+let fitmentPayload = null;
 function closeProfile(restoreFocus = false) {
   profileDropdown.hidden = true;
   profileToggle.setAttribute('aria-expanded', 'false');
@@ -273,6 +276,7 @@ function clearResult() {
   $('#result-count').textContent = ''; $('#result-query').textContent = '';
   $('#btn-export-lookup').hidden = true; $('#job-export').hidden = true; $('#export-format').hidden = true;
   $('#source-details').hidden = true; $('#job-details').hidden = true;
+  closeFitment();
 }
 function revealSearchActivity() {
   $('#results').hidden = false;
@@ -383,11 +387,121 @@ function renderRows() {
   $('#result-rows').replaceChildren(...rows.slice(start, start + 12).map((cross, index) => {
     const row = el('tr'); const number = el('td'); number.append(el('code', canonicalNumber(cross.number)));
     row.append(el('td', String(start + index + 1)), el('td', cross.oe_number || state.lookup?.oe || '—'), brandCell(cross.brand), number, el('td', (cross.sources || []).map(key => sourceTitle(key).replace(/\s*\([^()]*\)\s*$/, '')).join(', ') || '—'));
+    if (fitmentEnabled) {
+      const action = el('td');
+      const group = fitmentGroupFor(cross);
+      if (state.mode === 'lookup' && group) {
+        const button = el('button', 'Показать', 'fitment-action'); button.type = 'button';
+        button.setAttribute('aria-label', `Показать применяемость ${String(cross.brand || '').toUpperCase()} ${canonicalNumber(cross.number)}`);
+        button.onclick = () => loadFitment(cross, button, group);
+        action.append(button);
+      } else action.textContent = '—';
+      row.append(action);
+    }
     return row;
   }));
-  if (!rows.length) { const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = 5; row.append(cell); $('#result-rows').append(row); }
+  if (!rows.length) { const row = el('tr'); const cell = el('td', state.crosses.length ? 'По этому фильтру нет записей.' : 'Нет номеров для отображения. Статус проверки указан выше.'); cell.colSpan = fitmentEnabled ? 6 : 5; row.append(cell); $('#result-rows').append(row); }
 }
 $('#result-filter').oninput = () => { state.page = 1; renderRows(); };
+
+function closeFitment(restoreFocus = false) {
+  const panel = $('#fitment-panel');
+  if (!panel) return;
+  fitmentRequest += 1;
+  const trigger = panel._trigger;
+  panel.hidden = true; panel._trigger = null;
+  $('#fitment-product').replaceChildren(); $('#fitment-table').replaceChildren();
+  $('#fitment-status').textContent = '';
+  fitmentPayload = null;
+  if ($('#fitment-export')) $('#fitment-export').hidden = true;
+  if (restoreFocus && trigger?.isConnected) trigger.focus();
+}
+$('#fitment-close')?.addEventListener('click', () => closeFitment(true));
+
+function fitmentGroupFor(cross) {
+  const brand = String(cross.brand || '').trim().toUpperCase();
+  if (!['TRIALLI', 'TORR', 'KYB'].includes(brand)) return null;
+  if (state.lookup?.group === 'shock_absorbers') return 'shock_absorbers';
+  try {
+    const url = new URL(cross.url);
+    if (brand === 'TRIALLI' && url.hostname === 'trialli.ru' && url.pathname.startsWith('/catalogue/amortizatory-i-opory/amortizatory/')) return 'shock_absorbers';
+    if (brand === 'TORR' && url.hostname === 'controltorr.de' && url.pathname.includes('/catalog/')) return 'shock_absorbers';
+    if (brand === 'KYB' && url.hostname === 'kyb.ru') return 'shock_absorbers';
+  } catch (_) { /* a result without an official product URL is not eligible */ }
+  return null;
+}
+
+async function loadFitment(cross, button, group) {
+  const panel = $('#fitment-panel');
+  if (!panel || !fitmentEnabled) return;
+  const request = ++fitmentRequest;
+  const brand = String(cross.brand || '').trim().toUpperCase();
+  const payload = {brand, number:cross.number, group};
+  panel._trigger = button; panel.hidden = false;
+  $('#fitment-title').textContent = `Применимость ${canonicalNumber(cross.number)}`;
+  $('#fitment-label').textContent = `${brand} · АМОРТИЗАТОРЫ`;
+  $('#fitment-status').textContent = `Получаем данные из карточки ${brand}…`;
+  $('#fitment-product').replaceChildren(); $('#fitment-table').replaceChildren();
+  fitmentPayload = null; $('#fitment-export').hidden = true;
+  button.disabled = true; panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  try {
+    const data = await api('/api/v1/fitment/lookup', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),
+    });
+    if (request !== fitmentRequest) return;
+    const status = $('#fitment-status');
+    if (data.status !== 'ok' || !data.applications.length) {
+      status.textContent = data.message || `В карточке ${brand} применяемость не указана.`;
+      return;
+    }
+    status.textContent = `${data.applications.length} строк · ${data.cached ? 'из кеша' : 'получено сейчас'}. Данные ${brand} справочные.`;
+    fitmentPayload = payload; $('#fitment-export').hidden = false;
+    const product = $('#fitment-product');
+    product.append(el('strong', data.title || `${data.brand} ${canonicalNumber(data.number)}`));
+    const facts = [data.installation_position, data.damper_type, data.damper_kind].filter(Boolean);
+    if (facts.length) product.append(el('p', facts.join(' · '), 'muted'));
+    if (data.source_url) {
+      const source = el('a', `Открыть карточку ${brand} ↗`, 'fitment-source');
+      source.href = data.source_url; source.target = '_blank'; source.rel = 'noopener noreferrer';
+      product.append(source);
+    }
+    const table = el('table');
+    const head = el('thead'); const headRow = el('tr');
+    ['Марка','Модель','Модификация','Двигатель','Мощность / объём','Годы'].forEach(title => { const cell = el('th', title); cell.scope = 'col'; headRow.append(cell); });
+    head.append(headRow); table.append(head);
+    const body = el('tbody');
+    for (const item of data.applications) {
+      const row = el('tr');
+      row.append(el('td', item.make || '—'), el('td', item.model || '—'), el('td', item.modification || '—'), el('td', item.engine_code || '—'), el('td', [item.power_kw && `${item.power_kw} кВт`, item.power_hp && `${item.power_hp} лс`, item.engine_cc && `${item.engine_cc} см³`].filter(Boolean).join(' · ') || '—'), el('td', item.raw_period || '—'));
+      body.append(row);
+    }
+    table.append(body); $('#fitment-table').append(table);
+  } catch (error) {
+    if (request === fitmentRequest) $('#fitment-status').textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+}
+
+$('#fitment-export')?.addEventListener('click', async event => {
+  if (!fitmentPayload) return;
+  const button = event.currentTarget; button.disabled = true;
+  try {
+    const response = await fetch('/api/v1/fitment/export.xlsx', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(fitmentPayload),
+      signal:AbortSignal.timeout(90000),
+    });
+    if (!response.ok) {
+      let detail; try { detail = (await response.json()).detail; } catch (_) { /* fallback below */ }
+      throw new Error(typeof detail === 'string' ? detail : 'Не удалось скачать применяемость.');
+    }
+    const url = URL.createObjectURL(await response.blob()); const link = el('a');
+    link.href = url; link.download = `fitment-${fitmentPayload.brand.toLowerCase()}-${canonicalNumber(fitmentPayload.number)}.xlsx`;
+    document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (error) { $('#fitment-status').textContent = error.message; }
+  finally { button.disabled = false; }
+});
 
 const columnFilters = {
   brand: {trigger: $('#brand-filter-trigger'), menu: $('#brand-filter-menu'), excluded: state.excludedBrands},

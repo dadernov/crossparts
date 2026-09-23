@@ -167,6 +167,7 @@ def test_frontend_states_and_layout(browser_name, tmp_path):
             page.screenshot(path=str(out / 'lookup-controls.png'))
         assert calls['payload'] == {'oe':'58101H5A25','group':'brake_pads'}
         assert page.locator('#result-table th').all_text_contents() == ['№', 'Номер OE / OEM', 'Бренд', 'Номер аналога', 'Источник']
+        assert page.locator('#fitment-panel, .fitment-action').count() == 0
         # Searching numbers ignores catalogue separators, just like Excel export.
         lookup['crosses'] = [
             dict(brand='TRIALLI', number='PF 0806CR', kind='aftermarket', sources=['trialli','metaco']),
@@ -344,4 +345,101 @@ def test_frontend_states_and_layout(browser_name, tmp_path):
         page.wait_for_function('document.querySelector("#history-status").textContent.includes("неактуальна")')
         assert page.locator('.job-row').count() == 1
         assert not errors
+        browser.close()
+
+
+def test_admin_can_request_trialli_fitment_for_a_shock_result():
+    env = Environment(loader=FileSystemLoader('app/templates'), autoescape=True)
+    calls = {}
+    lookup = {
+        'oe': '4851080378', 'status': 'ok',
+        'crosses': [{'brand': 'TRIALLI', 'number': 'AG 29125', 'kind': 'aftermarket',
+                     'sources': ['trialli'],
+                     'url': 'https://trialli.ru/catalogue/amortizatory-i-opory/amortizatory/ag-29125/'}],
+        'unique_numbers': ['AG 29125'],
+        'sources': [{'source': 'trialli', 'status': 'ok'}],
+    }
+    fitment = {
+        'status': 'ok', 'brand': 'TRIALLI', 'number': 'AG 29125',
+        'group': 'shock_absorbers', 'source': 'trialli',
+        'source_url': 'https://trialli.ru/card/',
+        'title': 'Амортизатор задний', 'installation_position': 'Сзади',
+        'damper_type': 'Двухтрубный', 'damper_kind': 'Газовый',
+        'cached': False, 'message': None,
+        'applications': [{
+            'make': 'LADA', 'model': 'XRAY', 'modification': '1.6 Cross',
+            'engine_code': 'H4M', 'power_hp': '113', 'engine_cc': '1598',
+            'raw_period': '2019 - н.в.', 'year_from': 2019, 'year_to': None,
+            'end_is_open': True,
+        }],
+    }
+    sources = [{'key': 'trialli', 'title': 'TRIALLI', 'homepage': 'https://trialli.ru',
+                'groups': ['shock_absorbers']}]
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        page = browser.new_page(viewport={'width': 1440, 'height': 1000})
+
+        def route(request):
+            path = request.request.url.split('http://admin.local')[-1]
+            clean_path = path.split('?', 1)[0]
+            if clean_path.startswith('/static/'):
+                file = Path('app' + clean_path)
+                mime = {'.css': 'text/css', '.js': 'application/javascript',
+                        '.ttf': 'font/ttf', '.svg': 'image/svg+xml', '.png': 'image/png'}
+                request.fulfill(body=file.read_bytes(),
+                                content_type=mime.get(file.suffix, 'application/octet-stream'))
+            elif clean_path == '/api/v1/groups':
+                request.fulfill(json={'groups': [{'title': 'Амортизаторы',
+                                                  'group': 'shock_absorbers'}]})
+            elif clean_path == '/api/v1/sources':
+                request.fulfill(json={'sources': sources, 'default': ['trialli']})
+            elif clean_path == '/api/v1/account':
+                request.fulfill(json={'remaining': 100, 'limit': 100, 'used': 0})
+            elif clean_path == '/api/v1/jobs':
+                request.fulfill(json=[])
+            elif clean_path == '/api/v1/lookup':
+                request.fulfill(json=lookup)
+            elif clean_path == '/api/v1/fitment/lookup':
+                calls['fitment'] = request.request.post_data_json
+                request.fulfill(json=fitment)
+            elif clean_path == '/api/v1/fitment/export.xlsx':
+                calls['fitment_export'] = request.request.post_data_json
+                request.fulfill(body=b'PK mock xlsx', content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            elif clean_path == '/':
+                request.fulfill(
+                    body=env.get_template('index.html').render(
+                        username='admin', is_guest=False, trial_active=False,
+                        login_open=False, login_error=None, settings=get_settings(),
+                    ),
+                    content_type='text/html',
+                )
+            else:
+                request.fulfill(status=404, body='not found')
+
+        page.route('**/*', route)
+        page.goto('http://admin.local/')
+        page.wait_for_function("document.querySelectorAll('#group-choices button').length === 1")
+        page.locator('#oe').fill('4851080378')
+        assert page.locator('#group').input_value() == ''
+        page.locator('#btn-lookup').click()
+        action = page.get_by_role('button', name='Показать применяемость TRIALLI AG29125')
+        action.click()
+        page.wait_for_function("document.querySelectorAll('#fitment-table tbody tr').length === 1")
+
+        assert calls['fitment'] == {
+            'brand': 'TRIALLI', 'number': 'AG 29125', 'group': 'shock_absorbers'
+        }
+        assert page.locator('#result-table th').all_text_contents()[-1] == 'Применимость'
+        assert page.locator('#fitment-panel').is_visible()
+        assert page.locator('#fitment-table').inner_text().count('LADA') == 1
+        assert page.locator('#fitment-export').is_visible()
+        with page.expect_download():
+            page.locator('#fitment-export').click()
+        assert calls['fitment_export'] == calls['fitment']
+        assert page.evaluate("fitmentGroupFor({brand:'TORR',url:'https://controltorr.de/catalog/DH1270'})") == 'shock_absorbers'
+        assert page.evaluate("fitmentGroupFor({brand:'KYB',url:'https://kyb.ru/support/online-catalog-part-number'})") == 'shock_absorbers'
+        assert page.evaluate("fitmentGroupFor({brand:'SACHS',url:'https://example.test/part'})") is None
+        page.locator('#fitment-close').click()
+        assert page.locator('#fitment-panel').is_hidden()
         browser.close()

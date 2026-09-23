@@ -84,6 +84,16 @@ async def require_search_access(
     )
 
 
+async def require_admin_fitment(tenant: str = Depends(require_tenant)) -> str:
+    """Keep the fitment pilot unavailable to every tenant except admin."""
+    if tenant != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Модуль применяемости доступен только admin",
+        )
+    return tenant
+
+
 async def authenticate(session_factory, username: str, password: str) -> str | None:
     async with session_factory() as session:
         account = (await session.execute(
